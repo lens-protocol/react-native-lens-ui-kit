@@ -25,7 +25,6 @@ A feed of posts from Lens.
 ```javascript
 import { Feed } from 'react-native-lens'
 
-// Render a feed of posts
 <Feed />
 ```
 
@@ -62,7 +61,6 @@ A list of profiles
 ```javascript
 import { Profiles } from 'react-native-lens'
 
-// Render a list of profiles
 <Profiles />
 ```
 
@@ -89,7 +87,6 @@ Renders an individual profile
 ```javascript
 import { Profile } from 'react-native-lens'
 
-// Render an individual profile
 <Profile
   profile={profile}
 />
@@ -126,7 +123,6 @@ Renders a profile header component.
 ```javascript
 import { ProfileHeader } from 'react-native-lens'
 
-// Render a profile headers
 <ProfileHeader
   profile={profile}
   // or profileId={profileId}
@@ -149,7 +145,6 @@ Renders an individual publication.
 ```javascript
 import { Publication } from 'react-native-lens'
 
-// Render an individual publication
 <Publication
   publication={publication}
 />
@@ -178,7 +173,6 @@ Renders a list item for a profile overview.
 ```javascript
 import { ProfileListItem } from 'react-native-lens'
 
-// Render a feed of posts
 <ProfileListItem
   profile={profile}
 />
