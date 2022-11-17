@@ -89,7 +89,7 @@ Renders an individual profile
 ```javascript
 import { Profile } from 'react-native-lens'
 
-// Render a feed of posts
+// Render an individual profile
 <Profile
   profile={profile}
 />
@@ -126,7 +126,7 @@ Renders a profile header component.
 ```javascript
 import { ProfileHeader } from 'react-native-lens'
 
-// Render a feed of posts
+// Render a profile headers
 <ProfileHeader
   profile={profile}
   // or profileId={profileId}
@@ -149,7 +149,7 @@ Renders an individual publication.
 ```javascript
 import { Publication } from 'react-native-lens'
 
-// Render a feed of posts
+// Render an individual publication
 <Publication
   publication={publication}
 />
