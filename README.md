@@ -186,3 +186,18 @@ onProfilePress
 onFollowPress
 isFollowing
 ```
+
+# Roadmap
+
+Currently this project is in Alpha.
+
+### Beta Roadmap
+
+- Custom styling / layout
+- More query options
+- Authencication
+
+### V1 Roadmap
+
+- Theming
+- More rich content types (video, gif, audio)
