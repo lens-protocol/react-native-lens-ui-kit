@@ -11,11 +11,7 @@
   "dependencies": {
     "graphql": "^16.6.0",
     "react-native-svg": "^13.6.0",
-    "react-native": "0.70.6",
     "urql": "^3.0.3"
-  },
-  "resolutions": {
-    "react": "18.1.0"
   },
   "license": "ISC"
 }
