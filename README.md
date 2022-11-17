@@ -62,7 +62,7 @@ A list of profiles
 ```javascript
 import { Profiles } from 'react-native-lens'
 
-// Render a feed of posts
+// Render a list of profiles
 <Profiles />
 ```
 
