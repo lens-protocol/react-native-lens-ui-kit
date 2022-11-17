@@ -1,6 +1,6 @@
 # React Native Lens (alpha)
 
-![React Native Lens](header.png)
+![React Native Lens](header.jpg)
 
 A React Native UI kit for Lens Protocol.
 
