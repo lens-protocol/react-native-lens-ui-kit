@@ -47,33 +47,41 @@ export function Profiles({
       return
     }
     try {
-      setLoading(true)
-      let {
-        items, pageInfo
-      } = await fetchResponse(cursor)
-      setPaginationInfo(pageInfo)
-      items = await Promise.all(items.map(profile => {
-        let { picture, coverPicture } = profile
-        if (picture && picture.original) {
-          if (picture.original.url.startsWith('ipfs://')) {
-            let result = picture.original.url.substring(7, picture.original.url.length)
-            profile.picture.original.url = `https://lens.infura-ipfs.io/ipfs/${result}`
+      if (
+        !profileData ||
+        profileData && profiles.length
+      ) {
+        setLoading(true)
+        let {
+          items, pageInfo
+        } = await fetchResponse(cursor)
+        setPaginationInfo(pageInfo)
+        items = await Promise.all(items.map(profile => {
+          let { picture, coverPicture } = profile
+          if (picture && picture.original) {
+            if (picture.original.url.startsWith('ipfs://')) {
+              let result = picture.original.url.substring(7, picture.original.url.length)
+              profile.picture.original.url = `https://lens.infura-ipfs.io/ipfs/${result}`
+            }
+          } else {
+            profile.missingAvatar = true
           }
-        } else {
-          profile.missingAvatar = true
-        }
-        if (coverPicture && coverPicture.original.url) {
-          if (coverPicture.original.url.startsWith('ipfs://')) {
-            let hash = coverPicture.original.url.substring(7, coverPicture.original.url.length)
-            coverPicture.original.url = `https://lens.infura-ipfs.io/ipfs/${hash}`
+          if (coverPicture && coverPicture.original.url) {
+            if (coverPicture.original.url.startsWith('ipfs://')) {
+              let hash = coverPicture.original.url.substring(7, coverPicture.original.url.length)
+              coverPicture.original.url = `https://lens.infura-ipfs.io/ipfs/${hash}`
+            }
+          } else {
+            profile.missingCover = true
           }
-        } else {
-          profile.missingCover = true
-        }
-        return profile
-      }))
-      setLoading(false)
-      setProfiles([...profiles, ...items])
+          return profile
+          })
+        )
+        setLoading(false)
+        setProfiles([...profiles, ...items])
+      } else {
+        setProfiles(profileData)
+      }
     } catch (err) {
       console.log("Error fetching profiles... ", err)
     }

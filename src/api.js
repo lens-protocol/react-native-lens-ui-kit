@@ -398,7 +398,6 @@ fragment CollectModuleFields on CollectModule {
     collectModuleReturnData
   }
 }
-
 `
 
 export const getPublications = `

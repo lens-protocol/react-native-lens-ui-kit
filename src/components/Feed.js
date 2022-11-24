@@ -54,7 +54,6 @@ export function Feed({
       }
     }
     if (query.name === 'getPublications') {
-      console.log({ query })
       let { data: { publications: { pageInfo, items }}} = await client.query(getPublications, {
         profileId: query.profileId,
         cursor,
@@ -92,14 +91,14 @@ export function Feed({
     try {
       if (
         !feed ||
-        feed && publications.length
+        feed && cursor
       ) {
         setLoading(true)
         let {
           items, pageInfo
         } = await fetchResponse(cursor)   
         setPaginationInfo(pageInfo)
-        items = items.filter((item) => {
+        items = items.filter(item => {
           const { metadata: { media } } = item
           if (media.length) {
             if (media[0].original) {
@@ -116,6 +115,7 @@ export function Feed({
           let { profile } = item
           if (item.mirrorOf) {
             item.originalProfile = profile
+            item.stats = item.mirrorOf.stats
             profile = item.mirrorOf.profile
           }
           if (profile.picture && profile.picture.original) {

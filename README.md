@@ -54,6 +54,16 @@ onEndReachedThreshold = .6
 onProfileImagePress
 ```
 
+### Query options for `Feed`
+
+```graphql
+explorePublications(
+  request: ExplorePublicationRequest!
+): ExplorePublicationResult!
+```
+
+> View the entire schema [here](schema.graphql)
+
 ## Profiles
 
 A list of profiles
