@@ -1103,5 +1103,127 @@ fragment ReferenceModuleFields on ReferenceModule {
     degreesOfSeparation
   }
 }
+`
 
+export const getFollowing = `
+query Following(
+  $limit: LimitScalar
+  $cursor: Cursor
+  $address: EthereumAddress!
+) {
+  following(request: {
+    limit: $limit
+    cursor: $cursor
+    address: $address
+  }) {
+    items {
+      profile {
+        id
+        name
+        bio
+        followNftAddress
+        metadata
+        isDefault
+        handle
+        picture {
+          ... on NftImage {
+            contractAddress
+            tokenId
+            uri
+            verified
+          }
+          ... on MediaSet {
+            original {
+              url
+              width
+              height
+              mimeType
+            }
+            medium {
+              url
+              width
+              height
+              mimeType
+            }
+            small {
+              url
+              width
+              height
+              mimeType
+            }
+          }
+        }
+        coverPicture {
+          ... on NftImage {
+            contractAddress
+            tokenId
+            uri
+            verified
+          }
+          ... on MediaSet {
+            original {
+              url
+              width
+              height
+              mimeType
+            }
+            small {
+              width
+              url
+              height
+              mimeType
+            }
+            medium {
+              url
+              width
+              height
+              mimeType
+            }
+          }
+        }
+        ownedBy
+        dispatcher {
+          address
+          canUseRelay
+        }
+        stats {
+          totalFollowers
+          totalFollowing
+          totalPosts
+          totalComments
+          totalMirrors
+          totalPublications
+          totalCollects
+        }
+        followModule {
+          ... on FeeFollowModuleSettings {
+            type
+            amount {
+              asset {
+                name
+                symbol
+                decimals
+                address
+              }
+              value
+            }
+            recipient
+          }
+          ... on ProfileFollowModuleSettings {
+           type
+          }
+          ... on RevertFollowModuleSettings {
+           type
+          }
+        }
+      }
+      totalAmountOfTimesFollowing
+    }
+    pageInfo {
+      prev
+      next
+      totalCount
+    }
+  }
+}
 `

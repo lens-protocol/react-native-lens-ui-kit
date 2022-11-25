@@ -78,7 +78,8 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     justifyContent: 'center',
-    paddingLeft: 10
+    paddingLeft: 10,
+    maxWidth: 200,
   },
   followButtonContainer: {
     flex: 1,

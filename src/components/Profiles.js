@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import {
   FlatList, ActivityIndicator, StyleSheet
 } from 'react-native'
-import { client, exploreProfiles } from '../api'
+import { client, exploreProfiles, getFollowing } from '../api'
 import {
   ProfileListItem
 } from './'
@@ -10,7 +10,6 @@ import {
 export function Profiles({
   onFollowPress = () => null,
   onProfilePress = () => null,
-  isFollowing = null,
   profileData = null,
   onEndReachedThreshold = .7,
   infiniteScroll = true,
@@ -35,6 +34,21 @@ export function Profiles({
         cursor,
         limit: query.limit
       }).toPromise()
+      return {
+        pageInfo, items,
+      }
+    }
+    if (query.name === 'getFollowing') {
+      console.log("query: ", JSON.stringify(query))
+      let { data: { following: { pageInfo, items } }} = await client.query(getFollowing, {
+        address: query.ethereumAddress,
+        cursor,
+        limit: query.limit || 25
+      }).toPromise()
+      items = items.map(item => {
+        item.profile.isFollowing = true
+        return item.profile
+      })
       return {
         pageInfo, items,
       }
@@ -94,7 +108,6 @@ export function Profiles({
   }
 
   async function fetchNextItems() {
-    console.log({ paginationInfo })
     try {
      const { next } = paginationInfo
      fetchProfiles(next)
@@ -110,7 +123,7 @@ export function Profiles({
         onProfilePress={onProfilePress}
         profile={item}
         onFollowPress={onFollowPress}
-        isFollowing={isFollowing}
+        isFollowing={item.isFollowing}
       />
     )
   }
