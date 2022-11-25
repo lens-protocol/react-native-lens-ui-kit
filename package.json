@@ -9,6 +9,7 @@
   "keywords": [],
   "author": "",
   "dependencies": {
+    "date-fns": "^2.29.3",
     "graphql": "^16.6.0",
     "react-native-svg": "^13.6.0",
     "urql": "^3.0.3"

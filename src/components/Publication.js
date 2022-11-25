@@ -3,6 +3,7 @@ import {
 } from 'react-native'
 import { CommentIcon, MirrorIcon, CollectIcon, UnfilledHeartIcon, FilledHeartIcon } from './'
 import { returnIPFSPathorURL } from '../utils'
+import { formatDistanceStrict } from 'date-fns'
 
 const width = Dimensions.get('window').width
 
@@ -62,6 +63,7 @@ export function Publication({
           <View style={styles.postOwnerDetailsContainer}>
             <Text style={styles.postOwnerName}>{publication.profile.name}</Text>
             <Text style={styles.postOwnerHandle}>@{publication.profile.handle}</Text>
+            <Text style={styles.timestamp}>• {reduceDate(publication.createdAt)}</Text>
           </View>
           {
             publication.metadata.content && (
@@ -141,6 +143,13 @@ export function Publication({
   )
 }
 
+function reduceDate(date) {
+  const formattedDate = formatDistanceStrict(new Date(date), new Date())
+  const dateArr = formattedDate.split(' ')
+  const dateInfo = dateArr[1].charAt(0)
+  return `${dateArr[0]}${dateInfo}`
+}
+
 const styles = StyleSheet.create({
   publicationWrapper: {
     borderBottomWidth: 1,
@@ -191,7 +200,8 @@ const styles = StyleSheet.create({
     fontSize: 12
   },
   postOwnerDetailsContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   postOwnerName: {
     fontWeight: '600'
@@ -199,6 +209,12 @@ const styles = StyleSheet.create({
   postOwnerHandle: {
     marginLeft: 4,
     color: 'rgba(0, 0, 0, .5)'
+  },
+  timestamp: {
+    marginLeft: 4,
+    color: 'rgba(0, 0, 0, .5)',
+    fontSize: 12,
+    fontWeight: '600'
   },
   activityIndicatorContainer: {
     height: 60,
