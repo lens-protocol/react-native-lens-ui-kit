@@ -65,8 +65,6 @@ __getPublications__
 __getComments__    
 [getComments](./src/graphql/getComments.graphql)
 
-> View the entire schema [here](schema.graphql)
-
 ## Profiles
 
 A list of profiles
@@ -80,17 +78,26 @@ import { Profiles } from 'react-native-lens'
 ### Default Props
 
 ```
-onFollowPress = () => null
-onProfilePress = () => null
-profileData = null
-onEndReachedThreshold = .7
-infiniteScroll = true
 query = {
-  name: 'exploreProfiles',
+  name: 'getFollowing',
   sortCriteria: 'MOST_FOLLOWERS',
   limit: 25
 }
+profileData = null
+onEndReachedThreshold = .7
+infiniteScroll = true
+onFollowPress = profile => console.log({ profile })
+onProfilePress = profile => console.log({ profile })
 ```
+
+### Query options for `Profiles`
+
+__exploreProfiles (default)__    
+[exploreProfiles](./src/graphql/exploreProfiles.graphql)
+
+__getFollowing__    
+[getPublications](./src/graphql/getFollowing.graphql)
+
 
 ## Profile
 
@@ -112,20 +119,20 @@ ListHeaderComponent = null
 ListFooterComponent = null
 feed = null
 signedInUser = null
-onCollectPress = () => {}
-onCommentPress = () => {}
-onMirrorPress= () => {}
-onLikePress = () => {}
 hideLikes = false
 hideComments = false
 hideMirrors = false
 hideCollects = false
 infiniteScroll = true
-onEndReachedThreshold = .7
-onFollowingPress = null
-onFollowersPress = null
-query = null
+onEndReachedThreshold = .65
 onProfileImagePress
+onFollowingPress = profile => console.log({ profile })
+onFollowersPress = profile => console.log({ profile })
+onProfileImagePress = publication => console.log({ publication })
+onCollectPress = publication => console.log({ publication })
+onCommentPress = publication => console.log({ publication })
+onMirrorPress = publication => console.log({ publication })
+onLikePress = publication => console.log({ publication })
 ```
 
 ## Profile Header
@@ -145,9 +152,9 @@ import { ProfileHeader } from 'react-native-lens'
 
 ```
 profileId = null
-profile: user = null
-onFollowingPress = null
-onFollowersPress = null
+profile = null
+onFollowingPress = profile => console.log({ profile })
+onFollowersPress = profile => console.log({ profile })
 ```
 
 ## Publication
@@ -167,15 +174,15 @@ import { Publication } from 'react-native-lens'
 ```
 publication = undefined (required)
 signedInUser = null
-onCollectPress = publication => console.log(publication),
-onCommentPress = publication => console.log(publication),
-onMirrorPress= publication => console.log(publication),
-onLikePress = publication => console.log(publication),
-onProfileImagePress = publication => console.log(publication),
 hideLikes = false
 hideComments = false
 hideMirrors = false
 hideCollects = false
+onCollectPress = publication => console.log({ publication })
+onCommentPress = publication => console.log({ publication })
+onMirrorPress= publication => console.log({ publication })
+onLikePress = publication => console.log({ publication })
+onProfileImagePress = publication => console.log({ publication })
 ```
 
 ## ProfileListItem
@@ -194,9 +201,9 @@ import { ProfileListItem } from 'react-native-lens'
 
 ```
 profile (required)
+isFollowing
 onProfilePress
 onFollowPress
-isFollowing
 ```
 
 # Roadmap
@@ -232,7 +239,7 @@ npm install
 # or use yarn, pnpm, etc..
 ```
 
-3. Open `destDir` and configure the directory of your React Native project.
+3. Open `watcher.js` and configure the directory of your React Native project (`destDir`).
 
 4. Run the develop scripts:
 

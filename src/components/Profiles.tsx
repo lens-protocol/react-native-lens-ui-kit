@@ -11,8 +11,8 @@ import {
 } from './'
 
 export function Profiles({
-  onFollowPress = () => null,
-  onProfilePress = () => null,
+  onFollowPress = profile => console.log({ profile }),
+  onProfilePress = profile => console.log({ profile }),
   profileData = null,
   onEndReachedThreshold = .7,
   infiniteScroll = true,
@@ -50,9 +50,7 @@ export function Profiles({
         pageInfo, items,
       }
     }
-    if (query.name === 'getFollowing') {
-      console.log("query: ", JSON.stringify(query))
-      
+    if (query.name === 'getFollowing') {      
       let { data: { following: { pageInfo, items } }} = await client.query(FollowingDocument, {
         request: {
           address: query.ethereumAddress,

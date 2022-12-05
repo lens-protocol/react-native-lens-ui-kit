@@ -6,20 +6,24 @@ export function Profile({
   ListFooterComponent = null,
   feed = null,
   signedInUser = null,
-  onCollectPress = publication => console.log({ publication }),
-  onCommentPress = publication => console.log({ publication }),
-  onMirrorPress = publication => console.log({ publication }),
-  onLikePress = publication => console.log({ publication }),
   hideLikes = false,
   hideComments = false,
   hideMirrors = false,
   hideCollects = false,
   infiniteScroll = true,
-  onEndReachedThreshold = .7,
-  onFollowingPress = null,
-  onFollowersPress = null,
-  query = null,
-  onProfileImagePress = publication => console.log({ publication }),
+  onEndReachedThreshold = .65,
+  query = {
+    name: "getPublications",
+    profileId: profile.id,
+    publicationTypes: ["POST", "MIRROR"]
+  },
+  onFollowingPress = profile => console.log({ profile }),
+  onFollowersPress = profile => console.log({ profile }),
+  onProfileImagePress = publication => console.log({ publication }), 
+  onCollectPress = publication => console.log({ publication }),
+  onCommentPress = publication => console.log({ publication }),
+  onMirrorPress = publication => console.log({ publication }),
+  onLikePress = publication => console.log({ publication })
 }) {
   const HeaderComponent = ListHeaderComponent ?
   ListHeaderComponent : (
@@ -46,11 +50,7 @@ export function Profile({
       onEndReachedThreshold={onEndReachedThreshold}
       ListHeaderComponent={HeaderComponent}
       onProfileImagePress={onProfileImagePress}
-      query={ query ? query : {
-        name: "getPublications",
-        profileId: profile.id,
-        publicationTypes: ["POST", "MIRROR"]
-      }}
+      query={query}
     />
   )
 }

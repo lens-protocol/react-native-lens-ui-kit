@@ -8,8 +8,8 @@ import { ProfileDocument } from '../graphql/generated'
 export function ProfileHeader({
   profileId = null,
   profile: user = null,
-  onFollowingPress = null,
-  onFollowersPress = null,
+  onFollowingPress = profile => console.log({ profile }),
+  onFollowersPress = profile => console.log({ profile })
 }) {
   const [fetchedProfile, setFetchedProfile] = useState()
   useEffect(() => {
