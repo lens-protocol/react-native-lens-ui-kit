@@ -1,0 +1,19 @@
+query publications($request: PublicationsQueryRequest!) {
+  publications(request: $request) {
+    items {
+      __typename
+      ... on Post {
+        ...PostFields
+      }
+      ... on Comment {
+        ...CommentFields
+      }
+      ... on Mirror {
+        ...MirrorFields
+      }
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfoFields
+    }
+  }
+}

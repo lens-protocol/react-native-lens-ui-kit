@@ -1,24 +1,24 @@
 import {
   View, StyleSheet, Text, Dimensions, Image, Touchable, TouchableHighlight
 } from 'react-native'
-import { CommentIcon, MirrorIcon, CollectIcon, UnfilledHeartIcon, FilledHeartIcon } from './'
-import { returnIPFSPathorURL } from '../utils'
 import { formatDistanceStrict } from 'date-fns'
+import { returnIPFSPathorURL } from '../utils'
+import { CommentIcon, MirrorIcon, CollectIcon, UnfilledHeartIcon, FilledHeartIcon } from './'
 
 const width = Dimensions.get('window').width
 
 export function Publication({
   publication,
   signedInUser = null,
-  onCollectPress = () => {},
-  onCommentPress = () => {},
-  onMirrorPress= () => {},
-  onLikePress = () => {},
+  onCollectPress = publication => console.log(publication),
+  onCommentPress = publication => console.log(publication),
+  onMirrorPress= publication => console.log(publication),
+  onLikePress = publication => console.log(publication),
   hideLikes = false,
   hideComments = false,
   hideMirrors = false,
   hideCollects = false,
-  onProfileImagePress = () => {},
+  onProfileImagePress = publication => console.log(publication)
 }) {
   return (
     <View

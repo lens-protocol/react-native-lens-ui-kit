@@ -57,9 +57,14 @@ onProfileImagePress
 ### Query options for `Feed`
 
 ```graphql
+# explorePublications
 explorePublications(
   request: ExplorePublicationRequest!
 ): ExplorePublicationResult!
+
+# getPublications
+
+# getComments
 ```
 
 > View the entire schema [here](schema.graphql)
@@ -79,7 +84,6 @@ import { Profiles } from 'react-native-lens'
 ```
 onFollowPress = () => null
 onProfilePress = () => null
-isFollowing = null
 profileData = null
 onEndReachedThreshold = .7
 infiniteScroll = true

@@ -1,0 +1,13 @@
+query following($request: FollowingRequest!) {
+  following(request: $request) {
+    items {
+      profile {
+        ...ProfileFields
+      }
+      totalAmountOfTimesFollowing
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfoFields
+    }
+  }
+}

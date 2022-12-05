@@ -1,17 +1,28 @@
-import  { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {
   View, FlatList, Text, StyleSheet, ActivityIndicator
 } from 'react-native'
-import { client, getPublications, explorePublications } from '../api'
+import { client } from '../api'
+import {
+  ProfileMetadata
+} from '../types'
 import { configureIPFSURL } from '../utils'
 import { Publication } from './Publication'
+import {
+  ExplorePublicationsDocument, PublicationsDocument,
+  Publication as PublicationType, PaginatedResultInfo
+} from '../graphql/generated'
+
+import {
+  FeedQuery
+} from '../types'
 
 export function Feed({
   query = {
     name: "explorePublications",
     publicationTypes: ["POST", "COMMENT", "MIRROR"],
     sortCriteria: "LATEST",
-    limit: 25
+    limit: 20
   },
   ListHeaderComponent = null,
   ListFooterComponent = null,
@@ -21,30 +32,49 @@ export function Feed({
   onCommentPress = () => {},
   onMirrorPress= () => {},
   onLikePress = () => {},
+  onProfileImagePress = () => {},
   hideLikes = false,
   hideComments = false,
   hideMirrors = false,
   hideCollects = false,
   infiniteScroll = true,
-  onEndReachedThreshold = .6,
-  onProfileImagePress,
+  onEndReachedThreshold = .65
+}: {
+  query: FeedQuery,
+  ListHeaderComponent: React.FC,
+  ListFooterComponent: React.FC,
+  signedInUser: ProfileMetadata
+  feed: [],
+  onCollectPress: any,
+  onCommentPress: any,
+  onMirrorPress: any,
+  onLikePress: any,
+  hideLikes: any,
+  onProfileImagePress: any,
+  hideComments: boolean,
+  hideMirrors: boolean,
+  hideCollects: boolean,
+  infiniteScroll: boolean,
+  onEndReachedThreshold: number,
 }) {
   const [publications, setPublications] = useState([])
-  const [paginationInfo, setPaginationInfo] = useState()
+  const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
   const [loading, setLoading] = useState(false)
   
   useEffect(() => {
     fetchPublications()
   }, [])
 
-  async function fetchResponse(cursor = null) {
+  async function fetchResponse(cursor: string = null) {
     if (query.name === 'explorePublications') {
       try {
-        let { data: { explorePublications: { pageInfo, items }}} = await client.query(explorePublications, {
-          cursor,
-          publicationTypes: query.publicationTypes,
-          sortCriteria: query.sortCriteria,
-          limit: query.limit
+        let { data: { explorePublications: { pageInfo, items }}} = await client.query(ExplorePublicationsDocument, {
+          request: {
+            cursor,
+            publicationTypes: query.publicationTypes,
+            sortCriteria: query.sortCriteria,
+            limit: query.limit
+          }
         }).toPromise()
         return {
           pageInfo, items
@@ -54,10 +84,12 @@ export function Feed({
       }
     }
     if (query.name === 'getPublications') {
-      let { data: { publications: { pageInfo, items }}} = await client.query(getPublications, {
-        profileId: query.profileId,
-        cursor,
-        publicationTypes: query.publicationTypes
+      let { data: { publications: { pageInfo, items }}} = await client.query(PublicationsDocument, {
+        request: {
+          profileId: query.profileId,
+          cursor,
+          publicationTypes: query.publicationTypes
+        }
       }).toPromise()
       return {
         pageInfo, items
@@ -65,9 +97,11 @@ export function Feed({
     }
     if (query.name === 'getComments') {
       try {
-        let { data: { publications: { pageInfo, items }}} = await client.query(getPublications, {
-          commentsOf: query.publicationId,
-          cursor
+        let { data: { publications: { pageInfo, items }}} = await client.query(PublicationsDocument, {
+          request: {
+            commentsOf: query.publicationId,
+            cursor
+          }
         }).toPromise()
         return {
           pageInfo, items
@@ -83,11 +117,11 @@ export function Feed({
      const { next } = paginationInfo
      fetchPublications(next)
     } catch (err) {
-     console.log('Error fetching next items: ', err)
+     console.log('Error fetching next items:', err)
     }
   }
 
-  async function fetchPublications(cursor = null) {
+  async function fetchPublications(cursor: string = null) {
     try {
       if (
         !feed ||
@@ -157,7 +191,12 @@ export function Feed({
     }
   }
 
-  function renderItem({ item, index }) {
+  function renderItem({
+    item, index
+  } : {
+    item: PublicationType,
+    index: number
+  }) {
     return (
       <Publication
         key={index}
@@ -167,7 +206,7 @@ export function Feed({
         onCommentPress={onCommentPress}
         onMirrorPress={onMirrorPress}
         onLikePress={onLikePress}
-        hideLike={hideLikes}
+        hideLikes={hideLikes}
         hideComments={hideComments}
         hideMirrors={hideMirrors}
         hideCollects={hideCollects}

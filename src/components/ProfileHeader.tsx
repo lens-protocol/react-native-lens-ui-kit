@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import {
   View, TouchableHighlight, StyleSheet, Image, Text
 } from 'react-native'
-import { client, getProfile } from '../api'
+import { client } from '../api'
+import { ProfileDocument } from '../graphql/generated'
 
 export function ProfileHeader({
   profileId = null,
@@ -13,14 +14,16 @@ export function ProfileHeader({
   const [fetchedProfile, setFetchedProfile] = useState()
   useEffect(() => {
     if (!profile) {
-      fetchProfile(profileId)
+      fetchProfile()
     }
   })
   async function fetchProfile() {
     console.log("FETCHING PROFILE")
     try {
-      const { data: { profile: userProfile }} = await client.query(getProfile, {
-        profileId
+      const { data: { profile: userProfile }} = await client.query(ProfileDocument, {
+        request: {
+          profileId
+        }
       }).toPromise()
       setFetchedProfile(userProfile)
     } catch (err) {
@@ -136,10 +139,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 15
   },
-  profileFollowingData: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
   statsData: {
     fontWeight: '600',
     fontSize: 16,
@@ -156,5 +155,5 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     flexDirection: 'row',
     alignItems: 'center'
-  },
+  }
 })

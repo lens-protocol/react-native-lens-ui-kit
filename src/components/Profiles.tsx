@@ -2,7 +2,10 @@ import { useState, useEffect } from 'react'
 import {
   FlatList, ActivityIndicator, StyleSheet
 } from 'react-native'
-import { client, exploreProfiles, getFollowing } from '../api'
+import { client, getFollowing } from '../api'
+import { ExploreProfilesDocument, PaginatedResultInfo } from '../graphql/generated'
+import { ProfilesQuery } from '../types'
+import { Profile } from '../graphql/generated'
 import {
   ProfileListItem
 } from './'
@@ -18,10 +21,17 @@ export function Profiles({
     sortCriteria: 'MOST_FOLLOWERS',
     limit: 25
   }
+} : {
+  onFollowPress: any,
+  onProfilePress: any,
+  profileData: [],
+  onEndReachedThreshold: number,
+  infiniteScroll: boolean,
+  query: ProfilesQuery
 }) {
   const [profiles, setProfiles] = useState([])
   const [loading, setLoading] = useState(true)
-  const [paginationInfo, setPaginationInfo] = useState()
+  const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
 
   useEffect(() => {
     fetchProfiles()
@@ -29,10 +39,12 @@ export function Profiles({
 
   async function fetchResponse(cursor = null) {
     if (query.name === 'exploreProfiles') {
-      let { data: { exploreProfiles: { pageInfo, items } }} = await client.query(exploreProfiles, {
-        sortCriteria: query.sortCriteria,
-        cursor,
-        limit: query.limit
+      let { data: { exploreProfiles: { pageInfo, items } }} = await client.query(ExploreProfilesDocument, {
+        request: {
+          sortCriteria: query.sortCriteria,
+          cursor,
+          limit: query.limit
+        }
       }).toPromise()
       return {
         pageInfo, items,
@@ -116,7 +128,10 @@ export function Profiles({
     }
   }
 
-  function renderItem({ item, index }) {
+  function renderItem({ item, index } : {
+    item: Profile,
+    index: number
+  }) {
     return (
       <ProfileListItem
         key={index}

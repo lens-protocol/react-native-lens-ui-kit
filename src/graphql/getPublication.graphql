@@ -1,0 +1,14 @@
+query publication($request: PublicationQueryRequest!) {
+  publication(request: $request) {
+    __typename
+    ... on Post {
+      ...PostFields
+    }
+    ... on Comment {
+      ...CommentFields
+    }
+    ... on Mirror {
+      ...MirrorFields
+    }
+  }
+}
