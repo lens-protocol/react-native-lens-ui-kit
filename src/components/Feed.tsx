@@ -7,13 +7,12 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { client } from '../api'
-import { ProfileMetadata, FeedQuery } from '../types'
+import { ProfileMetadata, FeedQuery, ExtendedPublication } from '../types'
 import { configureIPFSURL } from '../utils'
 import { Publication } from './Publication'
 import {
   ExplorePublicationsDocument,
   PublicationsDocument,
-  Publication as PublicationType,
   PaginatedResultInfo,
   PublicationTypes,
   PublicationSortCriteria
@@ -40,12 +39,13 @@ export function Feed({
   onCommentPress = publication => console.log({ publication }),
   onMirrorPress = publication => console.log({ publication }),
   onLikePress = publication => console.log({ publication }),
-  onProfileImagePress = publication => console.log({ publication })
+  onProfileImagePress = publication => console.log({ publication }),
+  styles = baseStyles,
 }: {
   query: FeedQuery,
   ListHeaderComponent: React.FC,
   ListFooterComponent: React.FC,
-  signedInUser: ProfileMetadata
+  signedInUser?: ProfileMetadata
   feed: [],
   onCollectPress: any,
   onCommentPress: any,
@@ -58,8 +58,13 @@ export function Feed({
   hideCollects: boolean,
   infiniteScroll: boolean,
   onEndReachedThreshold: number,
+  styles?: {
+    container: {},
+    loadingIndicatorStyle: {},
+    noCommentsMessage: {}
+  }
 }) {
-  const [publications, setPublications] = useState([])
+  const [publications, setPublications] = useState<any[]>([])
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
   const [loading, setLoading] = useState(false)
   
@@ -132,6 +137,9 @@ export function Feed({
         setLoading(true)
         let {
           items, pageInfo
+        } : {
+          items: any[]
+          pageInfo: PaginatedResultInfo
         } = await fetchResponse(cursor)   
         setPaginationInfo(pageInfo)
         items = items.filter(item => {
@@ -197,7 +205,7 @@ export function Feed({
   function renderItem({
     item, index
   } : {
-    item: PublicationType,
+    item: ExtendedPublication,
     index: number
   }) {
     return (
@@ -246,7 +254,7 @@ export function Feed({
   )
 }
 
-const styles = StyleSheet.create({
+let baseStyles = StyleSheet.create({
   container: {
     flex: 1
   },

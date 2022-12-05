@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import { formatDistanceStrict } from 'date-fns'
 import { returnIPFSPathorURL } from '../utils'
+import { ExtendedPublication, ExtendedProfile } from '../types'
 import { CommentIcon, MirrorIcon, CollectIcon, UnfilledHeartIcon, FilledHeartIcon } from './'
 
 const width = Dimensions.get('window').width
@@ -23,7 +24,21 @@ export function Publication({
   onCommentPress = publication => console.log({ publication }),
   onMirrorPress= publication => console.log({ publication }),
   onLikePress = publication => console.log({ publication }),
-  onProfileImagePress = publication => console.log({ publication })
+  onProfileImagePress = publication => console.log({ publication }),
+  styles = baseStyles
+}: {
+  publication: any,
+  signedInUser: any,
+  hideLikes: boolean,
+  hideComments: boolean,
+  hideMirrors: boolean,
+  hideCollects: boolean,
+  onCollectPress: any,
+  onCommentPress: any,
+  onMirrorPress: any,
+  onLikePress: any,
+  onProfileImagePress: any,
+  styles?: any
 }) {
   return (
     <View
@@ -155,7 +170,7 @@ function reduceDate(date) {
   return `${dateArr[0]}${dateInfo}`
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   publicationWrapper: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0, 0, 0, .05)',

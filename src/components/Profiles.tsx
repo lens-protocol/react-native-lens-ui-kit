@@ -3,9 +3,8 @@ import {
   FlatList, ActivityIndicator, StyleSheet
 } from 'react-native'
 import { client } from '../api'
-import { ExploreProfilesDocument, PaginatedResultInfo, FollowingDocument } from '../graphql/generated'
 import { ProfilesQuery } from '../types'
-import { Profile, ProfileSortCriteria } from '../graphql/generated'
+import { Profile, ExploreProfilesDocument, FollowingDocument, ProfileSortCriteria, PaginatedResultInfo } from '../graphql/generated'
 import {
   ProfileListItem
 } from './'
@@ -51,19 +50,22 @@ export function Profiles({
       }
     }
     if (query.name === 'getFollowing') {      
-      let { data: { following: { pageInfo, items } }} = await client.query(FollowingDocument, {
+      let { data: { following }}  = await client.query(FollowingDocument, {
         request: {
           address: query.ethereumAddress,
           cursor,
           limit: query.limit || 25
         }
       }).toPromise()
+      let { pageInfo, items } : {
+        pageInfo: PaginatedResultInfo, items: any
+      } = following
       items = items.map(item => {
         item.profile.isFollowing = true
         return item.profile
       })
       return {
-        pageInfo, items,
+        pageInfo, items
       }
     }
   }

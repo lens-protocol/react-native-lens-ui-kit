@@ -4,14 +4,36 @@ import {
 } from 'react-native'
 import { client } from '../api'
 import { ProfileDocument } from '../graphql/generated'
+import { ExtendedProfile } from '../types'
 
 export function ProfileHeader({
   profileId = null,
   profile: user = null,
   onFollowingPress = profile => console.log({ profile }),
-  onFollowersPress = profile => console.log({ profile })
+  onFollowersPress = profile => console.log({ profile }),
+  styles = baseStyles,
+}: {
+  profileId?: number,
+  profile?: ExtendedProfile,
+  onFollowingPress: any,
+  onFollowersPress: any,
+  styles?: {
+    blankHeader: {},
+    headerImage: {},
+    avatar: {},
+    userDetails: {},
+    name: {},
+    handle: {},
+    bio: {},
+    profileStats: {},
+    statsData: {},
+    statsHeader: {},
+    profileFollowingData: {},
+    profileFollowerData: {}
+  }
 }) {
-  const [fetchedProfile, setFetchedProfile] = useState()
+
+  const [fetchedProfile, setFetchedProfile] = useState<any | null>(null)
   useEffect(() => {
     if (!profile) {
       fetchProfile()
@@ -27,28 +49,27 @@ export function ProfileHeader({
       }).toPromise()
       setFetchedProfile(userProfile)
     } catch (err) {
-      console.log('error fetching profile: ', err)
+        console.log('error fetching profile: ', err)
+      }
     }
-  }
-  if (!user && !fetchedProfile) return null
-  const profile = user || fetchedProfile
-
-  let { picture, coverPicture } = profile
-  if (picture && picture.original) {
-    if (picture.original.url.startsWith('ipfs://')) {
-      let result = picture.original.url.substring(7, picture.original.url.length)
-      profile.picture.original.url = `https://lens.infura-ipfs.io/ipfs/${result}`
+    if (!user && !fetchedProfile) return null
+    const profile = user || fetchedProfile
+    let { picture, coverPicture } = profile
+    if (picture && picture.original) {
+      if (picture.original.url.startsWith('ipfs://')) {
+        let result = picture.original.url.substring(7, picture.original.url.length)
+        profile.picture.original.url = `https://lens.infura-ipfs.io/ipfs/${result}`
+      }
+    } else {
+      profile.missingAvatar = true
     }
-  } else {
-    profile.missingAvatar = true
-  }
-  if (coverPicture && coverPicture.original.url) {
-    if (coverPicture.original.url.startsWith('ipfs://')) {
-      let hash = coverPicture.original.url.substring(7, coverPicture.original.url.length)
-      profile.coverPicture.original.url = `https://lens.infura-ipfs.io/ipfs/${hash}`
-    }
-  } else {
-    profile.missingCover = true
+    if (coverPicture && coverPicture.original.url) {
+      if (coverPicture.original.url.startsWith('ipfs://')) {
+        let hash = coverPicture.original.url.substring(7, coverPicture.original.url.length)
+        profile.coverPicture.original.url = `https://lens.infura-ipfs.io/ipfs/${hash}`
+      }
+    } else {
+      profile.missingCover = true
   }
 
   return (
@@ -104,7 +125,7 @@ export function ProfileHeader({
   )
 }
 
-const styles = StyleSheet.create({
+let baseStyles = StyleSheet.create({
   blankHeader: {
     height: 120,
     backgroundColor: 'black'

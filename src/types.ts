@@ -1,4 +1,12 @@
-import { MediaOutput, PublicationTypes, PublicationSortCriteria, ProfileSortCriteria } from './graphql/generated'
+import {
+  MediaOutput,
+  PublicationTypes,
+  PublicationSortCriteria,
+  ProfileSortCriteria,
+  Profile,
+  MediaSet,
+  Publication
+} from './graphql/generated'
 
 export type FeedQuery = {
   name: string;
@@ -111,4 +119,15 @@ export interface ProfileMetadata extends GenericMetadata {
   bio?: string;
   cover_picture?: string;
   attributes: AttributeData[];
+}
+
+export interface ExtendedProfile extends Profile {
+  picture: MediaSet;
+  coverPicture: MediaSet;
+  missingAvatar: boolean;
+  missingCover: boolean;
+}
+
+export type ExtendedPublication = Publication & {
+  profileSet: boolean
 }
