@@ -1,5 +1,10 @@
 import {
-  View, StyleSheet, Text, Dimensions, Image, Touchable, TouchableHighlight
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  Image,
+  TouchableHighlight
 } from 'react-native'
 import { formatDistanceStrict } from 'date-fns'
 import { returnIPFSPathorURL } from '../utils'

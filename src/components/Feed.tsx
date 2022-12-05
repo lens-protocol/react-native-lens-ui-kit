@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import {
-  View, FlatList, Text, StyleSheet, ActivityIndicator
+  View,
+  FlatList,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
 } from 'react-native'
 import { client } from '../api'
 import { ProfileMetadata, FeedQuery } from '../types'

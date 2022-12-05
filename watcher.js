@@ -1,7 +1,7 @@
 import fs from 'fs'
 
 const srcDir = `./dist`;
-const destDir = `../ReactLensExample/node_modules/react-native-lens/src`;
+const destDir = `../ReactLensExample/node_modules/react-native-lens/dist`;
 
 fs.watch("./src/", {recursive: true}, () => {
   console.log('copying...')
