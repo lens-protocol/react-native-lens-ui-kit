@@ -56,16 +56,14 @@ onProfileImagePress = profile => console.log({ profile })
 
 ### Query options for `Feed`
 
-```graphql
-# explorePublications (default)
+__explorePublications (default)__
 [explorePublications](./src/graphql/explorePublications.graphql)
 
-# getPublications
+__getPublications__
 [getPublications](./src/graphql/getPublications.graphql)
 
-# getComments
+__getComments__
 [getComments](./src/graphql/getComments.graphql)
-```
 
 > View the entire schema [here](schema.graphql)
 
