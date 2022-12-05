@@ -5,7 +5,7 @@ import {
 import { client } from '../api'
 import { ExploreProfilesDocument, PaginatedResultInfo, FollowingDocument } from '../graphql/generated'
 import { ProfilesQuery } from '../types'
-import { Profile } from '../graphql/generated'
+import { Profile, ProfileSortCriteria } from '../graphql/generated'
 import {
   ProfileListItem
 } from './'
@@ -18,7 +18,7 @@ export function Profiles({
   infiniteScroll = true,
   query = {
     name: 'exploreProfiles',
-    sortCriteria: 'MOST_FOLLOWERS',
+    sortCriteria: ProfileSortCriteria.MostFollowers,
     limit: 25
   }
 } : {

@@ -10,14 +10,16 @@ import {
   ExplorePublicationsDocument,
   PublicationsDocument,
   Publication as PublicationType,
-  PaginatedResultInfo
+  PaginatedResultInfo,
+  PublicationTypes,
+  PublicationSortCriteria
 } from '../graphql/generated'
 
 export function Feed({
   query = {
     name: "explorePublications",
-    publicationTypes: ["POST", "COMMENT", "MIRROR"],
-    sortCriteria: "LATEST",
+    publicationTypes: [PublicationTypes.Post, PublicationTypes.Comment, PublicationTypes.Mirror],
+    sortCriteria: PublicationSortCriteria.Latest,
     limit: 20
   },
   ListHeaderComponent = null,

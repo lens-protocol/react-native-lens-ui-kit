@@ -1,10 +1,9 @@
-import React from 'react'
-import { MediaOutput } from './graphql/generated'
+import { MediaOutput, PublicationTypes, PublicationSortCriteria, ProfileSortCriteria } from './graphql/generated'
 
 export type FeedQuery = {
   name: string;
-  publicationTypes?: string[],
-  sortCriteria?: string,
+  publicationTypes?: PublicationTypes[],
+  sortCriteria?: PublicationSortCriteria,
   limit?: number;
   profileId?: number;
   publicationId?: number;
@@ -12,7 +11,7 @@ export type FeedQuery = {
 
 export type ProfilesQuery = {
   name: string;
-  sortCriteria: string;
+  sortCriteria: ProfileSortCriteria;
   limit?: number;
   ethereumAddress?: string;
 }

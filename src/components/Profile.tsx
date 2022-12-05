@@ -1,4 +1,5 @@
 import { Feed, ProfileHeader } from './'
+import { PublicationTypes } from '../graphql/generated'
 
 export function Profile({
   profile,
@@ -15,7 +16,7 @@ export function Profile({
   query = {
     name: "getPublications",
     profileId: profile.id,
-    publicationTypes: ["POST", "MIRROR"]
+    publicationTypes: [PublicationTypes.Post, PublicationTypes.Mirror]
   },
   onFollowingPress = profile => console.log({ profile }),
   onFollowersPress = profile => console.log({ profile }),
@@ -23,7 +24,7 @@ export function Profile({
   onCollectPress = publication => console.log({ publication }),
   onCommentPress = publication => console.log({ publication }),
   onMirrorPress = publication => console.log({ publication }),
-  onLikePress = publication => console.log({ publication })
+  onLikePress = publication => console.log({ publication }),
 }) {
   const HeaderComponent = ListHeaderComponent ?
   ListHeaderComponent : (
