@@ -81,7 +81,7 @@ export function ProfileHeader({
         <Text style={styles.bio}>{profile.bio}</Text>
         <View style={styles.profileStats}>
           <TouchableHighlight
-            onPress={onFollowingPress}
+            onPress={() => onFollowingPress(profile)}
             underlayColor="transparent"
           >
             <View style={styles.profileFollowingData}>
@@ -90,7 +90,7 @@ export function ProfileHeader({
             </View>
           </TouchableHighlight>
           <TouchableHighlight
-            onPress={onFollowersPress}
+            onPress={() => onFollowersPress(profile)}
             underlayColor="transparent"
           >
             <View style={styles.profileFollowerData}>

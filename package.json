@@ -1,15 +1,17 @@
 {
   "name": "react-native-lens",
-  "version": "0.0.6",
-  "description": "",
-  "main": "src/index.js",
+  "version": "0.0.7",
+  "description": "React Native UI Kit for Lens Protocol",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copy": "cp -r ./src ../ReactLensExample/node_modules/react-native-lens/",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen",
+    "dev": "concurrently npm:watch:*",
+    "watch:ts": "npx tsc --watch",
+    "watch:copy": "node watcher.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["Lens Protocol", "web3 social", "React Native"],
+  "author": "Nader Dabit",
   "type": "module",
   "dependencies": {
     "@graphql-codegen/fragment-matcher": "^3.3.1",
@@ -27,6 +29,7 @@
     "@graphql-codegen/cli": "^2.15.0",
     "@graphql-codegen/typed-document-node": "^2.3.8",
     "@graphql-codegen/typescript": "^2.8.3",
-    "@graphql-codegen/typescript-operations": "^2.5.8"
+    "@graphql-codegen/typescript-operations": "^2.5.8",
+    "concurrently": "^7.6.0"
   }
 }

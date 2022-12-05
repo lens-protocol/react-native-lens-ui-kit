@@ -35,36 +35,36 @@ query = {
   name: "explorePublications",
   publicationTypes: ["POST", "COMMENT", "MIRROR"],
   sortCriteria: "LATEST",
-  limit: 25
+  limit: 20
 }
 ListHeaderComponent = null
 ListFooterComponent = null
 feed = null
 signedInUser = null
-onCollectPress = () => {}
-onCommentPress = () => {}
-onMirrorPress= () => {}
-onLikePress = () => {}
 hideLikes = false
 hideComments = false
 hideMirrors = false
 hideCollects = false
 infiniteScroll = true
-onEndReachedThreshold = .6
-onProfileImagePress
+onEndReachedThreshold = .65
+onCollectPress = publication => console.log({ publication })
+onCommentPress = publication => console.log({ publication })
+onMirrorPress = publication => console.log({ publication })
+onLikePress = publication => console.log({ publication })
+onProfileImagePress = profile => console.log({ profile })
 ```
 
 ### Query options for `Feed`
 
 ```graphql
-# explorePublications
-explorePublications(
-  request: ExplorePublicationRequest!
-): ExplorePublicationResult!
+# explorePublications (default)
+[explorePublications](./src/graphql/explorePublications.graphql)
 
 # getPublications
+[getPublications](./src/graphql/getPublications.graphql)
 
 # getComments
+[getComments](./src/graphql/getComments.graphql)
 ```
 
 > View the entire schema [here](schema.graphql)
@@ -167,17 +167,17 @@ import { Publication } from 'react-native-lens'
 ### Default props
 
 ```
-publication (required)
+publication = undefined (required)
 signedInUser = null
-onCollectPress = () => {}
-onCommentPress = () => {}
-onMirrorPress= () => {}
-onLikePress = () => {}
+onCollectPress = publication => console.log(publication),
+onCommentPress = publication => console.log(publication),
+onMirrorPress= publication => console.log(publication),
+onLikePress = publication => console.log(publication),
+onProfileImagePress = publication => console.log(publication),
 hideLikes = false
 hideComments = false
 hideMirrors = false
 hideCollects = false
-onProfileImagePress = () => {}
 ```
 
 ## ProfileListItem
@@ -215,3 +215,29 @@ Currently this project is in Alpha.
 
 - Theming
 - More rich content types (video, gif, audio)
+
+### Contribute
+
+To run and develop with the project locally, do the following:
+
+1. Clone the repo:
+
+```sh
+git clone git@github.com:lens-protocol/react-native-lens.git
+```
+
+2. Install the dependencies
+
+```sh
+npm install 
+
+# or use yarn, pnpm, etc..
+```
+
+3. Open `destDir` and configure the directory of your React Native project.
+
+4. Run the develop scripts:
+
+```sh
+npm run dev
+```

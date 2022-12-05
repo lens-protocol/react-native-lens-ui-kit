@@ -62,8 +62,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
 import { FlatList, ActivityIndicator, StyleSheet } from 'react-native';
-import { client, getFollowing } from '../api';
-import { ExploreProfilesDocument } from '../graphql/generated';
+import { client } from '../api';
+import { ExploreProfilesDocument, FollowingDocument } from '../graphql/generated';
 import { ProfileListItem } from './';
 export function Profiles(_a) {
     var _b = _a.onFollowPress, onFollowPress = _b === void 0 ? function () { return null; } : _b, _c = _a.onProfilePress, onProfilePress = _c === void 0 ? function () { return null; } : _c, _d = _a.profileData, profileData = _d === void 0 ? null : _d, _e = _a.onEndReachedThreshold, onEndReachedThreshold = _e === void 0 ? .7 : _e, _f = _a.infiniteScroll, infiniteScroll = _f === void 0 ? true : _f, _g = _a.query, query = _g === void 0 ? {
@@ -101,10 +101,12 @@ export function Profiles(_a) {
                     case 2:
                         if (!(query.name === 'getFollowing')) return [3, 4];
                         console.log("query: ", JSON.stringify(query));
-                        return [4, client.query(getFollowing, {
-                                address: query.ethereumAddress,
-                                cursor: cursor,
-                                limit: query.limit || 25
+                        return [4, client.query(FollowingDocument, {
+                                request: {
+                                    address: query.ethereumAddress,
+                                    cursor: cursor,
+                                    limit: query.limit || 25
+                                }
                             }).toPromise()];
                     case 3:
                         _b = (_c.sent()).data.following, pageInfo = _b.pageInfo, items = _b.items;

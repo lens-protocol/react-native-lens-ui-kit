@@ -6,10 +6,10 @@ export function Profile({
   ListFooterComponent = null,
   feed = null,
   signedInUser = null,
-  onCollectPress = () => {},
-  onCommentPress = () => {},
-  onMirrorPress= () => {},
-  onLikePress = () => {},
+  onCollectPress = publication => console.log({ publication }),
+  onCommentPress = publication => console.log({ publication }),
+  onMirrorPress = publication => console.log({ publication }),
+  onLikePress = publication => console.log({ publication }),
   hideLikes = false,
   hideComments = false,
   hideMirrors = false,
@@ -19,7 +19,7 @@ export function Profile({
   onFollowingPress = null,
   onFollowersPress = null,
   query = null,
-  onProfileImagePress,
+  onProfileImagePress = publication => console.log({ publication }),
 }) {
   const HeaderComponent = ListHeaderComponent ?
   ListHeaderComponent : (

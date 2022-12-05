@@ -10,15 +10,15 @@ const width = Dimensions.get('window').width
 export function Publication({
   publication,
   signedInUser = null,
-  onCollectPress = publication => console.log(publication),
-  onCommentPress = publication => console.log(publication),
-  onMirrorPress= publication => console.log(publication),
-  onLikePress = publication => console.log(publication),
+  onCollectPress = publication => console.log({ publication }),
+  onCommentPress = publication => console.log({ publication }),
+  onMirrorPress= publication => console.log({ publication }),
+  onLikePress = publication => console.log({ publication }),
+  onProfileImagePress = publication => console.log({ publication }),
   hideLikes = false,
   hideComments = false,
   hideMirrors = false,
-  hideCollects = false,
-  onProfileImagePress = publication => console.log(publication)
+  hideCollects = false
 }) {
   return (
     <View

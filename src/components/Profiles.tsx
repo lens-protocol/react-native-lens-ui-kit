@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import {
   FlatList, ActivityIndicator, StyleSheet
 } from 'react-native'
-import { client, getFollowing } from '../api'
-import { ExploreProfilesDocument, PaginatedResultInfo } from '../graphql/generated'
+import { client } from '../api'
+import { ExploreProfilesDocument, PaginatedResultInfo, FollowingDocument } from '../graphql/generated'
 import { ProfilesQuery } from '../types'
 import { Profile } from '../graphql/generated'
 import {
@@ -52,10 +52,13 @@ export function Profiles({
     }
     if (query.name === 'getFollowing') {
       console.log("query: ", JSON.stringify(query))
-      let { data: { following: { pageInfo, items } }} = await client.query(getFollowing, {
-        address: query.ethereumAddress,
-        cursor,
-        limit: query.limit || 25
+      
+      let { data: { following: { pageInfo, items } }} = await client.query(FollowingDocument, {
+        request: {
+          address: query.ethereumAddress,
+          cursor,
+          limit: query.limit || 25
+        }
       }).toPromise()
       items = items.map(item => {
         item.profile.isFollowing = true

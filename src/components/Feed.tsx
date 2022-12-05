@@ -3,19 +3,15 @@ import {
   View, FlatList, Text, StyleSheet, ActivityIndicator
 } from 'react-native'
 import { client } from '../api'
-import {
-  ProfileMetadata
-} from '../types'
+import { ProfileMetadata, FeedQuery } from '../types'
 import { configureIPFSURL } from '../utils'
 import { Publication } from './Publication'
 import {
-  ExplorePublicationsDocument, PublicationsDocument,
-  Publication as PublicationType, PaginatedResultInfo
+  ExplorePublicationsDocument,
+  PublicationsDocument,
+  Publication as PublicationType,
+  PaginatedResultInfo
 } from '../graphql/generated'
-
-import {
-  FeedQuery
-} from '../types'
 
 export function Feed({
   query = {
@@ -28,17 +24,17 @@ export function Feed({
   ListFooterComponent = null,
   feed = null,
   signedInUser = null,
-  onCollectPress = () => {},
-  onCommentPress = () => {},
-  onMirrorPress= () => {},
-  onLikePress = () => {},
-  onProfileImagePress = () => {},
   hideLikes = false,
   hideComments = false,
   hideMirrors = false,
   hideCollects = false,
   infiniteScroll = true,
-  onEndReachedThreshold = .65
+  onEndReachedThreshold = .65,
+  onCollectPress = publication => console.log({ publication }),
+  onCommentPress = publication => console.log({ publication }),
+  onMirrorPress = publication => console.log({ publication }),
+  onLikePress = publication => console.log({ publication }),
+  onProfileImagePress = publication => console.log({ publication })
 }: {
   query: FeedQuery,
   ListHeaderComponent: React.FC,
@@ -167,6 +163,7 @@ export function Feed({
           item.profileSet = true
           return item          
         })
+
         if (cursor) {
           let newData = [...publications, ...items]
           if (query.sortCriteria === "LATEST") {
