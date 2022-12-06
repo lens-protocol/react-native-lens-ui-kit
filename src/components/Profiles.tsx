@@ -49,7 +49,9 @@ export function Profiles({
         pageInfo, items,
       }
     }
-    if (query.name === 'getFollowing') {      
+    if (query.name === 'getFollowing') {     
+      // TODO
+      // Set following status if there is a signed in user 
       let { data: { following }}  = await client.query(FollowingDocument, {
         request: {
           address: query.ethereumAddress,
@@ -61,7 +63,6 @@ export function Profiles({
         pageInfo: PaginatedResultInfo, items: any
       } = following
       items = items.map(item => {
-        item.profile.isFollowing = true
         return item.profile
       })
       return {

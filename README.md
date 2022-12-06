@@ -13,7 +13,7 @@ First, install and configure [React Native SVG](https://github.com/software-mans
 ### Installation
 
 ```sh
-npm install react-native-lens
+@lens-protocol/react-native-lens-ui-kit
 ```
 
 # Components 🍃
@@ -23,7 +23,7 @@ npm install react-native-lens
 A feed of posts from Lens.
 
 ```javascript
-import { Feed } from 'react-native-lens'
+import { Feed } from 'react-native-lens-ui-kit'
 
 <Feed />
 ```
@@ -90,7 +90,7 @@ __getComments__
 A list of profiles
 
 ```javascript
-import { Profiles } from 'react-native-lens'
+import { Profiles } from 'react-native-lens-ui-kit'
 
 <Profiles />
 ```
@@ -126,7 +126,7 @@ __getFollowing__
 Renders an individual profile
 
 ```javascript
-import { Profile } from 'react-native-lens'
+import { Profile } from 'react-native-lens-ui-kit'
 
 <Profile
   profile={profile}
@@ -169,7 +169,7 @@ feedStyles = [FeedStyles](https://github.com/lens-protocol/react-native-lens-ui-
 Renders a profile header component.
 
 ```javascript
-import { ProfileHeader } from 'react-native-lens'
+import { ProfileHeader } from 'react-native-lens-ui-kit'
 
 <ProfileHeader
   profile={profile}
@@ -194,7 +194,7 @@ onFollowersPress = profile => console.log({ profile })
 Renders an individual publication.
 
 ```javascript
-import { Publication } from 'react-native-lens'
+import { Publication } from 'react-native-lens-ui-kit'
 
 <Publication
   publication={publication}
@@ -227,7 +227,7 @@ onProfileImagePress = publication => console.log({ publication })
 Renders a list item for a profile overview.
 
 ```javascript
-import { ProfileListItem } from 'react-native-lens'
+import { ProfileListItem } from 'react-native-lens-ui-kit'
 
 <ProfileListItem
   profile={profile}
@@ -271,7 +271,7 @@ To run and develop with the project locally, do the following:
 1. Clone the repo:
 
 ```sh
-git clone git@github.com:lens-protocol/react-native-lens.git
+git clone git@github.com:lens-protocol/react-native-lens-ui-kit.git
 ```
 
 2. Install the dependencies

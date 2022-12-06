@@ -1,6 +1,6 @@
 {
-  "name": "react-native-lens",
-  "version": "0.0.9",
+  "name": "@lens-protocol/react-native-lens-ui-kit",
+  "version": "0.0.1",
   "description": "React Native UI Kit for Lens Protocol",
   "main": "dist/index.js",
   "scripts": {
