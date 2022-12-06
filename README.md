@@ -4,6 +4,8 @@
 
 A React Native UI kit for Lens Protocol. Get started building with as little as 2 lines of code. Mix and match components to supercharge your mobile development workflow.
 
+Example app codebase located [here](https://github.com/dabit3/dabit3-react-native-lens-example)
+
 ## Getting started 🚀
 
 ### Prerequisites
