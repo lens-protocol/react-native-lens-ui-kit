@@ -25,7 +25,7 @@ npm install @lens-protocol/react-native-lens-ui-kit
 A feed of posts from Lens.
 
 ```javascript
-import { Feed } from 'react-native-lens-ui-kit'
+import { Feed } from '@lens-protocol/react-native-lens-ui-kit'
 
 <Feed />
 ```
@@ -92,7 +92,7 @@ __getComments__
 A list of profiles
 
 ```javascript
-import { Profiles } from 'react-native-lens-ui-kit'
+import { Profiles } from '@lens-protocol/react-native-lens-ui-kit'
 
 <Profiles />
 ```
@@ -128,7 +128,7 @@ __getFollowing__
 Renders an individual profile
 
 ```javascript
-import { Profile } from 'react-native-lens-ui-kit'
+import { Profile } from '@lens-protocol/react-native-lens-ui-kit'
 
 <Profile
   profile={profile}
@@ -171,7 +171,7 @@ feedStyles = [FeedStyles](https://github.com/lens-protocol/react-native-lens-ui-
 Renders a profile header component.
 
 ```javascript
-import { ProfileHeader } from 'react-native-lens-ui-kit'
+import { ProfileHeader } from '@lens-protocol/react-native-lens-ui-kit'
 
 <ProfileHeader
   profile={profile}
@@ -196,7 +196,7 @@ onFollowersPress = profile => console.log({ profile })
 Renders an individual publication.
 
 ```javascript
-import { Publication } from 'react-native-lens-ui-kit'
+import { Publication } from '@lens-protocol/react-native-lens-ui-kit'
 
 <Publication
   publication={publication}
@@ -229,7 +229,7 @@ onProfileImagePress = publication => console.log({ publication })
 Renders a list item for a profile overview.
 
 ```javascript
-import { ProfileListItem } from 'react-native-lens-ui-kit'
+import { ProfileListItem } from '@lens-protocol/react-native-lens-ui-kit'
 
 <ProfileListItem
   profile={profile}
