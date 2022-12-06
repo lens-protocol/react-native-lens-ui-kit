@@ -83,7 +83,7 @@ __getPublications__
 [getPublications](./src/graphql/getPublications.graphql)
 
 __getComments__    
-[getComments](./src/graphql/getComments.graphql)
+[getComments](./src/graphql/getPublications.graphql)
 
 ## Profiles
 
