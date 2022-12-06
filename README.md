@@ -2,7 +2,7 @@
 
 ![React Native Lens](header.jpg)
 
-A React Native UI kit for Lens Protocol.
+A React Native UI kit for Lens Protocol. Get started building with as little as 2 lines of code. Mix and match components to supercharge your mobile development lifecycle.
 
 ## Getting started 🚀
 
