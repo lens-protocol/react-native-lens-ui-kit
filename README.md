@@ -252,6 +252,7 @@ Currently this project is in Alpha.
 
 ### Beta Roadmap
 
+- Configure development or production endpoint (Mainnet or Mumbai)
 - Custom styling / layout (temporary implementation in place, want to make it more granular)
 - More query options (easy contribution, help wanted)
 - Authentication
