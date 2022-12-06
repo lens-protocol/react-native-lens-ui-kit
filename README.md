@@ -2,7 +2,7 @@
 
 ![React Native Lens](https://arweave.net/eDVHKj0nvAhYzUUXCU9vqVDY1N_PES8uik53xjQeLWo)
 
-A React Native UI kit for Lens Protocol. Get started building with as little as 2 lines of code. Mix and match components to supercharge your mobile development workflow.
+A React Native UI kit for [Lens Protocol](https://twitter.com/lensprotocol). Get started building with as little as 2 lines of code. Mix and match components to supercharge your mobile development workflow.
 
 Example app codebase located [here](https://github.com/dabit3/dabit3-react-native-lens-example)
 
