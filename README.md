@@ -256,6 +256,7 @@ Currently this project is in Alpha.
 - More query options (easy contribution, help wanted)
 - Authentication
 - Migrate the example application to Expo (easy contribution, help wanted)
+- Custom components
 
 ### V1 Roadmap
 
