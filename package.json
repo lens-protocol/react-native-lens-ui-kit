@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen --config ./src/codegen.yaml",
     "dev": "concurrently npm:watch:*",
     "watch:ts": "npx tsc --watch",
     "watch:copy": "node watcher.js"

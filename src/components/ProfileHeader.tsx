@@ -19,7 +19,6 @@ export function ProfileHeader({
   onFollowersPress: any,
   styles?: ProfileHeaderStyles
 }) {
-
   const [fetchedProfile, setFetchedProfile] = useState<any | null>(null)
   useEffect(() => {
     if (!profile) {
@@ -60,7 +59,7 @@ export function ProfileHeader({
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       {
         profile.missingCover ? (
           <View
@@ -112,7 +111,8 @@ export function ProfileHeader({
   )
 }
 
-let baseStyles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
+  container: {},
   blankHeader: {
     height: 120,
     backgroundColor: 'black'

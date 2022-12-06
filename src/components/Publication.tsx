@@ -20,6 +20,7 @@ export function Publication({
   hideComments = false,
   hideMirrors = false,
   hideCollects = false,
+  iconColor,
   onCollectPress = publication => console.log({ publication }),
   onCommentPress = publication => console.log({ publication }),
   onMirrorPress= publication => console.log({ publication }),
@@ -33,6 +34,7 @@ export function Publication({
   hideComments: boolean,
   hideMirrors: boolean,
   hideCollects: boolean,
+  iconColor: string,
   onCollectPress: any,
   onCommentPress: any,
   onMirrorPress: any,
@@ -111,6 +113,7 @@ export function Publication({
                 <View style={styles.statsDetailContainer}>
                   <CommentIcon
                     onPress={() => onCommentPress(publication)}
+                    color={iconColor}
                   />
                   <Text style={styles.statsDetailText}>{publication.stats.totalAmountOfComments}</Text>
                 </View>
@@ -121,6 +124,7 @@ export function Publication({
                 <View style={styles.statsDetailContainer}>
                   <MirrorIcon
                     onPress={() => onMirrorPress(publication)}
+                    color={iconColor}
                   />
                   <Text style={styles.statsDetailText}>{publication.stats.totalAmountOfMirrors}</Text>
                 </View>
@@ -131,6 +135,7 @@ export function Publication({
                 <View style={styles.statsDetailContainer}>
                   <CollectIcon
                     onPress={() => onCollectPress(publication)}
+                    color={iconColor}
                   />
                   <Text style={styles.statsDetailText}>{publication.stats.totalAmountOfCollects}</Text>
                 </View>
@@ -141,6 +146,7 @@ export function Publication({
                 <View style={styles.statsDetailContainer}>
                   <UnfilledHeartIcon
                     onPress={() => onLikePress(publication)}
+                    color={iconColor}
                   />
                   <Text style={styles.statsDetailText}>{publication.stats.totalUpvotes}</Text>
                 </View>
@@ -151,6 +157,7 @@ export function Publication({
                 <View style={styles.statsDetailContainer}>
                   <FilledHeartIcon
                     onPress={() => onLikePress(publication)}
+                    color={iconColor}
                   />
                   <Text style={styles.statsDetailText}>{publication.stats.totalUpvotes}</Text>
                 </View>

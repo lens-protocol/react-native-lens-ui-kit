@@ -12,6 +12,7 @@ export function Profile({
   hideComments = false,
   hideMirrors = false,
   hideCollects = false,
+  iconColor,
   infiniteScroll = true,
   onEndReachedThreshold = .65,
   headerStyles,
@@ -39,6 +40,7 @@ export function Profile({
   hideComments: boolean,
   hideMirrors: boolean,
   hideCollects: boolean,
+  iconColor?: string,
   infiniteScroll: boolean,
   onEndReachedThreshold: number,
   headerStyles: ProfileHeaderStyles,
@@ -52,7 +54,6 @@ export function Profile({
   onCommentPress: any,
   onMirrorPress: any,
   onLikePress: any
-
 }) {
   const HeaderComponent = ListHeaderComponent ?
   ListHeaderComponent : (
@@ -83,6 +84,7 @@ export function Profile({
       ListHeaderComponent={HeaderComponent}
       onProfileImagePress={onProfileImagePress}
       query={query}
+      iconColor={iconColor}
     />
   )
 }

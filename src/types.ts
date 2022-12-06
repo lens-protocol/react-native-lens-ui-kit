@@ -155,6 +155,7 @@ export type PublicationStyles = {
 }
 
 export type ProfileHeaderStyles = {
+  container: {},
   blankHeader: {},
   headerImage: {},
   avatar: {},

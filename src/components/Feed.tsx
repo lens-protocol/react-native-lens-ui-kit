@@ -33,6 +33,7 @@ export function Feed({
   hideComments = false,
   hideMirrors = false,
   hideCollects = false,
+  iconColor,
   infiniteScroll = true,
   onEndReachedThreshold = .65,
   onCollectPress = publication => console.log({ publication }),
@@ -57,6 +58,7 @@ export function Feed({
   hideComments: boolean,
   hideMirrors: boolean,
   hideCollects: boolean,
+  iconColor?: string,
   infiniteScroll: boolean,
   onEndReachedThreshold: number,
   styles?: FeedStyles,
@@ -221,6 +223,7 @@ export function Feed({
         hideMirrors={hideMirrors}
         hideCollects={hideCollects}
         onProfileImagePress={onProfileImagePress}
+        iconColor={iconColor}
       />
     )
   }
