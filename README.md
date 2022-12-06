@@ -13,7 +13,7 @@ First, install and configure [React Native SVG](https://github.com/software-mans
 ### Installation
 
 ```sh
-@lens-protocol/react-native-lens-ui-kit
+npm install @lens-protocol/react-native-lens-ui-kit
 ```
 
 # Components 🍃
