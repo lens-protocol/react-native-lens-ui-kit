@@ -1,6 +1,7 @@
 import {
   TouchableHighlight, View, Image, Text, StyleSheet
 } from 'react-native'
+import { ProfileListItemStyles } from '../types'
 
 export function ProfileListItem({
   profile,
@@ -13,20 +14,7 @@ export function ProfileListItem({
   onProfilePress: any,
   onFollowPress: any,
   isFollowing: boolean,
-  styles?: {
-    container: {},
-    avatarContainer: {},
-    avatar: {},
-    profileName: {},
-    profileHandle: {},
-    profileBio: {},
-    infoContainer: {},
-    followButtonContainer: {},
-    followButton: {},
-    followingButton: {},
-    followButtonText: {},
-    followingButtonText: {}
-  }
+  styles?: ProfileListItemStyles
 }) {
   function renderFollowButton(isFollowing) {
     if (isFollowing) {

@@ -170,6 +170,21 @@ export type ProfileHeaderStyles = {
   profileFollowerData: {}
 }
 
+export type ProfileListItemStyles = {
+  container: {},
+  avatarContainer: {},
+  avatar: {},
+  profileName: {},
+  profileHandle: {},
+  profileBio: {},
+  infoContainer: {},
+  followButtonContainer: {},
+  followButton: {},
+  followingButton: {},
+  followButtonText: {},
+  followingButtonText: {}
+}
+
 export type FeedStyles = {
   container: {},
   loadingIndicatorStyle: {},
