@@ -1,10 +1,10 @@
-# React Native Lens (alpha)
+# React Native Lens UI Kit 🌿 (alpha)
 
 ![React Native Lens](header.jpg)
 
 A React Native UI kit for Lens Protocol.
 
-## Getting started
+## Getting started 🚀
 
 ### Prerequisites
 
@@ -16,7 +16,7 @@ First, install and configure React Native [SVG](https://github.com/software-mans
 npm install react-native-lens
 ```
 
-# Components
+# Components 🍃
 
 ## Feed
 
