@@ -161,7 +161,7 @@ onLikePress = publication => console.log({ publication })
 
 ### Styles
 publicationStyles = [PublicationStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L137)     
-headerStyles = [ProfileHeaderStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L157)
+headerStyles = [ProfileHeaderStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L157)     
 feedStyles = [FeedStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L188)
 
 ## Profile Header
