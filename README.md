@@ -56,7 +56,7 @@ onLikePress = publication => console.log({ publication })
 onProfileImagePress = profile => console.log({ profile })
 
 # Styles
-const baseStyles = StyleSheet.create({
+styles = StyleSheet.create({
   container: {
     flex: 1
   },
@@ -154,6 +154,11 @@ onCollectPress = publication => console.log({ publication })
 onCommentPress = publication => console.log({ publication })
 onMirrorPress = publication => console.log({ publication })
 onLikePress = publication => console.log({ publication })
+
+# Styles
+headerStyles
+feedStyles
+publicationStyles
 ```
 
 ## Profile Header
@@ -176,6 +181,60 @@ profileId = null
 profile = null
 onFollowingPress = profile => console.log({ profile })
 onFollowersPress = profile => console.log({ profile })
+
+styles = StyleSheet.create({
+  blankHeader: {
+    height: 120,
+    backgroundColor: 'black'
+  },
+  headerImage: {
+    width: '100%',
+    height: 120
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginTop: -50,
+    marginLeft: 25
+  },
+  userDetails: {
+    paddingHorizontal: 25,
+    paddingVertical: 10
+  },
+  name: {
+    fontWeight: '600',
+    fontSize: 20,
+  },
+  handle: {
+    fontSize: 14,
+  },
+  bio: {
+    marginTop: 10,
+    color: 'rgba(0, 0, 0, .5)'
+  },
+  profileStats: {
+    flexDirection: 'row',
+    marginTop: 15
+  },
+  statsData: {
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  statsHeader: {
+    marginLeft: 3,
+    opacity: .7
+  },
+  profileFollowingData: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  profileFollowerData: {
+    marginLeft: 15,
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
+})
 ```
 
 ## Publication
@@ -208,7 +267,7 @@ onLikePress = publication => console.log({ publication })
 onProfileImagePress = publication => console.log({ publication })
 
 # Styles
-const baseStyles = StyleSheet.create({
+styles = StyleSheet.create({
   publicationWrapper: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0, 0, 0, .05)',
@@ -311,6 +370,74 @@ profile (required)
 isFollowing
 onProfilePress
 onFollowPress
+
+# Styles
+styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    paddingLeft: 15,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0, 0, 0, .06)'
+  },
+  avatarContainer: {
+    padding: 5
+  },
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22
+  },
+  profileName: {
+    fontWeight: '600',
+    fontSize: 16,
+    maxWidth: 200
+  },
+  profileHandle: {
+    marginTop: 3,
+    axWidth: 200
+  },
+  profileBio: {
+    maxWidth: 200,
+    marginTop: 15,
+    color: 'rgba(0, 0, 0, .5)'
+  },
+  infoContainer: {
+    justifyContent: 'center',
+    paddingLeft: 10,
+    maxWidth: 200,
+  },
+  followButtonContainer: {
+    flex: 1,
+    alignItems: 'flex-end', 
+    paddingRight: 20
+  },
+  followButton: {
+    borderWidth: 1,
+    borderRadius: 34,
+    paddingHorizontal: 17,
+    paddingVertical:7,
+    marginTop: 3,
+    backgroundColor: 'black',
+  },
+  followingButton: {
+    borderWidth: 1,
+    borderRadius: 34,
+    paddingHorizontal: 17,
+    paddingVertical:7,
+    marginTop: 3,
+  },
+  followButtonText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: 'white'
+  },
+  followingButtonText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: 'black'
+  }
+})
 ```
 
 # Roadmap

@@ -7,8 +7,8 @@ import {
   TouchableHighlight
 } from 'react-native'
 import { formatDistanceStrict } from 'date-fns'
+import { PublicationStyles } from '../types'
 import { returnIPFSPathorURL } from '../utils'
-import { ExtendedPublication, ExtendedProfile } from '../types'
 import { CommentIcon, MirrorIcon, CollectIcon, UnfilledHeartIcon, FilledHeartIcon } from './'
 
 const width = Dimensions.get('window').width
@@ -38,7 +38,7 @@ export function Publication({
   onMirrorPress: any,
   onLikePress: any,
   onProfileImagePress: any,
-  styles?: any
+  styles?: PublicationStyles
 }) {
   return (
     <View

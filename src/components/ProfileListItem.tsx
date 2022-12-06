@@ -6,8 +6,48 @@ export function ProfileListItem({
   profile,
   onProfilePress,
   onFollowPress,
-  isFollowing
+  isFollowing,
+  styles = baseStyles
+} : {
+  profile: any,
+  onProfilePress: any,
+  onFollowPress: any,
+  isFollowing: boolean,
+  styles?: {
+    container: {},
+    avatarContainer: {},
+    avatar: {},
+    profileName: {},
+    profileHandle: {},
+    profileBio: {},
+    infoContainer: {},
+    followButtonContainer: {},
+    followButton: {},
+    followingButton: {},
+    followButtonText: {},
+    followingButtonText: {}
+  }
 }) {
+  function renderFollowButton(isFollowing) {
+    if (isFollowing) {
+      return (
+        <View style={styles.followingButton}>
+          <Text style={styles.followingButtonText}>
+            Following
+          </Text>
+        </View>
+      )
+    } else {
+      return (
+        <View style={styles.followButton}>
+          <Text style={styles.followButtonText}>
+            Follow
+          </Text>
+        </View>
+      )
+    }
+  }
+
   return (
     <TouchableHighlight
         activeOpacity={0.8}
@@ -46,7 +86,7 @@ export function ProfileListItem({
   )
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     paddingLeft: 15,
@@ -113,22 +153,3 @@ const styles = StyleSheet.create({
   }
 })
 
-function renderFollowButton(isFollowing) {
-  if (isFollowing) {
-    return (
-      <View style={styles.followingButton}>
-        <Text style={styles.followingButtonText}>
-          Following
-        </Text>
-      </View>
-    )
-  } else {
-    return (
-      <View style={styles.followButton}>
-        <Text style={styles.followButtonText}>
-          Follow
-        </Text>
-      </View>
-    )
-  }
-}

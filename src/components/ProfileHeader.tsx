@@ -4,7 +4,7 @@ import {
 } from 'react-native'
 import { client } from '../api'
 import { ProfileDocument } from '../graphql/generated'
-import { ExtendedProfile } from '../types'
+import { ExtendedProfile, ProfileHeaderStyles } from '../types'
 
 export function ProfileHeader({
   profileId = null,
@@ -17,20 +17,7 @@ export function ProfileHeader({
   profile?: ExtendedProfile,
   onFollowingPress: any,
   onFollowersPress: any,
-  styles?: {
-    blankHeader: {},
-    headerImage: {},
-    avatar: {},
-    userDetails: {},
-    name: {},
-    handle: {},
-    bio: {},
-    profileStats: {},
-    statsData: {},
-    statsHeader: {},
-    profileFollowingData: {},
-    profileFollowerData: {}
-  }
+  styles?: ProfileHeaderStyles
 }) {
 
   const [fetchedProfile, setFetchedProfile] = useState<any | null>(null)

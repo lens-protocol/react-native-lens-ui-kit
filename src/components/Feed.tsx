@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { client } from '../api'
-import { ProfileMetadata, FeedQuery, ExtendedPublication } from '../types'
+import { ProfileMetadata, FeedQuery, ExtendedPublication, PublicationStyles, FeedStyles } from '../types'
 import { configureIPFSURL } from '../utils'
 import { Publication } from './Publication'
 import {
@@ -40,13 +40,14 @@ export function Feed({
   onMirrorPress = publication => console.log({ publication }),
   onLikePress = publication => console.log({ publication }),
   onProfileImagePress = publication => console.log({ publication }),
+  publicationStyles,
   styles = baseStyles,
 }: {
   query: FeedQuery,
-  ListHeaderComponent: React.FC,
-  ListFooterComponent: React.FC,
+  ListHeaderComponent: any,
+  ListFooterComponent: React.FC <{}>,
   signedInUser?: ProfileMetadata
-  feed: [],
+  feed: any[],
   onCollectPress: any,
   onCommentPress: any,
   onMirrorPress: any,
@@ -58,11 +59,8 @@ export function Feed({
   hideCollects: boolean,
   infiniteScroll: boolean,
   onEndReachedThreshold: number,
-  styles?: {
-    container: {},
-    loadingIndicatorStyle: {},
-    noCommentsMessage: {}
-  }
+  styles?: FeedStyles,
+  publicationStyles?: PublicationStyles
 }) {
   const [publications, setPublications] = useState<any[]>([])
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
@@ -210,6 +208,7 @@ export function Feed({
   }) {
     return (
       <Publication
+        styles={publicationStyles}
         key={index}
         publication={item}
         signedInUser={signedInUser}

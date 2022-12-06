@@ -15,6 +15,7 @@ export type FeedQuery = {
   limit?: number;
   profileId?: number;
   publicationId?: number;
+  cursor?: string;
 }
 
 export type ProfilesQuery = {
@@ -22,6 +23,7 @@ export type ProfilesQuery = {
   sortCriteria: ProfileSortCriteria;
   limit?: number;
   ethereumAddress?: string;
+  cursor?: string;
 }
 
 export interface Props {
@@ -29,7 +31,6 @@ export interface Props {
 }
 
 /* Lens specific */
-
 export enum MetadataDisplayType {
   number = 'number',
   string = 'string',
@@ -130,4 +131,46 @@ export interface ExtendedProfile extends Profile {
 
 export type ExtendedPublication = Publication & {
   profileSet: boolean
+}
+
+/* Styles */
+export type PublicationStyles = {
+  publicationWrapper: {},
+  publicationContainer: {},
+  missingAvatarPlaceholder: {},
+  smallAvatar: {},
+  postContentContainer: {},
+  postText: {},
+  metadataImage: {},
+  statsContainer: {},
+  statsDetailContainer: {},
+  statsDetailText: {},
+  postOwnerDetailsContainer: {},
+  postOwnerName: {},
+  postOwnerHandle: {},
+  timestamp: {},
+  activityIndicatorContainer: {},
+  mirrorContainer: {},
+  mirrorText: {}
+}
+
+export type ProfileHeaderStyles = {
+  blankHeader: {},
+  headerImage: {},
+  avatar: {},
+  userDetails: {},
+  name: {},
+  handle: {},
+  bio: {},
+  profileStats: {},
+  statsData: {},
+  statsHeader: {},
+  profileFollowingData: {},
+  profileFollowerData: {}
+}
+
+export type FeedStyles = {
+  container: {},
+  loadingIndicatorStyle: {},
+  noCommentsMessage: {}
 }

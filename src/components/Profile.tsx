@@ -1,5 +1,6 @@
 import { Feed, ProfileHeader } from './'
 import { PublicationTypes } from '../graphql/generated'
+import { ProfileHeaderStyles, FeedStyles, PublicationStyles, FeedQuery } from '../types'
 
 export function Profile({
   profile,
@@ -13,6 +14,9 @@ export function Profile({
   hideCollects = false,
   infiniteScroll = true,
   onEndReachedThreshold = .65,
+  headerStyles,
+  feedStyles,
+  publicationStyles,
   query = {
     name: "getPublications",
     profileId: profile.id,
@@ -25,6 +29,30 @@ export function Profile({
   onCommentPress = publication => console.log({ publication }),
   onMirrorPress = publication => console.log({ publication }),
   onLikePress = publication => console.log({ publication }),
+} : {
+  profile: any,
+  ListHeaderComponent: React.FC <{}>,
+  ListFooterComponent: React.FC <{}>,
+  feed: any[],
+  signedInUser: any,
+  hideLikes: boolean,
+  hideComments: boolean,
+  hideMirrors: boolean,
+  hideCollects: boolean,
+  infiniteScroll: boolean,
+  onEndReachedThreshold: number,
+  headerStyles: ProfileHeaderStyles,
+  feedStyles: FeedStyles,
+  publicationStyles: PublicationStyles,
+  query: FeedQuery,
+  onFollowingPress: any,
+  onFollowersPress: any,
+  onProfileImagePress: any,
+  onCollectPress: any,
+  onCommentPress: any,
+  onMirrorPress: any,
+  onLikePress: any
+
 }) {
   const HeaderComponent = ListHeaderComponent ?
   ListHeaderComponent : (
@@ -32,10 +60,13 @@ export function Profile({
       profile={profile}
       onFollowingPress={onFollowingPress}
       onFollowersPress={onFollowersPress}
+      styles={headerStyles}
     />
   )
   return (
     <Feed
+      styles={feedStyles}
+      publicationStyles={publicationStyles}
       ListFooterComponent={ListFooterComponent}
       feed={feed}
       signedInUser={signedInUser}
