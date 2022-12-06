@@ -83,7 +83,7 @@ __getPublications__
 [getPublications](./src/graphql/getPublications.graphql)
 
 __getComments__    
-[getComments](./src/graphql/getPublications.graphql)
+[getPublications](./src/graphql/getPublications.graphql)
 
 ## Profiles
 
@@ -118,7 +118,7 @@ __exploreProfiles (default)__
 [exploreProfiles](./src/graphql/exploreProfiles.graphql)
 
 __getFollowing__    
-[getPublications](./src/graphql/getFollowing.graphql)
+[getFollowing](./src/graphql/getFollowing.graphql)
 
 
 ## Profile
