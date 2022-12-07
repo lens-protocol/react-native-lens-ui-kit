@@ -259,12 +259,15 @@ Currently this project is in Alpha.
 - More query options (easy contribution, help wanted)
 - Authentication
 - Custom components
+- Support video
+- Support git
 
 ### V1 Roadmap
 
 - Theming
 - More rich content types (video, gif, audio)
 - Better TypeScript support
+- Support audio
 
 ### Contribute
 
