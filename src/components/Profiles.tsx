@@ -22,25 +22,24 @@ export function Profiles({
   profileData = null,
   onEndReachedThreshold = .7,
   infiniteScroll = true,
-  signedInUserId = null,
+  signedInUserAddress = null,
   query = {
     name: 'exploreProfiles',
     sortCriteria: ProfileSortCriteria.MostFollowers,
     limit: 25
   }
 } : {
-  onFollowPress: (profile: ExtendedProfile) => void,
+  onFollowPress: (profile: ExtendedProfile, profiles: ExtendedProfile[]) => void,
   onProfilePress: any,
-  profileData: (ExtendedProfile )[],
+  profileData: ExtendedProfile[],
   onEndReachedThreshold: number,
   infiniteScroll: boolean,
   query: ProfilesQuery,
-  signedInUserId?: string
+  signedInUserAddress?: string
 }) {
   const [profiles, setProfiles] = useState([])
   const [loading, setLoading] = useState(true)
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
-
   useEffect(() => {
     fetchProfiles()
   }, [])
@@ -54,10 +53,10 @@ export function Profiles({
           limit: query.limit
         }
       }).toPromise()
-      if (signedInUserId) {
+      if (signedInUserAddress) {
         const requestData = items.map(i => ({
-          followerAddress: i.ownedBy,
-          profileId: signedInUserId
+          followerAddress: signedInUserAddress,
+          profileId: i.id
         }))
         const response = await client.query(DoesFollowDocument, {
           request: {
@@ -85,17 +84,16 @@ export function Profiles({
         pageInfo: PaginatedResultInfo,
         items: any
       } = following
-      if (signedInUserId) {
+      if (signedInUserAddress) {
         const requestData = items.map(i => ({
-          followerAddress: i.profile.ownedBy,
-          profileId: signedInUserId
+          followerAddress: signedInUserAddress,
+          profileId: i.profile.id
         }))
         const response = await client.query(DoesFollowDocument, {
           request: {
             followInfos: requestData
           }
         }).toPromise()
-        console.log("RESPONSE FROM GETFOLLOWING:: ", response)
         items = items.map((item, index) => {
           item.profile.isFollowing = response.data.doesFollow[index].follows
           return item.profile
@@ -187,12 +185,12 @@ export function Profiles({
         key={index}
         onProfilePress={onProfilePress}
         profile={item}
-        onFollowPress={onFollowPress}
+        onFollowPress={profile => onFollowPress(profile, profiles)}
         isFollowing={item.isFollowing}
       />
     )
   }
-
+  
   return (
     <FlatList
       renderItem={renderItem}

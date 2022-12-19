@@ -108,9 +108,10 @@ query = {
 profileData = null
 onEndReachedThreshold = .7
 infiniteScroll = true
+signedInUserAddress=null
 
 # Functions
-onFollowPress = profile => console.log({ profile })
+onFollowPress = (profile, profiles) => console.log({ profile })
 onProfilePress = profile => console.log({ profile })
 ```
 
@@ -267,7 +268,6 @@ Currently this project is in Alpha.
 ### V1 Roadmap
 
 - Theming
-- More rich content types (video, gif, audio)
 - Better TypeScript support
 - Support audio
 
