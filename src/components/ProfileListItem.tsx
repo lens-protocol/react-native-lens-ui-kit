@@ -13,7 +13,7 @@ export function ProfileListItem({
   profile: ExtendedProfile,
   onProfilePress: any,
   onFollowPress: any,
-  isFollowing: boolean,
+  isFollowing?: boolean,
   styles?: ProfileListItemStyles
 }) {
   function renderFollowButton(isFollowing) {

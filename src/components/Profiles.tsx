@@ -4,7 +4,14 @@ import {
 } from 'react-native'
 import { client } from '../api'
 import { ProfilesQuery, ExtendedProfile } from '../types'
-import { Profile, ExploreProfilesDocument, FollowingDocument, ProfileSortCriteria, PaginatedResultInfo } from '../graphql/generated'
+import {
+  Profile,
+  ExploreProfilesDocument,
+  FollowingDocument,
+  ProfileSortCriteria,
+  PaginatedResultInfo,
+  DoesFollowDocument
+} from '../graphql/generated'
 import {
   ProfileListItem
 } from './'
@@ -15,6 +22,7 @@ export function Profiles({
   profileData = null,
   onEndReachedThreshold = .7,
   infiniteScroll = true,
+  signedInUserId = null,
   query = {
     name: 'exploreProfiles',
     sortCriteria: ProfileSortCriteria.MostFollowers,
@@ -26,9 +34,9 @@ export function Profiles({
   profileData: (ExtendedProfile )[],
   onEndReachedThreshold: number,
   infiniteScroll: boolean,
-  query: ProfilesQuery
+  query: ProfilesQuery,
+  signedInUserId?: string
 }) {
-  console.log("HELLO MY DEV ENVIRONMENT IS ACTUALLY WORKING!!!")
   const [profiles, setProfiles] = useState([])
   const [loading, setLoading] = useState(true)
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
@@ -46,13 +54,26 @@ export function Profiles({
           limit: query.limit
         }
       }).toPromise()
+      if (signedInUserId) {
+        const requestData = items.map(i => ({
+          followerAddress: i.ownedBy,
+          profileId: signedInUserId
+        }))
+        const response = await client.query(DoesFollowDocument, {
+          request: {
+            followInfos: requestData
+          }
+        }).toPromise()
+        items = items.map((item, index) => {
+          item.isFollowing = response.data.doesFollow[index].follows
+          return item
+        })
+      }
       return {
         pageInfo, items,
       }
     }
     if (query.name === 'getFollowing') {     
-      // TODO
-      // Set following status if there is a signed in user 
       let { data: { following }}  = await client.query(FollowingDocument, {
         request: {
           address: query.ethereumAddress,
@@ -61,11 +82,29 @@ export function Profiles({
         }
       }).toPromise()
       let { pageInfo, items } : {
-        pageInfo: PaginatedResultInfo, items: any
+        pageInfo: PaginatedResultInfo,
+        items: any
       } = following
-      items = items.map(item => {
-        return item.profile
-      })
+      if (signedInUserId) {
+        const requestData = items.map(i => ({
+          followerAddress: i.profile.ownedBy,
+          profileId: signedInUserId
+        }))
+        const response = await client.query(DoesFollowDocument, {
+          request: {
+            followInfos: requestData
+          }
+        }).toPromise()
+        console.log("RESPONSE FROM GETFOLLOWING:: ", response)
+        items = items.map((item, index) => {
+          item.profile.isFollowing = response.data.doesFollow[index].follows
+          return item.profile
+        })
+      } else {
+        items = items.map(item => {
+          return item.profile
+        })
+      }
       return {
         pageInfo, items
       }
