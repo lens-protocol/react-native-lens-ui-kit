@@ -1,7 +1,7 @@
 import {
   TouchableHighlight, View, Image, Text, StyleSheet
 } from 'react-native'
-import { ProfileListItemStyles } from '../types'
+import { ProfileListItemStyles, ExtendedProfile } from '../types'
 
 export function ProfileListItem({
   profile,
@@ -10,7 +10,7 @@ export function ProfileListItem({
   isFollowing,
   styles = baseStyles
 } : {
-  profile: any,
+  profile: ExtendedProfile,
   onProfilePress: any,
   onFollowPress: any,
   isFollowing: boolean,
@@ -47,7 +47,8 @@ export function ProfileListItem({
           <View style={styles.avatarContainer}>
             <Image
               source={{
-                uri: profile?.picture?.original?.url || "https://source.unsplash.com/random/200x200?sig=1"
+                uri: profile?.picture?.__typename === 'MediaSet' && profile?.picture?.original?.url
+                || "https://source.unsplash.com/random/200x200?sig=1"
               }}
               style={styles.avatar}
             />

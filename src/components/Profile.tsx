@@ -1,6 +1,6 @@
 import { Feed, ProfileHeader } from './'
-import { PublicationTypes } from '../graphql/generated'
-import { ProfileHeaderStyles, FeedStyles, PublicationStyles, FeedQuery } from '../types'
+import { PublicationTypes, Publication } from '../graphql/generated'
+import { ProfileHeaderStyles, FeedStyles, PublicationStyles, FeedQuery, ExtendedProfile } from '../types'
 
 export function Profile({
   profile,
@@ -31,10 +31,10 @@ export function Profile({
   onMirrorPress = publication => console.log({ publication }),
   onLikePress = publication => console.log({ publication }),
 } : {
-  profile: any,
-  ListHeaderComponent: React.FC <{}>,
+  profile: ExtendedProfile,
+  ListHeaderComponent: any,
   ListFooterComponent: React.FC <{}>,
-  feed: any[],
+  feed: Publication[],
   signedInUser: any,
   hideLikes: boolean,
   hideComments: boolean,

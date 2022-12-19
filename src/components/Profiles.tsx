@@ -3,14 +3,14 @@ import {
   FlatList, ActivityIndicator, StyleSheet
 } from 'react-native'
 import { client } from '../api'
-import { ProfilesQuery } from '../types'
+import { ProfilesQuery, ExtendedProfile } from '../types'
 import { Profile, ExploreProfilesDocument, FollowingDocument, ProfileSortCriteria, PaginatedResultInfo } from '../graphql/generated'
 import {
   ProfileListItem
 } from './'
 
 export function Profiles({
-  onFollowPress = profile => console.log({ profile }),
+  onFollowPress  = profile => console.log({ profile }),
   onProfilePress = profile => console.log({ profile }),
   profileData = null,
   onEndReachedThreshold = .7,
@@ -21,13 +21,14 @@ export function Profiles({
     limit: 25
   }
 } : {
-  onFollowPress: any,
+  onFollowPress: (profile: ExtendedProfile) => void,
   onProfilePress: any,
-  profileData: [],
+  profileData: (ExtendedProfile )[],
   onEndReachedThreshold: number,
   infiniteScroll: boolean,
   query: ProfilesQuery
 }) {
+  console.log("HELLO MY DEV ENVIRONMENT IS ACTUALLY WORKING!!!")
   const [profiles, setProfiles] = useState([])
   const [loading, setLoading] = useState(true)
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
@@ -84,25 +85,31 @@ export function Profiles({
         setLoading(true)
         let {
           items, pageInfo
+        } : {
+          items: ExtendedProfile[], pageInfo: PaginatedResultInfo
         } = await fetchResponse(cursor)
         setPaginationInfo(pageInfo)
         items = await Promise.all(items.map(profile => {
           let { picture, coverPicture } = profile
-          if (picture && picture.original) {
-            if (picture.original.url.startsWith('ipfs://')) {
-              let result = picture.original.url.substring(7, picture.original.url.length)
-              profile.picture.original.url = `https://lens.infura-ipfs.io/ipfs/${result}`
+          if (picture && picture.__typename === 'MediaSet') {
+            if (picture.original) {
+              if (picture.original.url.startsWith('ipfs://')) {
+                let result = picture.original.url.substring(7, picture.original.url.length)
+                picture.original.url = `https://lens.infura-ipfs.io/ipfs/${result}`
+              }
+            } else {
+              profile.missingAvatar = true
             }
-          } else {
-            profile.missingAvatar = true
           }
-          if (coverPicture && coverPicture.original.url) {
-            if (coverPicture.original.url.startsWith('ipfs://')) {
-              let hash = coverPicture.original.url.substring(7, coverPicture.original.url.length)
-              coverPicture.original.url = `https://lens.infura-ipfs.io/ipfs/${hash}`
+          if (coverPicture && coverPicture.__typename === 'MediaSet') {
+            if (coverPicture.original.url) {
+              if (coverPicture.original.url.startsWith('ipfs://')) {
+                let hash = coverPicture.original.url.substring(7, coverPicture.original.url.length)
+                coverPicture.original.url = `https://lens.infura-ipfs.io/ipfs/${hash}`
+              }
+            } else {
+              profile.missingCover = true
             }
-          } else {
-            profile.missingCover = true
           }
           return profile
           })

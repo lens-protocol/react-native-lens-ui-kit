@@ -7,7 +7,7 @@ import {
   TouchableHighlight
 } from 'react-native'
 import { formatDistanceStrict } from 'date-fns'
-import { PublicationStyles } from '../types'
+import { PublicationStyles, ExtendedPublication } from '../types'
 import { returnIPFSPathorURL } from '../utils'
 import { CommentIcon, MirrorIcon, CollectIcon, UnfilledHeartIcon, FilledHeartIcon } from './'
 
@@ -28,7 +28,7 @@ export function Publication({
   onProfileImagePress = publication => console.log({ publication }),
   styles = baseStyles
 }: {
-  publication: any,
+  publication: ExtendedPublication,
   signedInUser: any,
   hideLikes: boolean,
   hideComments: boolean,
@@ -56,7 +56,7 @@ export function Publication({
             onPress={() => onProfileImagePress(publication)}
           >
           {
-            publication.profile.missingAvatar ? (
+            publication.profile.picture.__typename !== 'MediaSet' || publication.profile.missingAvatar ? (
               <View
                 style={styles.missingAvatarPlaceholder}
               />
@@ -73,7 +73,7 @@ export function Publication({
         </View>
         <View style={styles.postContentContainer}>
           {
-            publication.mirrorOf && (
+            publication.__typename === 'Mirror' && publication.mirrorOf && (
               <View style={styles.mirrorContainer}>
                 <MirrorIcon
                   color="rgba(0, 0, 0, .6)"

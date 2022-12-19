@@ -4,8 +4,10 @@ import {
   PublicationSortCriteria,
   ProfileSortCriteria,
   Profile,
-  MediaSet,
-  Publication
+  Post,
+  Comment,
+  Mirror,
+  PaginatedResultInfo
 } from './graphql/generated'
 
 export type FeedQuery = {
@@ -123,14 +125,33 @@ export interface ProfileMetadata extends GenericMetadata {
 }
 
 export interface ExtendedProfile extends Profile {
-  picture: MediaSet;
-  coverPicture: MediaSet;
-  missingAvatar: boolean;
-  missingCover: boolean;
+  missingAvatar?: boolean;
+  missingCover?: boolean;
 }
 
-export type ExtendedPublication = Publication & {
-  profileSet: boolean
+export interface ExtendedPost extends Post {
+  profile: ExtendedProfile;
+  profileSet?: boolean;
+  originalProfile?: ExtendedProfile;
+}
+
+export interface ExtendedComment extends Comment {
+  profile: ExtendedProfile;
+  profileSet?: boolean;
+  originalProfile?: ExtendedProfile;
+}
+
+export interface ExtendedMirror extends Mirror {
+  profile: ExtendedProfile;
+  profileSet?: boolean;
+  originalProfile?: ExtendedProfile;
+}
+
+export type ExtendedPublication = ExtendedComment | ExtendedMirror | ExtendedPost
+
+export interface PublicationFetchResults {
+  pageInfo: PaginatedResultInfo;
+  items: ExtendedPublication[];
 }
 
 /* Styles */

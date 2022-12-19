@@ -4,12 +4,19 @@ import {
   FlatList,
   Text,
   StyleSheet,
-  ActivityIndicator,
+  ActivityIndicator
 } from 'react-native'
 import { client } from '../api'
-import { ProfileMetadata, FeedQuery, ExtendedPublication, PublicationStyles, FeedStyles } from '../types'
+import {
+  ProfileMetadata,
+  FeedQuery,
+  ExtendedPublication,
+  PublicationStyles,
+  FeedStyles,
+  PublicationFetchResults
+} from '../types'
 import { configureIPFSURL } from '../utils'
-import { Publication } from './Publication'
+import { Publication as PublicationComponent } from './'
 import {
   ExplorePublicationsDocument,
   PublicationsDocument,
@@ -45,10 +52,10 @@ export function Feed({
   styles = baseStyles,
 }: {
   query: FeedQuery,
-  ListHeaderComponent: any,
+  ListHeaderComponent: React.FC,
   ListFooterComponent: React.FC <{}>,
   signedInUser?: ProfileMetadata
-  feed: any[],
+  feed: ExtendedPublication[],
   onCollectPress: any,
   onCommentPress: any,
   onMirrorPress: any,
@@ -64,7 +71,7 @@ export function Feed({
   styles?: FeedStyles,
   publicationStyles?: PublicationStyles
 }) {
-  const [publications, setPublications] = useState<any[]>([])
+  const [publications, setPublications] = useState<ExtendedPublication[]>([])
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
   const [loading, setLoading] = useState(false)
   
@@ -75,7 +82,7 @@ export function Feed({
   async function fetchResponse(cursor: string = null) {
     if (query.name === 'explorePublications') {
       try {
-        let { data: { explorePublications: { pageInfo, items }}} = await client.query(ExplorePublicationsDocument, {
+        let { data: { explorePublications }} = await client.query(ExplorePublicationsDocument, {
           request: {
             cursor,
             publicationTypes: query.publicationTypes,
@@ -83,8 +90,12 @@ export function Feed({
             limit: query.limit
           }
         }).toPromise()
+        let {
+          pageInfo,
+          items
+        } = explorePublications as PublicationFetchResults
         return {
-          pageInfo, items
+          pageInfo, items,
         }
       } catch (err) {
         console.log('Error fetching explorePublications: ', err)
@@ -100,7 +111,7 @@ export function Feed({
       }).toPromise()
       return {
         pageInfo, items
-      }
+      } as PublicationFetchResults
     }
     if (query.name === 'getComments') {
       try {
@@ -112,7 +123,7 @@ export function Feed({
         }).toPromise()
         return {
           pageInfo, items
-        }
+        } as PublicationFetchResults
       } catch (err) {
         console.log('error fetching comments...', err)
       }
@@ -136,10 +147,11 @@ export function Feed({
       ) {
         setLoading(true)
         let {
-          items, pageInfo
+          items,
+          pageInfo
         } : {
-          items: any[]
-          pageInfo: PaginatedResultInfo
+          pageInfo: PaginatedResultInfo,
+          items: ExtendedPublication[]
         } = await fetchResponse(cursor)   
         setPaginationInfo(pageInfo)
         items = items.filter(item => {
@@ -157,12 +169,14 @@ export function Feed({
         items = items.map(item => {
           if (item.profileSet) return item
           let { profile } = item
-          if (item.mirrorOf) {
-            item.originalProfile = profile
-            item.stats = item.mirrorOf.stats
-            profile = item.mirrorOf.profile
+          if (item.__typename === 'Mirror') {
+            if (item.mirrorOf) {
+              item.originalProfile = profile
+              item.stats = item.mirrorOf.stats
+              profile = item.mirrorOf.profile
+            }
           }
-          if (profile.picture && profile.picture.original) {
+          if (profile.picture && profile.picture.__typename === 'MediaSet' && profile.picture.original) {
             const url = configureIPFSURL(profile.picture.original.url)
             if (url) {
               profile.picture.original.url = url
@@ -209,7 +223,7 @@ export function Feed({
     index: number
   }) {
     return (
-      <Publication
+      <PublicationComponent
         styles={publicationStyles}
         key={index}
         publication={item}
