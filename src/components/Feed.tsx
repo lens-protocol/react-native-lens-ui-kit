@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import {
   View,
   FlatList,
@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator
 } from 'react-native'
-import { client } from '../api'
+import { createClient } from '../api'
 import {
   ProfileMetadata,
   FeedQuery,
@@ -24,6 +24,7 @@ import {
   PublicationTypes,
   PublicationSortCriteria
 } from '../graphql/generated'
+import { LensContext } from '../context'
 
 export function Feed({
   query = {
@@ -74,6 +75,9 @@ export function Feed({
   const [publications, setPublications] = useState<ExtendedPublication[]>([])
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
   const [loading, setLoading] = useState(false)
+
+  const { environment } = useContext(LensContext)
+  const client = createClient(environment)
   
   useEffect(() => {
     fetchPublications()

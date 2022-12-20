@@ -24,7 +24,7 @@ npm install @lens-protocol/react-native-lens-ui-kit
 
 A feed of posts from Lens.
 
-```javascript
+```tsx
 import { Feed } from '@lens-protocol/react-native-lens-ui-kit'
 
 <Feed />
@@ -91,7 +91,7 @@ __getComments__
 
 A list of profiles
 
-```javascript
+```tsx
 import { Profiles } from '@lens-protocol/react-native-lens-ui-kit'
 
 <Profiles />
@@ -128,7 +128,7 @@ __getFollowing__
 
 Renders an individual profile
 
-```javascript
+```tsx
 import { Profile } from '@lens-protocol/react-native-lens-ui-kit'
 
 <Profile
@@ -171,7 +171,7 @@ feedStyles = [FeedStyles](https://github.com/lens-protocol/react-native-lens-ui-
 
 Renders a profile header component.
 
-```javascript
+```tsx
 import { ProfileHeader } from '@lens-protocol/react-native-lens-ui-kit'
 
 <ProfileHeader
@@ -196,7 +196,7 @@ onFollowersPress = profile => console.log({ profile })
 
 Renders an individual publication.
 
-```javascript
+```tsx
 import { Publication } from '@lens-protocol/react-native-lens-ui-kit'
 
 <Publication
@@ -229,7 +229,7 @@ onProfileImagePress = publication => console.log({ publication })
 
 Renders a list item for a profile overview.
 
-```javascript
+```tsx
 import { ProfileListItem } from '@lens-protocol/react-native-lens-ui-kit'
 
 <ProfileListItem
@@ -249,13 +249,34 @@ onFollowPress
 ### Styles    
 [ProfileListItemStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L173)
 
+## LensProvider
+
+Allows you to pass global configurations to React Native Lens UI Kit.
+
+### Options
+
+```
+environment = 'testnet' | 'mainnet' (default) | 'sandbox'
+```
+
+### Usage
+
+```tsx
+import { LensProvider } from '@lens-protocol/react-native-lens-ui-kit'
+
+<LensProvider
+  environment="testnet"
+>
+  <App />
+</LensProvider>
+```
+
 # Roadmap
 
 Currently this project is in Alpha.
 
 ### Beta Roadmap
 
-- Configure development or production endpoint (Mainnet or Mumbai)
 - Search
 - Custom styling / layout (temporary implementation in place, want to make it more granular)
 - More query options (easy contribution, help wanted)

@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import {
   FlatList, ActivityIndicator, StyleSheet
 } from 'react-native'
-import { client } from '../api'
+import { createClient } from '../api'
 import { ProfilesQuery, ExtendedProfile } from '../types'
 import {
   Profile,
@@ -15,6 +15,7 @@ import {
 import {
   ProfileListItem
 } from './'
+import { LensContext } from '../context'
 
 export function Profiles({
   onFollowPress  = profile => console.log({ profile }),
@@ -40,6 +41,9 @@ export function Profiles({
   const [profiles, setProfiles] = useState([])
   const [loading, setLoading] = useState(true)
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
+  const context = useContext(LensContext)
+  const { environment } = context
+  const client = createClient(environment)
   useEffect(() => {
     fetchProfiles()
   }, [])

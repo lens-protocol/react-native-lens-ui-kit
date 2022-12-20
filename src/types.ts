@@ -32,6 +32,10 @@ export interface Props {
   Comp: React.ComponentType;
 }
 
+export interface LensContextType {
+  environment?: string;
+}
+
 /* Lens specific */
 export enum MetadataDisplayType {
   number = 'number',

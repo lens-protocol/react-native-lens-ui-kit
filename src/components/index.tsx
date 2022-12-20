@@ -12,3 +12,6 @@ export { ProfileListItem } from './ProfileListItem'
 export { Feed } from './Feed'
 export { ProfileHeader } from './ProfileHeader'
 export { Publication } from './Publication'
+
+/* provider */
+export { LensProvider } from './LensProvider'

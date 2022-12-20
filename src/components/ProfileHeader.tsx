@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import {
   View, TouchableHighlight, StyleSheet, Image, Text
 } from 'react-native'
-import { client } from '../api'
+import { createClient } from '../api'
 import { ProfileDocument } from '../graphql/generated'
 import { ExtendedProfile, ProfileHeaderStyles } from '../types'
+import { LensContext } from '../context'
 
 export function ProfileHeader({
   profileId = null,
@@ -20,6 +21,8 @@ export function ProfileHeader({
   styles?: ProfileHeaderStyles
 }) {
   const [fetchedProfile, setFetchedProfile] = useState<any | null>(null)
+  const { environment } = useContext(LensContext)
+  const client = createClient(environment)
   useEffect(() => {
     if (!profile) {
       fetchProfile()
