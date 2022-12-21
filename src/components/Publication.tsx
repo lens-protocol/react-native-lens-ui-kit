@@ -49,13 +49,16 @@ export function Publication({
   onProfileImagePress: (publication: ExtendedPublication) => void,
   styles?: PublicationStyles
 }) {
-  const { theme } = useContext(LensContext) as {
-    theme?: Theme
-  }
-  if (theme) {
-    if (theme === 'dark') {
-      styles = darkThemeStyles
-      iconColor = ThemeColors.lightGray
+  const context = useContext(LensContext)
+  if (context) {
+    const { theme } = useContext(LensContext) as {
+      theme?: Theme
+    }
+    if (theme) {
+      if (theme === 'dark') {
+        styles = darkThemeStyles
+        iconColor = ThemeColors.lightGray
+      }
     }
   }
   return (
