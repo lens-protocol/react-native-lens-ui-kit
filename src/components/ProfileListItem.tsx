@@ -24,12 +24,14 @@ export function ProfileListItem({
   styles?: ProfileListItemStyles
 }) {
   const context = useContext(LensContext)
-  const { theme } = useContext(LensContext) as {
-    theme?: Theme,
-  }
-  if (theme) {
-    if (theme === 'dark') {
-      styles = darkThemeStyles
+  if (context) {
+    const { theme } = context as {
+      theme?: Theme,
+    }
+    if (theme) {
+      if (theme === 'dark') {
+        styles = darkThemeStyles
+      }
     }
   }
 

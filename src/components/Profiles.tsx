@@ -61,23 +61,24 @@ export function Profiles({
         if (data && data.exploreProfiles) {
          let { exploreProfiles: { pageInfo, items } } = data
          if (signedInUserAddress) {
-          const requestData = items.map(i => ({
-            followerAddress: signedInUserAddress,
-            profileId: i.id
-          }))
-          const response = await client.query(DoesFollowDocument, {
-            request: {
-              followInfos: requestData
-            }
-          }).toPromise()
-          items = items.map((item, index) => {
-            item.isFollowing = response?.data?.doesFollow[index].follows || false
-            return item
-          })
+           const requestData = items.map(i => ({
+             followerAddress: signedInUserAddress,
+               profileId: i.id
+             }))
+             const response = await client.query(DoesFollowDocument, {
+               request: {
+                 followInfos: requestData
+               }
+             }).toPromise()
+             items = items.map((item, index) => {
+               item.isFollowing = response?.data?.doesFollow[index].follows || false
+               return item
+             })
+          }
           return {
             pageInfo, items,
           }
-        }}
+      }
       } catch (err) {
         console.log('Error fetching profiles: ', err)
       }
