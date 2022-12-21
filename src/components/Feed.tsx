@@ -13,7 +13,8 @@ import {
   ExtendedPublication,
   PublicationStyles,
   FeedStyles,
-  PublicationFetchResults
+  PublicationFetchResults,
+  LensContextType
 } from '../types'
 import { configureIPFSURL } from '../utils'
 import { Publication as PublicationComponent } from './'
@@ -33,10 +34,10 @@ export function Feed({
     sortCriteria: PublicationSortCriteria.Latest,
     limit: 20
   },
-  ListHeaderComponent = null,
-  ListFooterComponent = null,
-  feed = null,
-  signedInUser = null,
+  ListHeaderComponent,
+  ListFooterComponent,
+  feed,
+  signedInUser,
   hideLikes = false,
   hideComments = false,
   hideMirrors = false,
@@ -53,16 +54,16 @@ export function Feed({
   styles = baseStyles,
 }: {
   query: FeedQuery,
-  ListHeaderComponent: React.FC,
-  ListFooterComponent: React.FC <{}>,
+  ListHeaderComponent?: React.FC,
+  ListFooterComponent?: React.FC <{}>,
   signedInUser?: ProfileMetadata
-  feed: ExtendedPublication[],
-  onCollectPress: any,
-  onCommentPress: any,
-  onMirrorPress: any,
-  onLikePress: any,
+  feed?: ExtendedPublication[],
+  onCollectPress: (publication: ExtendedPublication) => void,
+  onCommentPress: (publication: ExtendedPublication) => void,
+  onMirrorPress: (publication: ExtendedPublication) => void,
+  onLikePress: (publication: ExtendedPublication) => void,
+  onProfileImagePress: (publication: ExtendedPublication) => void,
   hideLikes: any,
-  onProfileImagePress: any,
   hideComments: boolean,
   hideMirrors: boolean,
   hideCollects: boolean,
@@ -76,58 +77,67 @@ export function Feed({
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
   const [loading, setLoading] = useState(false)
 
-  const { environment } = useContext(LensContext)
+  const { environment } = useContext(LensContext) as { environment: LensContextType['environment'] } || 'mainnet'
   const client = createClient(environment)
   
   useEffect(() => {
     fetchPublications()
   }, [])
 
-  async function fetchResponse(cursor: string = null) {
+  async function fetchResponse(cursor?: string) {
     if (query.name === 'explorePublications') {
       try {
-        let { data: { explorePublications }} = await client.query(ExplorePublicationsDocument, {
+        let { data } = await client.query(ExplorePublicationsDocument, {
           request: {
             cursor,
             publicationTypes: query.publicationTypes,
-            sortCriteria: query.sortCriteria,
+            sortCriteria: query.sortCriteria || PublicationSortCriteria.Latest,
             limit: query.limit
           }
         }).toPromise()
-        let {
-          pageInfo,
-          items
-        } = explorePublications as PublicationFetchResults
-        return {
-          pageInfo, items,
+        if (data) {
+          const { explorePublications } = data
+          let {
+            pageInfo,
+            items
+          } = explorePublications as PublicationFetchResults
+          return {
+            pageInfo, items,
+          }
         }
       } catch (err) {
         console.log('Error fetching explorePublications: ', err)
       }
     }
     if (query.name === 'getPublications') {
-      let { data: { publications: { pageInfo, items }}} = await client.query(PublicationsDocument, {
+      let { data } = await client.query(PublicationsDocument, {
         request: {
           profileId: query.profileId,
           cursor,
           publicationTypes: query.publicationTypes
         }
       }).toPromise()
-      return {
-        pageInfo, items
-      } as PublicationFetchResults
+      if (data) {
+        const { publications: { pageInfo, items }} = data
+        return {
+          pageInfo, items
+        } as PublicationFetchResults
+      }
     }
     if (query.name === 'getComments') {
       try {
-        let { data: { publications: { pageInfo, items }}} = await client.query(PublicationsDocument, {
+        let { data } = await client.query(PublicationsDocument, {
           request: {
             commentsOf: query.publicationId,
             cursor
           }
         }).toPromise()
-        return {
-          pageInfo, items
-        } as PublicationFetchResults
+        if (data) {
+          const { publications: { pageInfo, items }} = data
+          return {
+            pageInfo, items
+          } as PublicationFetchResults
+        }
       } catch (err) {
         console.log('error fetching comments...', err)
       }
@@ -136,14 +146,16 @@ export function Feed({
 
   async function fetchNextItems() {
     try {
-     const { next } = paginationInfo
-     fetchPublications(next)
+     if (paginationInfo) {
+       const { next } = paginationInfo
+       fetchPublications(next)
+     }
     } catch (err) {
      console.log('Error fetching next items:', err)
     }
   }
 
-  async function fetchPublications(cursor: string = null) {
+  async function fetchPublications(cursor?: string) {
     try {
       if (
         !feed ||
@@ -153,10 +165,10 @@ export function Feed({
         let {
           items,
           pageInfo
-        } : {
+        } = await fetchResponse(cursor) as {
           pageInfo: PaginatedResultInfo,
           items: ExtendedPublication[]
-        } = await fetchResponse(cursor)   
+        }  
         setPaginationInfo(pageInfo)
         items = items.filter(item => {
           const { metadata: { media } } = item

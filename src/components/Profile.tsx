@@ -1,13 +1,20 @@
 import { Feed, ProfileHeader } from './'
-import { PublicationTypes, Publication } from '../graphql/generated'
-import { ProfileHeaderStyles, FeedStyles, PublicationStyles, FeedQuery, ExtendedProfile } from '../types'
+import { PublicationTypes, Publication, PublicationSortCriteria } from '../graphql/generated'
+import {
+  ProfileHeaderStyles,
+  FeedStyles,
+  PublicationStyles,
+  FeedQuery,
+  ExtendedProfile,
+  ExtendedPublication
+} from '../types'
 
 export function Profile({
   profile,
   ListHeaderComponent = null,
-  ListFooterComponent = null,
-  feed = null,
-  signedInUser = null,
+  ListFooterComponent,
+  feed,
+  signedInUser,
   hideLikes = false,
   hideComments = false,
   hideMirrors = false,
@@ -21,7 +28,7 @@ export function Profile({
   query = {
     name: "getPublications",
     profileId: profile.id,
-    publicationTypes: [PublicationTypes.Post, PublicationTypes.Mirror]
+    publicationTypes: [PublicationTypes.Post, PublicationTypes.Mirror],
   },
   onFollowingPress = profile => console.log({ profile }),
   onFollowersPress = profile => console.log({ profile }),
@@ -33,9 +40,9 @@ export function Profile({
 } : {
   profile: ExtendedProfile,
   ListHeaderComponent: any,
-  ListFooterComponent: React.FC <{}>,
-  feed: Publication[],
-  signedInUser: any,
+  ListFooterComponent?: React.FC <{}>,
+  feed?: Publication[],
+  signedInUser?: any,
   hideLikes: boolean,
   hideComments: boolean,
   hideMirrors: boolean,
@@ -47,13 +54,13 @@ export function Profile({
   feedStyles: FeedStyles,
   publicationStyles: PublicationStyles,
   query: FeedQuery,
-  onFollowingPress: any,
-  onFollowersPress: any,
-  onProfileImagePress: any,
-  onCollectPress: any,
-  onCommentPress: any,
-  onMirrorPress: any,
-  onLikePress: any
+  onFollowingPress: (profile: ExtendedProfile) => void,
+  onFollowersPress: (profile: ExtendedProfile) => void,
+  onProfileImagePress: (publication: ExtendedPublication) => void,
+  onCollectPress: (publication: ExtendedPublication) => void,
+  onCommentPress: (publication: ExtendedPublication) => void,
+  onMirrorPress: (publication: ExtendedPublication) => void,
+  onLikePress: (publication: ExtendedPublication) => void,
 }) {
   const HeaderComponent = ListHeaderComponent ?
   ListHeaderComponent : (

@@ -3,7 +3,7 @@ import {
   FlatList, ActivityIndicator, StyleSheet
 } from 'react-native'
 import { createClient } from '../api'
-import { ProfilesQuery, ExtendedProfile } from '../types'
+import { ProfilesQuery, ExtendedProfile, LensContextType } from '../types'
 import {
   Profile,
   ExploreProfilesDocument,
@@ -31,18 +31,18 @@ export function Profiles({
   }
 } : {
   onFollowPress: (profile: ExtendedProfile, profiles: ExtendedProfile[]) => void,
-  onProfilePress: any,
-  profileData: ExtendedProfile[],
+  onProfilePress: (profile: ExtendedProfile) => void,
+  profileData: ExtendedProfile[] | null,
   onEndReachedThreshold: number,
   infiniteScroll: boolean,
   query: ProfilesQuery,
-  signedInUserAddress?: string
+  signedInUserAddress?: string | null
 }) {
-  const [profiles, setProfiles] = useState([])
+  const [profiles, setProfiles] = useState<ExtendedProfile[]>([])
   const [loading, setLoading] = useState(true)
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
   const context = useContext(LensContext)
-  const { environment } = context
+  const { environment } = context as { environment: LensContextType['environment'] } || 'mainnet'
   const client = createClient(environment)
   useEffect(() => {
     fetchProfiles()
@@ -50,65 +50,74 @@ export function Profiles({
 
   async function fetchResponse(cursor = null) {
     if (query.name === 'exploreProfiles') {
-      let { data: { exploreProfiles: { pageInfo, items } }} = await client.query(ExploreProfilesDocument, {
-        request: {
-          sortCriteria: query.sortCriteria,
-          cursor,
-          limit: query.limit
-        }
-      }).toPromise()
-      if (signedInUserAddress) {
-        const requestData = items.map(i => ({
-          followerAddress: signedInUserAddress,
-          profileId: i.id
-        }))
-        const response = await client.query(DoesFollowDocument, {
+      try {
+        let { data } = await client.query(ExploreProfilesDocument, {
           request: {
-            followInfos: requestData
+            sortCriteria: query.sortCriteria,
+            cursor,
+            limit: query.limit
           }
         }).toPromise()
-        items = items.map((item, index) => {
-          item.isFollowing = response.data.doesFollow[index].follows
-          return item
-        })
-      }
-      return {
-        pageInfo, items,
+        if (data && data.exploreProfiles) {
+         let { exploreProfiles: { pageInfo, items } } = data
+         if (signedInUserAddress) {
+          const requestData = items.map(i => ({
+            followerAddress: signedInUserAddress,
+            profileId: i.id
+          }))
+          const response = await client.query(DoesFollowDocument, {
+            request: {
+              followInfos: requestData
+            }
+          }).toPromise()
+          items = items.map((item, index) => {
+            item.isFollowing = response?.data?.doesFollow[index].follows || false
+            return item
+          })
+          return {
+            pageInfo, items,
+          }
+        }}
+      } catch (err) {
+        console.log('Error fetching profiles: ', err)
       }
     }
     if (query.name === 'getFollowing') {     
-      let { data: { following }}  = await client.query(FollowingDocument, {
+      let { data }  = await client.query(FollowingDocument, {
         request: {
           address: query.ethereumAddress,
           cursor,
           limit: query.limit || 25
         }
       }).toPromise()
-      let { pageInfo, items } : {
-        pageInfo: PaginatedResultInfo,
-        items: any
-      } = following
-      if (signedInUserAddress) {
-        const requestData = items.map(i => ({
-          followerAddress: signedInUserAddress,
-          profileId: i.profile.id
-        }))
-        const response = await client.query(DoesFollowDocument, {
-          request: {
-            followInfos: requestData
-          }
-        }).toPromise()
-        items = items.map((item, index) => {
-          item.profile.isFollowing = response.data.doesFollow[index].follows
-          return item.profile
-        })
-      } else {
-        items = items.map(item => {
-          return item.profile
-        })
-      }
-      return {
-        pageInfo, items
+      if (data) {
+        let  { following } = data
+        let { pageInfo, items } : {
+          pageInfo: PaginatedResultInfo,
+          items: any
+        } = following
+        if (signedInUserAddress) {
+          const requestData = items.map((i: any) => ({
+            followerAddress: signedInUserAddress,
+            profileId: i.profile.id
+          }))
+          const response = await client.query(DoesFollowDocument, {
+            request: {
+              followInfos: requestData
+            }
+          }).toPromise()
+          items = items.map((item: any, index: number) => {
+            item.profile.isFollowing = response?.data?.doesFollow[index].follows
+            return item.profile
+          })
+        } else {
+          items = items.map((item: any) => {
+            return item.profile
+          })
+        }
+        return {
+          pageInfo, items
+        }
       }
     }
   }
@@ -126,9 +135,9 @@ export function Profiles({
         setLoading(true)
         let {
           items, pageInfo
-        } : {
+        } = await fetchResponse(cursor) as {
           items: ExtendedProfile[], pageInfo: PaginatedResultInfo
-        } = await fetchResponse(cursor)
+        }
         setPaginationInfo(pageInfo)
         items = await Promise.all(items.map(profile => {
           let { picture, coverPicture } = profile
@@ -173,8 +182,10 @@ export function Profiles({
 
   async function fetchNextItems() {
     try {
-     const { next } = paginationInfo
-     fetchProfiles(next)
+     if (paginationInfo) {
+      const { next } = paginationInfo
+      fetchProfiles(next)
+     }
     } catch (err) {
      console.log('Error fetching next items: ', err)
     }
@@ -189,7 +200,7 @@ export function Profiles({
         key={index}
         onProfilePress={onProfilePress}
         profile={item}
-        onFollowPress={profile => onFollowPress(profile, profiles)}
+        onFollowPress={(profile: ExtendedProfile) => onFollowPress(profile, profiles)}
         isFollowing={item.isFollowing}
       />
     )

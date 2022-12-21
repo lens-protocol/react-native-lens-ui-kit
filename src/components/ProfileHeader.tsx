@@ -4,24 +4,38 @@ import {
 } from 'react-native'
 import { createClient } from '../api'
 import { ProfileDocument } from '../graphql/generated'
-import { ExtendedProfile, ProfileHeaderStyles } from '../types'
+import {
+  ExtendedProfile,
+  ProfileHeaderStyles,
+  LensContextType,
+  Theme,
+  ThemeColors
+} from '../types'
 import { LensContext } from '../context'
 
 export function ProfileHeader({
-  profileId = null,
-  profile: user = null,
+  profileId,
+  profile: user,
   onFollowingPress = profile => console.log({ profile }),
   onFollowersPress = profile => console.log({ profile }),
   styles = baseStyles,
 }: {
   profileId?: number,
   profile?: ExtendedProfile,
-  onFollowingPress: any,
-  onFollowersPress: any,
+  onFollowingPress: (profile: ExtendedProfile) => void,
+  onFollowersPress: (profile: ExtendedProfile) => void,
   styles?: ProfileHeaderStyles
 }) {
   const [fetchedProfile, setFetchedProfile] = useState<any | null>(null)
-  const { environment } = useContext(LensContext)
+  const { environment, theme } = useContext(LensContext) as {
+    theme?: Theme,
+    environment?: LensContextType['environment']
+  }
+  if (theme) {
+    if (theme === 'dark') {
+      styles = darkThemeStyles
+    }
+  }
   const client = createClient(environment)
   useEffect(() => {
     if (!profile) {
@@ -31,12 +45,15 @@ export function ProfileHeader({
   async function fetchProfile() {
     console.log("FETCHING PROFILE")
     try {
-      const { data: { profile: userProfile }} = await client.query(ProfileDocument, {
+      const { data } = await client.query(ProfileDocument, {
         request: {
           profileId
         }
       }).toPromise()
-      setFetchedProfile(userProfile)
+      if (data) {
+        const { profile: userProfile } = data
+        setFetchedProfile(userProfile)
+      }
     } catch (err) {
         console.log('error fetching profile: ', err)
       }
@@ -87,7 +104,7 @@ export function ProfileHeader({
       }
       <View style={styles.userDetails}>
         <Text style={styles.name}>{profile.name}</Text>
-        <Text style={styles.handle}>{profile.handle}</Text>
+        <Text style={styles.handle}>@{profile.handle}</Text>
         <Text style={styles.bio}>{profile.bio}</Text>
         <View style={styles.profileStats}>
           <TouchableHighlight
@@ -157,6 +174,67 @@ const baseStyles = StyleSheet.create({
   statsHeader: {
     marginLeft: 3,
     opacity: .7
+  },
+  profileFollowingData: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  profileFollowerData: {
+    marginLeft: 15,
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
+})
+
+const darkThemeStyles = StyleSheet.create({
+  container: {
+    backgroundColor: ThemeColors.black,
+    paddingBottom: 10
+  },
+  blankHeader: {
+    height: 120,
+    backgroundColor: 'black'
+  },
+  headerImage: {
+    width: '100%',
+    height: 120
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginTop: -50,
+    marginLeft: 25
+  },
+  userDetails: {
+    paddingHorizontal: 25,
+    paddingVertical: 10
+  },
+  name: {
+    fontWeight: '600',
+    fontSize: 20,
+    color: ThemeColors.white
+  },
+  handle: {
+    fontSize: 14,
+    color: ThemeColors.lightGray
+  },
+  bio: {
+    marginTop: 10,
+    color: 'white'
+  },
+  profileStats: {
+    flexDirection: 'row',
+    marginTop: 15
+  },
+  statsData: {
+    fontWeight: '600',
+    fontSize: 16,
+    color: ThemeColors.lightGray
+  },
+  statsHeader: {
+    marginLeft: 3,
+    color: ThemeColors.white
   },
   profileFollowingData: {
     flexDirection: 'row',

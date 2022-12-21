@@ -256,7 +256,8 @@ Allows you to pass global configurations to React Native Lens UI Kit.
 ### Options
 
 ```
-environment = 'testnet' | 'mainnet' (default) | 'sandbox'
+environment? = 'testnet' | 'mainnet' (default) | 'sandbox'
+theme? = 'light' (default) | 'dark
 ```
 
 ### Usage
@@ -265,7 +266,8 @@ environment = 'testnet' | 'mainnet' (default) | 'sandbox'
 import { LensProvider } from '@lens-protocol/react-native-lens-ui-kit'
 
 <LensProvider
-  environment="testnet"
+  environment='testnet'
+  theme='dark'
 >
   <App />
 </LensProvider>
@@ -288,7 +290,7 @@ Currently this project is in Alpha.
 
 ### V1 Roadmap
 
-- Theming
+- Improved theme-ing
 - Better TypeScript support
 - Support audio
 

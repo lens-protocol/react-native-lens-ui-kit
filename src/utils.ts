@@ -1,4 +1,4 @@
-export function configureIPFSURL(url) {
+export function configureIPFSURL(url: string) {
   if (url.startsWith('ipfs://')) {
     let result = url.substring(7, url.length)
     let modifiedUrl = `https://lens.infura-ipfs.io/ipfs/${result}`
@@ -10,7 +10,7 @@ export function configureIPFSURL(url) {
   }
 }
 
-export function returnIPFSPathorURL(url) {
+export function returnIPFSPathorURL(url: string) {
   if (url.startsWith('ipfs://')) {
     let result = url.substring(7, url.length)
     let modifiedUrl = `https://lens.infura-ipfs.io/ipfs/${result}`

@@ -12,8 +12,8 @@ import {
 
 export type FeedQuery = {
   name: string;
-  publicationTypes?: PublicationTypes[],
   sortCriteria?: PublicationSortCriteria,
+  publicationTypes?: PublicationTypes[],
   limit?: number;
   profileId?: number;
   publicationId?: number;
@@ -28,13 +28,30 @@ export type ProfilesQuery = {
   cursor?: string;
 }
 
-export interface Props {
-  Comp: React.ComponentType;
+export enum Theme {
+  light = 'light',
+  dark = 'dark'
+}
+
+export enum ThemeColors {
+  black = '#131313',
+  white = '#ffffff',
+  lightGray = 'rgba(255, 255, 255, .6)',
+  clearWhite = 'rgba(255, 255, 255, .15)'
+}
+
+export enum Environment {
+  testnet = 'testnet',
+  mainnet = 'mainnet',
+  sandbox = 'sandbox'
 }
 
 export interface LensContextType {
-  environment?: string;
+  environment?: Environment;
+  theme?: Theme;
 }
+
+export type LensContextProps = LensContextType | null
 
 /* Lens specific */
 export enum MetadataDisplayType {
@@ -207,7 +224,7 @@ export type ProfileListItemStyles = {
   followButton: {},
   followingButton: {},
   followButtonText: {},
-  followingButtonText: {}
+  followingButtonText: {},
 }
 
 export type FeedStyles = {

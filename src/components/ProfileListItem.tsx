@@ -1,7 +1,14 @@
 import {
   TouchableHighlight, View, Image, Text, StyleSheet
 } from 'react-native'
-import { ProfileListItemStyles, ExtendedProfile } from '../types'
+import { useContext } from 'react'
+import {
+  ProfileListItemStyles,
+  ExtendedProfile,
+  Theme,
+  ThemeColors
+} from '../types'
+import { LensContext } from '../context'
 
 export function ProfileListItem({
   profile,
@@ -16,7 +23,17 @@ export function ProfileListItem({
   isFollowing?: boolean,
   styles?: ProfileListItemStyles
 }) {
-  function renderFollowButton(isFollowing) {
+  const context = useContext(LensContext)
+  const { theme } = useContext(LensContext) as {
+    theme?: Theme,
+  }
+  if (theme) {
+    if (theme === 'dark') {
+      styles = darkThemeStyles
+    }
+  }
+
+  function renderFollowButton(isFollowing: boolean = false) {
     if (isFollowing) {
       return (
         <View style={styles.followingButton}>
@@ -55,7 +72,7 @@ export function ProfileListItem({
           </View>
           <View style={styles.infoContainer}>
             <Text style={styles.profileName}>{profile.name || profile.handle}</Text>
-            <Text style={styles.profileHandle}>{profile.handle}</Text>
+            <Text style={styles.profileHandle}>@{profile.handle}</Text>
             <Text style={styles.profileBio}>{profile.bio && profile.bio.substring(0, 150)}</Text>
             
           </View>
@@ -94,7 +111,8 @@ const baseStyles = StyleSheet.create({
   profileName: {
     fontWeight: '600',
     fontSize: 16,
-    maxWidth: 200
+    maxWidth: 200,
+    
   },
   profileHandle: {
     marginTop: 3,
@@ -139,6 +157,78 @@ const baseStyles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     color: 'black'
+  }
+})
+
+const darkThemeStyles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    paddingLeft: 15,
+    paddingVertical: 12,
+    backgroundColor: ThemeColors.black,
+    borderBottomColor: ThemeColors.clearWhite,
+    borderBottomWidth: 1
+  },
+  avatarContainer: {
+    padding: 5
+  },
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22
+  },
+  profileName: {
+    fontWeight: '600',
+    fontSize: 16,
+    maxWidth: 200,
+    color: ThemeColors.white
+  },
+  profileHandle: {
+    marginTop: 3,
+    axWidth: 200,
+    color: ThemeColors.lightGray
+  },
+  profileBio: {
+    maxWidth: 200,
+    marginTop: 15,
+    color: ThemeColors.white
+  },
+  infoContainer: {
+    justifyContent: 'center',
+    paddingLeft: 10,
+    maxWidth: 200,
+  },
+  followButtonContainer: {
+    flex: 1,
+    alignItems: 'flex-end', 
+    paddingRight: 20
+  },
+  followButton: {
+    borderWidth: 1,
+    borderRadius: 34,
+    paddingHorizontal: 17,
+    paddingVertical:7,
+    marginTop: 3,
+    backgroundColor: ThemeColors.white,
+    color: ThemeColors.black
+  },
+  followingButton: {
+    borderWidth: 1,
+    borderRadius: 34,
+    paddingHorizontal: 17,
+    paddingVertical:7,
+    marginTop: 3,
+    borderColor: ThemeColors.white
+  },
+  followButtonText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: ThemeColors.black
+  },
+  followingButtonText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: ThemeColors.white
   }
 })
 

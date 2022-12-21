@@ -1,4 +1,5 @@
 import { createClient as createUrqlClient } from 'urql'
+import { Environment } from './types'
 
 const environments = {
   testnet: 'https://api-mumbai.lens.dev',
@@ -7,8 +8,8 @@ const environments = {
 }
 
 /* creates the API client */
-export function createClient(env = 'mainnet') {
-  const APIURL = environments[env]
+export function createClient(env:Environment = Environment.mainnet) {
+  const APIURL = environments[env] || environments.mainnet
   return createUrqlClient({
     url: APIURL
   })
