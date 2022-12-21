@@ -27,16 +27,23 @@ export function ProfileHeader({
   styles?: ProfileHeaderStyles
 }) {
   const [fetchedProfile, setFetchedProfile] = useState<any | null>(null)
-  const { environment, theme } = useContext(LensContext) as {
-    theme?: Theme,
-    environment?: LensContextType['environment']
-  }
-  if (theme) {
-    if (theme === 'dark') {
-      styles = darkThemeStyles
+  const context = useContext(LensContext)
+  let client = createClient()
+  if (context) {
+    const { environment, theme } = context as {
+      theme?: Theme,
+      environment?: LensContextType['environment']
+    }
+    if (theme) {
+      if (theme === 'dark') {
+        styles = darkThemeStyles
+      }
+    }
+    if (environment) {
+      client = createClient(environment)
     }
   }
-  const client = createClient(environment)
+
   useEffect(() => {
     if (!profile) {
       fetchProfile()
