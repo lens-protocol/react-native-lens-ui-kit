@@ -53,23 +53,23 @@ export function Feed({
   publicationStyles,
   styles = baseStyles,
 }: {
-  query: FeedQuery,
+  query?: FeedQuery,
   ListHeaderComponent?: React.FC,
   ListFooterComponent?: React.FC <{}>,
   signedInUser?: ProfileMetadata
   feed?: ExtendedPublication[],
-  onCollectPress: (publication: ExtendedPublication) => void,
-  onCommentPress: (publication: ExtendedPublication) => void,
-  onMirrorPress: (publication: ExtendedPublication) => void,
-  onLikePress: (publication: ExtendedPublication) => void,
-  onProfileImagePress: (publication: ExtendedPublication) => void,
-  hideLikes: any,
-  hideComments: boolean,
-  hideMirrors: boolean,
-  hideCollects: boolean,
+  onCollectPress?: (publication: ExtendedPublication) => void,
+  onCommentPress?: (publication: ExtendedPublication) => void,
+  onMirrorPress?: (publication: ExtendedPublication) => void,
+  onLikePress?: (publication: ExtendedPublication) => void,
+  onProfileImagePress?: (publication: ExtendedPublication) => void,
+  hideLikes?: any,
+  hideComments?: boolean,
+  hideMirrors?: boolean,
+  hideCollects?: boolean,
   iconColor?: string,
-  infiniteScroll: boolean,
-  onEndReachedThreshold: number,
+  infiniteScroll?: boolean,
+  onEndReachedThreshold?: number,
   styles?: FeedStyles,
   publicationStyles?: PublicationStyles
 }) {
@@ -77,7 +77,7 @@ export function Feed({
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
   const [loading, setLoading] = useState(false)
 
-  const { environment } = useContext(LensContext) as { environment: LensContextType['environment'] } || 'mainnet'
+  const { environment } = useContext(LensContext) as LensContextType
   const client = createClient(environment)
   
   useEffect(() => {

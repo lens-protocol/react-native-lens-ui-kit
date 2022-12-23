@@ -5,8 +5,8 @@ import { useContext } from 'react'
 import {
   ProfileListItemStyles,
   ExtendedProfile,
-  Theme,
-  ThemeColors
+  ThemeColors,
+  LensContextType
 } from '../types'
 import { LensContext } from '../context'
 
@@ -23,18 +23,12 @@ export function ProfileListItem({
   isFollowing?: boolean,
   styles?: ProfileListItemStyles
 }) {
-  const context = useContext(LensContext)
-  if (context) {
-    const { theme } = context as {
-      theme?: Theme,
-    }
-    if (theme) {
-      if (theme === 'dark') {
-        styles = darkThemeStyles
-      }
+  const { theme } = useContext(LensContext) as LensContextType
+  if (theme) {
+    if (theme === 'dark') {
+      styles = darkThemeStyles
     }
   }
-
   function renderFollowButton(isFollowing: boolean = false) {
     if (isFollowing) {
       return (

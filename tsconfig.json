@@ -8,6 +8,7 @@
     "moduleResolution": "Node",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "declaration": true,
     "jsx": "react-jsx",
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,

@@ -11,7 +11,7 @@ import { formatDistanceStrict } from 'date-fns'
 import {
   PublicationStyles,
   ExtendedPublication,
-  Theme,
+  LensContextType,
   ThemeColors
 } from '../types'
 import { returnIPFSPathorURL } from '../utils'
@@ -49,16 +49,11 @@ export function Publication({
   onProfileImagePress: (publication: ExtendedPublication) => void,
   styles?: PublicationStyles
 }) {
-  const context = useContext(LensContext)
-  if (context) {
-    const { theme } = useContext(LensContext) as {
-      theme?: Theme
-    }
-    if (theme) {
-      if (theme === 'dark') {
-        styles = darkThemeStyles
-        iconColor = ThemeColors.lightGray
-      }
+  const { theme } = useContext(LensContext) as LensContextType
+  if (theme) {
+    if (theme === 'dark') {
+      styles = darkThemeStyles
+      iconColor = ThemeColors.lightGray
     }
   }
   return (

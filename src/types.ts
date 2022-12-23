@@ -1,5 +1,4 @@
 import {
-  MediaOutput,
   PublicationTypes,
   PublicationSortCriteria,
   ProfileSortCriteria,
@@ -22,7 +21,7 @@ export type FeedQuery = {
 
 export type ProfilesQuery = {
   name: string;
-  sortCriteria: ProfileSortCriteria;
+  sortCriteria?: ProfileSortCriteria;
   limit?: number;
   ethereumAddress?: string;
   cursor?: string;
@@ -33,17 +32,10 @@ export enum Theme {
   dark = 'dark'
 }
 
-export enum ThemeColors {
-  black = '#131313',
-  white = '#ffffff',
-  lightGray = 'rgba(255, 255, 255, .6)',
-  clearWhite = 'rgba(255, 255, 255, .15)'
-}
-
 export enum Environment {
   testnet = 'testnet',
   mainnet = 'mainnet',
-  sandbox = 'sandbox'
+  sandbox = 'sandbox',
 }
 
 export interface LensContextType {
@@ -51,7 +43,12 @@ export interface LensContextType {
   theme?: Theme;
 }
 
-export type LensContextProps = LensContextType | null
+export enum ThemeColors {
+  black = '#131313',
+  white = '#ffffff',
+  lightGray = 'rgba(255, 255, 255, .6)',
+  clearWhite = 'rgba(255, 255, 255, .15)'
+}
 
 /* Lens specific */
 export enum MetadataDisplayType {
@@ -83,52 +80,6 @@ export interface GenericMetadata {
    * This is the appId the content belongs to
    */
   appId?: string;
-}
-
-interface MetadataMedia {
-  item: string;
-  /**
-   * This is the mime type of media
-   */
-  type: string;
-}
-
-export interface MetadataAttribute {
-  displayType?: MetadataDisplayType;
-  traitType?: string;
-  value: string;
-}
-
-export interface Metadata extends GenericMetadata {
-  description?: string;
-  content?: string;
-  external_url?: string | null;
-  name: string;
-  attributes: MetadataAttribute[];
-  image?: string | null;
-  imageMimeType?: string | null;
-  media?: MediaOutput[];
-  animation_url?: string;
-  locale: string;
-  tags?: string[];
-  contentWarning?: PublicationContentWarning;
-  mainContentFocus: PublicationMainFocus;
-}
-
-export enum PublicationContentWarning {
-  NSFW = 'NSFW',
-  SENSITIVE = 'SENSITIVE',
-  SPOILER = 'SPOILER',
-}
-
-export enum PublicationMainFocus {
-  VIDEO = 'VIDEO',
-  IMAGE = 'IMAGE',
-  ARTICLE = 'ARTICLE',
-  TEXT_ONLY = 'TEXT_ONLY',
-  AUDIO = 'AUDIO',
-  LINK = 'LINK',
-  EMBED = 'EMBED',
 }
 
 export interface AttributeData {

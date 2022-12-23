@@ -3,7 +3,12 @@ import {
   FlatList, ActivityIndicator, StyleSheet
 } from 'react-native'
 import { createClient } from '../api'
-import { ProfilesQuery, ExtendedProfile, LensContextType } from '../types'
+import {
+  ProfilesQuery,
+  ExtendedProfile,
+  Environment,
+  LensContextType
+} from '../types'
 import {
   Profile,
   ExploreProfilesDocument,
@@ -20,30 +25,30 @@ import { LensContext } from '../context'
 export function Profiles({
   onFollowPress  = profile => console.log({ profile }),
   onProfilePress = profile => console.log({ profile }),
-  profileData = null,
+  profileData,
   onEndReachedThreshold = .7,
   infiniteScroll = true,
-  signedInUserAddress = null,
+  signedInUserAddress,
   query = {
     name: 'exploreProfiles',
     sortCriteria: ProfileSortCriteria.MostFollowers,
     limit: 25
   }
 } : {
-  onFollowPress: (profile: ExtendedProfile, profiles: ExtendedProfile[]) => void,
-  onProfilePress: (profile: ExtendedProfile) => void,
-  profileData: ExtendedProfile[] | null,
-  onEndReachedThreshold: number,
-  infiniteScroll: boolean,
-  query: ProfilesQuery,
-  signedInUserAddress?: string | null
+  onFollowPress?: (profile: ExtendedProfile, profiles: ExtendedProfile[]) => void,
+  onProfilePress?: (profile: ExtendedProfile) => void,
+  profileData?: ExtendedProfile[],
+  onEndReachedThreshold?: number,
+  infiniteScroll?: boolean,
+  query?: ProfilesQuery,
+  signedInUserAddress?: string
 }) {
   const [profiles, setProfiles] = useState<ExtendedProfile[]>([])
   const [loading, setLoading] = useState(true)
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
-  const context = useContext(LensContext)
-  const { environment } = context as { environment: LensContextType['environment'] } || 'mainnet'
+  const { environment } = useContext(LensContext) as LensContextType
   const client = createClient(environment)
+
   useEffect(() => {
     fetchProfiles()
   }, [])
@@ -53,7 +58,7 @@ export function Profiles({
       try {
         let { data } = await client.query(ExploreProfilesDocument, {
           request: {
-            sortCriteria: query.sortCriteria,
+            sortCriteria: query.sortCriteria || ProfileSortCriteria.MostFollowers,
             cursor,
             limit: query.limit
           }

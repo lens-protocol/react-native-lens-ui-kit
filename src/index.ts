@@ -1,4 +1,2 @@
-import * as types from './types'
-
+export * from './types'
 export * from './components'
-export { types }
