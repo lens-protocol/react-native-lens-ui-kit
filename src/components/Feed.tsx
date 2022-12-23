@@ -76,6 +76,7 @@ export function Feed({
   const [publications, setPublications] = useState<ExtendedPublication[]>([])
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
   const [loading, setLoading] = useState(false)
+  const [canPaginate, setCanPaginate] = useState<Boolean>(true)
 
   const { environment } = useContext(LensContext) as LensContextType
   const client = createClient(environment)
@@ -146,9 +147,13 @@ export function Feed({
 
   async function fetchNextItems() {
     try {
-     if (paginationInfo) {
+     if (canPaginate && paginationInfo) {
        const { next } = paginationInfo
-       fetchPublications(next)
+       if (!next) {
+        setCanPaginate(false)
+       } else {
+        fetchPublications(next)
+       }
      }
     } catch (err) {
      console.log('Error fetching next items:', err)
@@ -205,7 +210,7 @@ export function Feed({
 
           item.profile = profile
           item.profileSet = true
-          return item          
+          return item
         })
 
         if (cursor) {

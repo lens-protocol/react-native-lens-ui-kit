@@ -44,7 +44,8 @@ export function Profiles({
   signedInUserAddress?: string
 }) {
   const [profiles, setProfiles] = useState<ExtendedProfile[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState<Boolean>(true)
+  const [canPaginate, setCanPaginate] = useState<Boolean>(true)
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
   const { environment } = useContext(LensContext) as LensContextType
   const client = createClient(environment)
@@ -86,6 +87,7 @@ export function Profiles({
       }
       } catch (err) {
         console.log('Error fetching profiles: ', err)
+        setLoading(false)
       }
     }
     if (query.name === 'getFollowing') {     
@@ -177,6 +179,7 @@ export function Profiles({
       }
     } catch (err) {
       console.log("Error fetching profiles... ", err)
+      setLoading(false)
     }
   }
 
@@ -188,9 +191,13 @@ export function Profiles({
 
   async function fetchNextItems() {
     try {
-     if (paginationInfo) {
+     if (canPaginate && paginationInfo) {
       const { next } = paginationInfo
-      fetchProfiles(next)
+      if (!next) {
+        setCanPaginate(false)
+      } else {
+        fetchProfiles(next)
+      }
      }
     } catch (err) {
      console.log('Error fetching next items: ', err)
