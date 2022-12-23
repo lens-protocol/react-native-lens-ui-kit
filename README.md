@@ -263,11 +263,15 @@ theme? = 'light' (default) | 'dark
 ### Usage
 
 ```tsx
-import { LensProvider } from '@lens-protocol/react-native-lens-ui-kit'
+import {
+  LensProvider,
+  Theme,
+  Environment
+} from '@lens-protocol/react-native-lens-ui-kit'
 
 <LensProvider
-  environment='testnet'
-  theme='dark'
+  environment={Environment.mainnet}
+  theme={Theme.dark}
 >
   <App />
 </LensProvider>
