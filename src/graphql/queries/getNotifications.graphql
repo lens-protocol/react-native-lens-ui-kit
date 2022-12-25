@@ -1,0 +1,43 @@
+query notifications(
+  $observerId: ProfileId!
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $sources: [Sources!]
+) {
+  result: notifications(
+    request: {
+      profileId: $observerId
+      limit: $limit
+      cursor: $cursor
+      sources: $sources
+    }
+  ) {
+    items {
+      ... on NewFollowerNotification {
+        ...NewFollowerNotificationFields
+      }
+
+      ... on NewMirrorNotification {
+        ...NewMirrorNotificationFields
+      }
+
+      ... on NewCollectNotification {
+        ...NewCollectNotificationFields
+      }
+
+      ... on NewCommentNotification {
+        ...NewCommentNotificationFields
+      }
+
+      ... on NewMentionNotification {
+        ...NewMentionNotificationFields
+      }
+      ... on NewReactionNotification {
+        ...NewReactionNotificationFields
+      }
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

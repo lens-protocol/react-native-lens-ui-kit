@@ -1,0 +1,21 @@
+fragment RelayerResult on RelayerResult {
+  __typename
+  txHash
+  txId
+}
+
+fragment RelayError on RelayError {
+  __typename
+  reason
+}
+
+fragment TransactionIndexedResult on TransactionIndexedResult {
+  __typename
+  indexed
+  txHash
+}
+
+fragment TransactionError on TransactionError {
+  __typename
+  reason
+}

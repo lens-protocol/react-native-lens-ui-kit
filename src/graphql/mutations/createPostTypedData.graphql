@@ -1,0 +1,30 @@
+mutation createPostTypedData(
+  $request: CreatePublicPostRequest!
+  $options: TypedDataOptions
+) {
+  result: createPostTypedData(request: $request, options: $options) {
+    id
+    expiresAt
+    typedData {
+      types {
+        PostWithSig {
+          name
+          type
+        }
+      }
+      domain {
+        ...EIP712TypedDataDomain
+      }
+      value {
+        nonce
+        deadline
+        profileId
+        contentURI
+        collectModule
+        collectModuleInitData
+        referenceModule
+        referenceModuleInitData
+      }
+    }
+  }
+}

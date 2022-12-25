@@ -1,0 +1,17 @@
+query profileFollowers(
+  $profileId: ProfileId!
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $observerId: ProfileId
+) {
+  result: followers(
+    request: { profileId: $profileId, limit: $limit, cursor: $cursor }
+  ) {
+    items {
+      ...Follower
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

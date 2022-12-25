@@ -1,0 +1,25 @@
+query comments(
+  $observerId: ProfileId
+  $commentsOf: InternalPublicationId!
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $sources: [Sources!]
+) {
+  result: publications(
+    request: {
+      limit: $limit
+      cursor: $cursor
+      commentsOf: $commentsOf
+      sources: $sources
+    }
+  ) {
+    items {
+      ... on Comment {
+        ...CommentWithFirstComment
+      }
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

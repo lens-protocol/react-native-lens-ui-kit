@@ -1,0 +1,11 @@
+mutation createProfile($request: CreateProfileRequest!) {
+  result: createProfile(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}

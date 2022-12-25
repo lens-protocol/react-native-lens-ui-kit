@@ -1,0 +1,34 @@
+query walletCollectedPublications(
+  $observerId: ProfileId
+  $walletAddress: EthereumAddress!
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $sources: [Sources!]
+) {
+  result: publications(
+    request: {
+      collectedBy: $walletAddress
+      limit: $limit
+      cursor: $cursor
+      publicationTypes: [POST, COMMENT]
+      sources: $sources
+    }
+  ) {
+    items {
+      ... on Post {
+        ...Post
+      }
+
+      ... on Mirror {
+        ...Mirror
+      }
+
+      ... on Comment {
+        ...Comment
+      }
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

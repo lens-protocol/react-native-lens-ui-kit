@@ -1,0 +1,17 @@
+query profileFollowing(
+  $walletAddress: EthereumAddress!
+  $limit: LimitScalar!
+  $cursor: Cursor
+  $observerId: ProfileId
+) {
+  result: following(
+    request: { address: $walletAddress, limit: $limit, cursor: $cursor }
+  ) {
+    items {
+      ...Following
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

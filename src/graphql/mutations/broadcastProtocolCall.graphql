@@ -1,0 +1,11 @@
+mutation broadcastProtocolCall($request: BroadcastRequest!) {
+  result: broadcast(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}

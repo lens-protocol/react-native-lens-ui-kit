@@ -1,0 +1,101 @@
+fragment MediaFields on Media {
+  __typename
+  url
+  mimeType
+}
+
+fragment MediaSet on MediaSet {
+  __typename
+  original {
+    ...MediaFields
+  }
+}
+
+fragment FeeFollowModuleSettings on FeeFollowModuleSettings {
+  __typename
+  amount {
+    ...ModuleFeeAmount
+  }
+  contractAddress
+  recipient
+}
+
+fragment ProfileFollowModuleSettings on ProfileFollowModuleSettings {
+  __typename
+  contractAddress
+}
+
+fragment RevertFollowModuleSettings on RevertFollowModuleSettings {
+  __typename
+  contractAddress
+}
+
+fragment ProfileMediaFields on ProfileMedia {
+  ... on NftImage {
+    __typename
+    contractAddress
+    tokenId
+    uri
+    verified
+  }
+
+  ... on MediaSet {
+    ...MediaSet
+  }
+}
+
+fragment Attribute on Attribute {
+  __typename
+  key
+  value
+}
+
+fragment ProfileFields on Profile {
+  __typename
+  id
+  name
+  bio
+  handle
+  ownedBy
+  attributes {
+    ...Attribute
+  }
+  picture {
+    ...ProfileMediaFields
+  }
+  coverPicture {
+    ...ProfileMediaFields
+  }
+  stats {
+    __typename
+    totalFollowers
+    totalFollowing
+    totalPosts
+  }
+  followModule {
+    ... on FeeFollowModuleSettings {
+      ...FeeFollowModuleSettings
+    }
+
+    ... on ProfileFollowModuleSettings {
+      ...ProfileFollowModuleSettings
+    }
+
+    ... on RevertFollowModuleSettings {
+      ...RevertFollowModuleSettings
+    }
+  }
+  dispatcher {
+    address
+    canUseRelay
+  }
+
+  isFollowedByMe(isFinalisedOnChain: true)
+  isFollowing(who: $observerId)
+
+  isOptimisticFollowedByMe @client
+  location @client
+  twitter @client
+  website @client
+  ownedByMe @client
+}
