@@ -1,0 +1,5 @@
+query profilesToFollow($observerId: ProfileId) {
+  result: recommendedProfiles {
+    ...ProfileFields
+  }
+}

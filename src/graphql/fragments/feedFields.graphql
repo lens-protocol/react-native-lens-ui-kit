@@ -1,0 +1,15 @@
+fragment FeedItem on FeedItem {
+  __typename
+  root {
+    ... on Post {
+      ...Post
+    }
+
+    ... on Comment {
+      ...Comment
+    }
+  }
+  comments {
+    ...Comment
+  }
+}

@@ -1,0 +1,10 @@
+query getAllProfilesByOwnerAddress(
+  $address: EthereumAddress!
+  $observerId: ProfileId
+) {
+  profilesByOwner: profiles(request: { ownedBy: [$address] }) {
+    items {
+      ...ProfileFields
+    }
+  }
+}

@@ -1,0 +1,5 @@
+query authChallenge($address: EthereumAddress!) {
+  result: challenge(request: { address: $address }) {
+    text
+  }
+}

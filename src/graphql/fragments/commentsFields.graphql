@@ -1,0 +1,7 @@
+fragment CommentWithFirstComment on Comment {
+  __typename
+  ...Comment
+  firstComment {
+    ...Comment
+  }
+}

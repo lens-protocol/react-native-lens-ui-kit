@@ -1,0 +1,13 @@
+fragment Follower on Follower {
+  __typename
+  wallet {
+    ...Wallet
+  }
+}
+
+fragment Following on Following {
+  __typename
+  profile {
+    ...ProfileFields
+  }
+}

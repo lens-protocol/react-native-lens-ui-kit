@@ -1,0 +1,11 @@
+query hasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
+  result: hasTxHashBeenIndexed(request: $request) {
+    ... on TransactionIndexedResult {
+      ...TransactionIndexedResult
+    }
+
+    ... on TransactionError {
+      ...TransactionError
+    }
+  }
+}

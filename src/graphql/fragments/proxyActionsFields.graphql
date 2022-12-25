@@ -1,0 +1,17 @@
+fragment ProxyActionStatusResult on ProxyActionStatusResult {
+  __typename
+  txHash
+  txId
+  status
+}
+
+fragment ProxyActionError on ProxyActionError {
+  __typename
+  reason
+  lastKnownTxId
+}
+
+fragment ProxyActionQueued on ProxyActionQueued {
+  __typename
+  queuedAt
+}

@@ -1,0 +1,5 @@
+query enabledModuleCurrencies {
+  result: enabledModuleCurrencies {
+    ...Erc20
+  }
+}

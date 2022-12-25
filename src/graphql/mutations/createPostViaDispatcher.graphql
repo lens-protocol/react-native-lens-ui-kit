@@ -1,0 +1,11 @@
+mutation createPostViaDispatcher($request: CreatePublicPostRequest!) {
+  result: createPostViaDispatcher(request: $request) {
+    ... on RelayerResult {
+      ...RelayerResult
+    }
+
+    ... on RelayError {
+      ...RelayError
+    }
+  }
+}

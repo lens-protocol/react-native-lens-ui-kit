@@ -1,0 +1,7 @@
+query unreadNotificationCount($profileId: ProfileId!, $sources: [Sources!]) {
+  result: notifications(request: { profileId: $profileId, sources: $sources }) {
+    pageInfo {
+      totalCount
+    }
+  }
+}

@@ -1,0 +1,22 @@
+query mutualFollowersProfiles(
+  $observerId: ProfileId!
+  $viewingProfileId: ProfileId!
+  $limit: LimitScalar!
+  $cursor: Cursor
+) {
+  result: mutualFollowersProfiles(
+    request: {
+      yourProfileId: $observerId
+      viewingProfileId: $viewingProfileId
+      limit: $limit
+      cursor: $cursor
+    }
+  ) {
+    items {
+      ...ProfileFields
+    }
+    pageInfo {
+      ...CommonPaginatedResultInfo
+    }
+  }
+}

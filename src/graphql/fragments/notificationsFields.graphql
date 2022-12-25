@@ -1,0 +1,111 @@
+fragment CommentWithCommentedPublicationFields on Comment {
+  __typename
+  ...Comment
+  commentOn {
+    ... on Post {
+      ...Post
+    }
+    ... on Mirror {
+      ...Mirror
+    }
+    ... on Comment {
+      ...Comment
+    }
+  }
+}
+
+fragment NewFollowerNotificationFields on NewFollowerNotification {
+  __typename
+  notificationId
+  createdAt
+  isFollowedByMe
+  wallet {
+    ...Wallet
+  }
+}
+
+fragment NewCollectNotificationFields on NewCollectNotification {
+  __typename
+  notificationId
+  createdAt
+  wallet {
+    ...Wallet
+  }
+  collectedPublication {
+    ... on Post {
+      ...Post
+    }
+
+    ... on Mirror {
+      ...Mirror
+    }
+
+    ... on Comment {
+      ...Comment
+    }
+  }
+}
+
+fragment NewMirrorNotificationFields on NewMirrorNotification {
+  __typename
+  notificationId
+  createdAt
+  profile {
+    ...ProfileFields
+  }
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+  }
+}
+
+fragment NewCommentNotificationFields on NewCommentNotification {
+  __typename
+  notificationId
+  createdAt
+  profile {
+    ...ProfileFields
+  }
+  comment {
+    ...CommentWithCommentedPublicationFields
+  }
+}
+
+fragment NewMentionNotificationFields on NewMentionNotification {
+  __typename
+  notificationId
+  createdAt
+  mentionPublication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+  }
+}
+
+fragment NewReactionNotificationFields on NewReactionNotification {
+  __typename
+  notificationId
+  createdAt
+  profile {
+    ...ProfileFields
+  }
+  reaction
+  publication {
+    ... on Post {
+      ...Post
+    }
+    ... on Comment {
+      ...Comment
+    }
+    ... on Mirror {
+      ...Mirror
+    }
+  }
+}

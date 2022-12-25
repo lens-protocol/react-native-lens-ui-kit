@@ -1,4 +1,4 @@
-query ExplorePublications($request: ExplorePublicationRequest!) {
+query explorePublications($request: ExplorePublicationRequest!) {
   explorePublications(request: $request) {
     items {
       __typename
