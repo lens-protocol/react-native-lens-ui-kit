@@ -530,7 +530,7 @@ export type CreateFollowEip712TypedDataTypes = {
 /** The create follow eip 712 typed data value */
 export type CreateFollowEip712TypedDataValue = {
   __typename?: 'CreateFollowEIP712TypedDataValue';
-  datas: Array<Scalars['BlockchainData']>;
+  data: Array<Scalars['BlockchainData']>;
   deadline: Scalars['UnixTimestamp'];
   nonce: Scalars['Nonce'];
   profileIds: Array<Scalars['ProfileId']>;
@@ -2764,7 +2764,7 @@ export enum PublicationMediaSource {
   Lens = 'LENS'
 }
 
-/** Publication metadata content waring filters */
+/** Publication metadata content warning filters */
 export type PublicationMetadataContentWarningFilter = {
   /** By default all content warnings will be hidden you can include them in your query by adding them to this array. */
   includeOneOf?: InputMaybe<Array<PublicationContentWarning>>;
@@ -3342,7 +3342,7 @@ export type RecommendedProfileOptions = {
 export type ReferenceModule = DegreesOfSeparationReferenceModuleSettings | FollowOnlyReferenceModuleSettings | UnknownReferenceModuleSettings;
 
 export type ReferenceModuleParams = {
-  /** The degrees of seperation reference module */
+  /** The degrees of separation reference module */
   degreesOfSeparationReferenceModule?: InputMaybe<DegreesOfSeparationReferenceModuleParams>;
   /** The follower only reference module */
   followerOnlyReferenceModule?: InputMaybe<Scalars['Boolean']>;
