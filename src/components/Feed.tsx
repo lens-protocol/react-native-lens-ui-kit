@@ -180,6 +180,7 @@ export function Feed({
           if (media.length) {
             if (media[0].original) {
               if (media[0].original.mimeType === 'image/jpeg') return true
+              if (media[0].original.mimeType === 'image/gif') return true
               if (media[0].original.mimeType === 'image/png') return true
               return false
             }

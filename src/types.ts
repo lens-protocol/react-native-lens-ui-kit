@@ -6,7 +6,8 @@ import {
   Post,
   Comment,
   Mirror,
-  PaginatedResultInfo
+  PaginatedResultInfo,
+  PublicationMetadataFilters
 } from './graphql/generated'
 
 export type FeedQuery = {
@@ -17,6 +18,7 @@ export type FeedQuery = {
   profileId?: number;
   publicationId?: number;
   cursor?: string;
+  metadata?: PublicationMetadataFilters
 }
 
 export type ProfilesQuery = {
