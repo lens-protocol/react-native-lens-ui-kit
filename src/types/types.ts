@@ -7,19 +7,19 @@ import {
   Comment,
   Mirror,
   PaginatedResultInfo,
-  PublicationMetadataFilters
-} from './graphql/generated'
+  PublicationMetadataFilters,
+} from "../graphql/generated";
 
 export type FeedQuery = {
   name: string;
-  sortCriteria?: PublicationSortCriteria,
-  publicationTypes?: PublicationTypes[],
+  sortCriteria?: PublicationSortCriteria;
+  publicationTypes?: PublicationTypes[];
   limit?: number;
   profileId?: number;
   publicationId?: number;
   cursor?: string;
-  metadata?: PublicationMetadataFilters
-}
+  metadata?: PublicationMetadataFilters;
+};
 
 export type ProfilesQuery = {
   name: string;
@@ -27,17 +27,17 @@ export type ProfilesQuery = {
   limit?: number;
   ethereumAddress?: string;
   cursor?: string;
-}
+};
 
 export enum Theme {
-  light = 'light',
-  dark = 'dark'
+  light = "light",
+  dark = "dark",
 }
 
 export enum Environment {
-  testnet = 'testnet',
-  mainnet = 'mainnet',
-  sandbox = 'sandbox',
+  testnet = "testnet",
+  mainnet = "mainnet",
+  sandbox = "sandbox",
 }
 
 export interface LensContextType {
@@ -46,17 +46,17 @@ export interface LensContextType {
 }
 
 export enum ThemeColors {
-  black = '#131313',
-  white = '#ffffff',
-  lightGray = 'rgba(255, 255, 255, .6)',
-  clearWhite = 'rgba(255, 255, 255, .15)'
+  black = "#131313",
+  white = "#ffffff",
+  lightGray = "rgba(255, 255, 255, .6)",
+  clearWhite = "rgba(255, 255, 255, .15)",
 }
 
 /* Lens specific */
 export enum MetadataDisplayType {
-  number = 'number',
-  string = 'string',
-  date = 'date',
+  number = "number",
+  string = "string",
+  date = "date",
 }
 
 export interface SignatureContext {
@@ -121,7 +121,10 @@ export interface ExtendedMirror extends Mirror {
   originalProfile?: ExtendedProfile;
 }
 
-export type ExtendedPublication = ExtendedComment | ExtendedMirror | ExtendedPost
+export type ExtendedPublication =
+  | ExtendedComment
+  | ExtendedMirror
+  | ExtendedPost;
 
 export interface PublicationFetchResults {
   pageInfo: PaginatedResultInfo;
@@ -130,58 +133,58 @@ export interface PublicationFetchResults {
 
 /* Styles */
 export type PublicationStyles = {
-  publicationWrapper: {},
-  publicationContainer: {},
-  missingAvatarPlaceholder: {},
-  smallAvatar: {},
-  postContentContainer: {},
-  postText: {},
-  metadataImage: {},
-  statsContainer: {},
-  statsDetailContainer: {},
-  statsDetailText: {},
-  postOwnerDetailsContainer: {},
-  postOwnerName: {},
-  postOwnerHandle: {},
-  timestamp: {},
-  activityIndicatorContainer: {},
-  mirrorContainer: {},
-  mirrorText: {}
-}
+  publicationWrapper: {};
+  publicationContainer: {};
+  missingAvatarPlaceholder: {};
+  smallAvatar: {};
+  postContentContainer: {};
+  postText: {};
+  metadataImage: {};
+  statsContainer: {};
+  statsDetailContainer: {};
+  statsDetailText: {};
+  postOwnerDetailsContainer: {};
+  postOwnerName: {};
+  postOwnerHandle: {};
+  timestamp: {};
+  activityIndicatorContainer: {};
+  mirrorContainer: {};
+  mirrorText: {};
+};
 
 export type ProfileHeaderStyles = {
-  container: {},
-  blankHeader: {},
-  headerImage: {},
-  avatar: {},
-  userDetails: {},
-  name: {},
-  handle: {},
-  bio: {},
-  profileStats: {},
-  statsData: {},
-  statsHeader: {},
-  profileFollowingData: {},
-  profileFollowerData: {}
-}
+  container: {};
+  blankHeader: {};
+  headerImage: {};
+  avatar: {};
+  userDetails: {};
+  name: {};
+  handle: {};
+  bio: {};
+  profileStats: {};
+  statsData: {};
+  statsHeader: {};
+  profileFollowingData: {};
+  profileFollowerData: {};
+};
 
 export type ProfileListItemStyles = {
-  container: {},
-  avatarContainer: {},
-  avatar: {},
-  profileName: {},
-  profileHandle: {},
-  profileBio: {},
-  infoContainer: {},
-  followButtonContainer: {},
-  followButton: {},
-  followingButton: {},
-  followButtonText: {},
-  followingButtonText: {},
-}
+  container: {};
+  avatarContainer: {};
+  avatar: {};
+  profileName: {};
+  profileHandle: {};
+  profileBio: {};
+  infoContainer: {};
+  followButtonContainer: {};
+  followButton: {};
+  followingButton: {};
+  followButtonText: {};
+  followingButtonText: {};
+};
 
 export type FeedStyles = {
-  container: {},
-  loadingIndicatorStyle: {},
-  noCommentsMessage: {}
-}
+  container: {};
+  loadingIndicatorStyle: {};
+  noCommentsMessage: {};
+};

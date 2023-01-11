@@ -1,12 +1,12 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from "react";
 import {
   View,
   FlatList,
   Text,
   StyleSheet,
-  ActivityIndicator
-} from 'react-native'
-import { createClient } from '../api'
+  ActivityIndicator,
+} from "react-native";
+import { createClient } from "../api";
 import {
   ProfileMetadata,
   FeedQuery,
@@ -14,25 +14,29 @@ import {
   PublicationStyles,
   FeedStyles,
   PublicationFetchResults,
-  LensContextType
-} from '../types'
-import { configureIPFSURL } from '../utils'
-import { Publication as PublicationComponent } from './'
+  LensContextType,
+} from "../types/types";
+import { configureIPFSURL } from "../utils/utils";
+import { Publication as PublicationComponent } from "./";
 import {
   ExplorePublicationsDocument,
   PublicationsDocument,
   PaginatedResultInfo,
   PublicationTypes,
-  PublicationSortCriteria
-} from '../graphql/generated'
-import { LensContext } from '../context'
+  PublicationSortCriteria,
+} from "../graphql/generated";
+import { LensContext } from "../context/context";
 
 export function Feed({
   query = {
     name: "explorePublications",
-    publicationTypes: [PublicationTypes.Post, PublicationTypes.Comment, PublicationTypes.Mirror],
+    publicationTypes: [
+      PublicationTypes.Post,
+      PublicationTypes.Comment,
+      PublicationTypes.Mirror,
+    ],
     sortCriteria: PublicationSortCriteria.Latest,
-    limit: 20
+    limit: 20,
   },
   ListHeaderComponent,
   ListFooterComponent,
@@ -44,205 +48,220 @@ export function Feed({
   hideCollects = false,
   iconColor,
   infiniteScroll = true,
-  onEndReachedThreshold = .65,
-  onCollectPress = publication => console.log({ publication }),
-  onCommentPress = publication => console.log({ publication }),
-  onMirrorPress = publication => console.log({ publication }),
-  onLikePress = publication => console.log({ publication }),
-  onProfileImagePress = publication => console.log({ publication }),
+  onEndReachedThreshold = 0.65,
+  onCollectPress = (publication) => console.log({ publication }),
+  onCommentPress = (publication) => console.log({ publication }),
+  onMirrorPress = (publication) => console.log({ publication }),
+  onLikePress = (publication) => console.log({ publication }),
+  onProfileImagePress = (publication) => console.log({ publication }),
   publicationStyles,
   styles = baseStyles,
 }: {
-  query?: FeedQuery,
-  ListHeaderComponent?: React.FC,
-  ListFooterComponent?: React.FC <{}>,
-  signedInUser?: ProfileMetadata
-  feed?: ExtendedPublication[],
-  onCollectPress?: (publication: ExtendedPublication) => void,
-  onCommentPress?: (publication: ExtendedPublication) => void,
-  onMirrorPress?: (publication: ExtendedPublication) => void,
-  onLikePress?: (publication: ExtendedPublication) => void,
-  onProfileImagePress?: (publication: ExtendedPublication) => void,
-  hideLikes?: any,
-  hideComments?: boolean,
-  hideMirrors?: boolean,
-  hideCollects?: boolean,
-  iconColor?: string,
-  infiniteScroll?: boolean,
-  onEndReachedThreshold?: number,
-  styles?: FeedStyles,
-  publicationStyles?: PublicationStyles
+  query?: FeedQuery;
+  ListHeaderComponent?: React.FC;
+  ListFooterComponent?: React.FC<{}>;
+  signedInUser?: ProfileMetadata;
+  feed?: ExtendedPublication[];
+  onCollectPress?: (publication: ExtendedPublication) => void;
+  onCommentPress?: (publication: ExtendedPublication) => void;
+  onMirrorPress?: (publication: ExtendedPublication) => void;
+  onLikePress?: (publication: ExtendedPublication) => void;
+  onProfileImagePress?: (publication: ExtendedPublication) => void;
+  hideLikes?: any;
+  hideComments?: boolean;
+  hideMirrors?: boolean;
+  hideCollects?: boolean;
+  iconColor?: string;
+  infiniteScroll?: boolean;
+  onEndReachedThreshold?: number;
+  styles?: FeedStyles;
+  publicationStyles?: PublicationStyles;
 }) {
-  const [publications, setPublications] = useState<ExtendedPublication[]>([])
-  const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
-  const [loading, setLoading] = useState(false)
-  const [canPaginate, setCanPaginate] = useState<Boolean>(true)
+  const [publications, setPublications] = useState<ExtendedPublication[]>([]);
+  const [paginationInfo, setPaginationInfo] = useState<
+    PaginatedResultInfo | undefined
+  >();
+  const [loading, setLoading] = useState(false);
+  const [canPaginate, setCanPaginate] = useState<Boolean>(true);
 
-  const { environment } = useContext(LensContext) as LensContextType
-  const client = createClient(environment)
-  
+  const { environment } = useContext(LensContext) as LensContextType;
+  const client = createClient(environment);
+
   useEffect(() => {
-    fetchPublications()
-  }, [])
+    fetchPublications();
+  }, []);
 
   async function fetchResponse(cursor?: string) {
-    if (query.name === 'explorePublications') {
+    if (query.name === "explorePublications") {
       try {
-        let { data } = await client.query(ExplorePublicationsDocument, {
+        let { data } = await client
+          .query(ExplorePublicationsDocument, {
+            request: {
+              cursor,
+              publicationTypes: query.publicationTypes,
+              sortCriteria:
+                query.sortCriteria || PublicationSortCriteria.Latest,
+              limit: query.limit,
+            },
+          })
+          .toPromise();
+        if (data) {
+          const { explorePublications } = data;
+          let { pageInfo, items } =
+            explorePublications as PublicationFetchResults;
+          return {
+            pageInfo,
+            items,
+          };
+        }
+      } catch (err) {
+        console.log("Error fetching explorePublications: ", err);
+      }
+    }
+    if (query.name === "getPublications") {
+      let { data } = await client
+        .query(PublicationsDocument, {
           request: {
+            profileId: query.profileId,
             cursor,
             publicationTypes: query.publicationTypes,
-            sortCriteria: query.sortCriteria || PublicationSortCriteria.Latest,
-            limit: query.limit
-          }
-        }).toPromise()
-        if (data) {
-          const { explorePublications } = data
-          let {
-            pageInfo,
-            items
-          } = explorePublications as PublicationFetchResults
-          return {
-            pageInfo, items,
-          }
-        }
-      } catch (err) {
-        console.log('Error fetching explorePublications: ', err)
-      }
-    }
-    if (query.name === 'getPublications') {
-      let { data } = await client.query(PublicationsDocument, {
-        request: {
-          profileId: query.profileId,
-          cursor,
-          publicationTypes: query.publicationTypes
-        }
-      }).toPromise()
+          },
+        })
+        .toPromise();
       if (data) {
-        const { publications: { pageInfo, items }} = data
+        const {
+          publications: { pageInfo, items },
+        } = data;
         return {
-          pageInfo, items
-        } as PublicationFetchResults
+          pageInfo,
+          items,
+        } as PublicationFetchResults;
       }
     }
-    if (query.name === 'getComments') {
+    if (query.name === "getComments") {
       try {
-        let { data } = await client.query(PublicationsDocument, {
-          request: {
-            commentsOf: query.publicationId,
-            cursor
-          }
-        }).toPromise()
+        let { data } = await client
+          .query(PublicationsDocument, {
+            request: {
+              commentsOf: query.publicationId,
+              cursor,
+            },
+          })
+          .toPromise();
         if (data) {
-          const { publications: { pageInfo, items }} = data
+          const {
+            publications: { pageInfo, items },
+          } = data;
           return {
-            pageInfo, items
-          } as PublicationFetchResults
+            pageInfo,
+            items,
+          } as PublicationFetchResults;
         }
       } catch (err) {
-        console.log('error fetching comments...', err)
+        console.log("error fetching comments...", err);
       }
     }
   }
 
   async function fetchNextItems() {
     try {
-     if (canPaginate && paginationInfo) {
-       const { next } = paginationInfo
-       if (!next) {
-        setCanPaginate(false)
-       } else {
-        fetchPublications(next)
-       }
-     }
+      if (canPaginate && paginationInfo) {
+        const { next } = paginationInfo;
+        if (!next) {
+          setCanPaginate(false);
+        } else {
+          fetchPublications(next);
+        }
+      }
     } catch (err) {
-     console.log('Error fetching next items:', err)
+      console.log("Error fetching next items:", err);
     }
   }
 
   async function fetchPublications(cursor?: string) {
     try {
-      if (
-        !feed ||
-        feed && cursor
-      ) {
-        setLoading(true)
-        let {
-          items,
-          pageInfo
-        } = await fetchResponse(cursor) as {
-          pageInfo: PaginatedResultInfo,
-          items: ExtendedPublication[]
-        }  
-        setPaginationInfo(pageInfo)
-        items = items.filter(item => {
-          const { metadata: { media } } = item
+      if (!feed || (feed && cursor)) {
+        setLoading(true);
+        let { items, pageInfo } = (await fetchResponse(cursor)) as {
+          pageInfo: PaginatedResultInfo;
+          items: ExtendedPublication[];
+        };
+        setPaginationInfo(pageInfo);
+        items = items.filter((item) => {
+          const {
+            metadata: { media },
+          } = item;
           if (media.length) {
             if (media[0].original) {
-              if (media[0].original.mimeType === 'image/jpeg') return true
-              if (media[0].original.mimeType === 'image/gif') return true
-              if (media[0].original.mimeType === 'image/png') return true
-              return false
+              if (media[0].original.mimeType === "image/jpeg") return true;
+              if (media[0].original.mimeType === "image/gif") return true;
+              if (media[0].original.mimeType === "image/png") return true;
+              return false;
             }
           } else {
-            return true
+            return true;
           }
-        })
-        items = items.map(item => {
-          if (item.profileSet) return item
-          let { profile } = item
-          if (item.__typename === 'Mirror') {
+        });
+        items = items.map((item) => {
+          if (item.profileSet) return item;
+          let { profile } = item;
+          if (item.__typename === "Mirror") {
             if (item.mirrorOf) {
-              item.originalProfile = profile
-              item.stats = item.mirrorOf.stats
-              profile = item.mirrorOf.profile
+              item.originalProfile = profile;
+              item.stats = item.mirrorOf.stats;
+              profile = item.mirrorOf.profile;
             }
           }
-          if (profile.picture && profile.picture.__typename === 'MediaSet' && profile.picture.original) {
-            const url = configureIPFSURL(profile.picture.original.url)
+          if (
+            profile.picture &&
+            profile.picture.__typename === "MediaSet" &&
+            profile.picture.original
+          ) {
+            const url = configureIPFSURL(profile.picture.original.url);
             if (url) {
-              profile.picture.original.url = url
+              profile.picture.original.url = url;
             } else {
-              profile.missingAvatar = true
+              profile.missingAvatar = true;
             }
           } else {
-            profile.missingAvatar = true
+            profile.missingAvatar = true;
           }
 
-          item.profile = profile
-          item.profileSet = true
-          return item
-        })
+          item.profile = profile;
+          item.profileSet = true;
+          return item;
+        });
 
         if (cursor) {
-          let newData = [...publications, ...items]
+          let newData = [...publications, ...items];
           if (query.sortCriteria === "LATEST") {
-            newData = [...new Map(newData.map(m => [m.id, m])).values()]
+            newData = [...new Map(newData.map((m) => [m.id, m])).values()];
           }
-          setPublications(newData)
+          setPublications(newData);
         } else {
-          setPublications(items)
+          setPublications(items);
         }
-        setLoading(false)
+        setLoading(false);
       } else {
-        setPublications(feed)
+        setPublications(feed);
       }
     } catch (err) {
-      console.log('error fetching publications...', err)
+      console.log("error fetching publications...", err);
     }
   }
 
   function onEndReached() {
     if (infiniteScroll) {
-      fetchNextItems()
+      fetchNextItems();
     }
   }
 
   function renderItem({
-    item, index
-  } : {
-    item: ExtendedPublication,
-    index: number
+    item,
+    index,
+  }: {
+    item: ExtendedPublication;
+    index: number;
   }) {
     return (
       <PublicationComponent
@@ -261,17 +280,15 @@ export function Feed({
         onProfileImagePress={onProfileImagePress}
         iconColor={iconColor}
       />
-    )
+    );
   }
   return (
     <View style={styles.container}>
-      {
-        !loading &&
+      {!loading &&
         publications.length === Number(0) &&
-        query.name === 'getComments' && (
+        query.name === "getComments" && (
           <Text style={styles.noCommentsMessage}>No comments...</Text>
-        )
-      }
+        )}
       <FlatList
         data={publications}
         ListHeaderComponent={ListHeaderComponent}
@@ -279,29 +296,27 @@ export function Feed({
         onEndReached={onEndReached}
         onEndReachedThreshold={onEndReachedThreshold}
         ListFooterComponent={
-          ListFooterComponent ?
-          ListFooterComponent :
-          loading ? (
-            <ActivityIndicator
-              style={styles.loadingIndicatorStyle}
-            />
+          ListFooterComponent ? (
+            ListFooterComponent
+          ) : loading ? (
+            <ActivityIndicator style={styles.loadingIndicatorStyle} />
           ) : null
         }
       />
     </View>
-  )
+  );
 }
 
 let baseStyles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
-  loadingIndicatorStyle : {
-    marginVertical: 20
+  loadingIndicatorStyle: {
+    marginVertical: 20,
   },
   noCommentsMessage: {
     margin: 20,
     fontSize: 14,
-    fontWeight: '500'
-  }
-})
+    fontWeight: "500",
+  },
+});

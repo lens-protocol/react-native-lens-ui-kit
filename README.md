@@ -6,6 +6,22 @@ A React Native UI kit for [Lens Protocol](https://lens.xyz/). Get started buildi
 
 Example app codebase located [here](https://github.com/dabit3/dabit3-react-native-lens-example)
 
+## Table of Contents
+
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#prerequisites)
+- [Components](#components)
+  - [Feed](#feed)
+  - [Profiles](#profiles)
+  - [Profile Header](#profile-header)
+  - [Publication](#ublication)
+  - [ProfileListItem](#profilelistitem)
+  - [LensProvider](#lensprovider)
+- [Roadmap](#roadmap)
+  - [Beta Roadmap](#beta-roadmap)
+  - [V1 Roadmap](#v1-roadmap)
+
 ## Getting started 🚀
 
 ### Prerequisites
@@ -25,9 +41,9 @@ npm install @lens-protocol/react-native-lens-ui-kit
 A feed of posts from Lens.
 
 ```tsx
-import { Feed } from '@lens-protocol/react-native-lens-ui-kit'
+import { Feed } from "@lens-protocol/react-native-lens-ui-kit";
 
-<Feed />
+<Feed />;
 ```
 
 ### Default props
@@ -78,13 +94,13 @@ styles = StyleSheet.create({
 
 ### Query options for `Feed`
 
-__explorePublications (default)__    
+**explorePublications (default)**  
 [explorePublications](./src/graphql/explorePublications.graphql)
 
-__getPublications__    
+**getPublications**  
 [getPublications](./src/graphql/getPublications.graphql)
 
-__getComments__    
+**getComments**  
 [getPublications](./src/graphql/getPublications.graphql)
 
 ## Profiles
@@ -92,9 +108,9 @@ __getComments__
 A list of profiles
 
 ```tsx
-import { Profiles } from '@lens-protocol/react-native-lens-ui-kit'
+import { Profiles } from "@lens-protocol/react-native-lens-ui-kit";
 
-<Profiles />
+<Profiles />;
 ```
 
 ### Default Props
@@ -117,23 +133,20 @@ onProfilePress = profile => console.log({ profile })
 
 ### Query options for `Profiles`
 
-__exploreProfiles (default)__    
+**exploreProfiles (default)**  
 [exploreProfiles](./src/graphql/exploreProfiles.graphql)
 
-__getFollowing__    
+**getFollowing**  
 [getFollowing](./src/graphql/getFollowing.graphql)
-
 
 ## Profile
 
 Renders an individual profile
 
 ```tsx
-import { Profile } from '@lens-protocol/react-native-lens-ui-kit'
+import { Profile } from "@lens-protocol/react-native-lens-ui-kit";
 
-<Profile
-  profile={profile}
-/>
+<Profile profile={profile} />;
 ```
 
 ### Default props
@@ -163,8 +176,9 @@ onLikePress = publication => console.log({ publication })
 ```
 
 ### Styles
-publicationStyles = [PublicationStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L137)     
-headerStyles = [ProfileHeaderStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L157)     
+
+publicationStyles = [PublicationStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L137)  
+headerStyles = [ProfileHeaderStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L157)  
 feedStyles = [FeedStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L188)
 
 ## Profile Header
@@ -172,12 +186,12 @@ feedStyles = [FeedStyles](https://github.com/lens-protocol/react-native-lens-ui-
 Renders a profile header component.
 
 ```tsx
-import { ProfileHeader } from '@lens-protocol/react-native-lens-ui-kit'
+import { ProfileHeader } from "@lens-protocol/react-native-lens-ui-kit";
 
 <ProfileHeader
   profile={profile}
   // or profileId={profileId}
-/>
+/>;
 ```
 
 ### Default props
@@ -189,7 +203,8 @@ onFollowingPress = profile => console.log({ profile })
 onFollowersPress = profile => console.log({ profile })
 ```
 
-### Styles 
+### Styles
+
 [ProfileHeaderStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L157)
 
 ## Publication
@@ -197,11 +212,9 @@ onFollowersPress = profile => console.log({ profile })
 Renders an individual publication.
 
 ```tsx
-import { Publication } from '@lens-protocol/react-native-lens-ui-kit'
+import { Publication } from "@lens-protocol/react-native-lens-ui-kit";
 
-<Publication
-  publication={publication}
-/>
+<Publication publication={publication} />;
 ```
 
 ### Default props
@@ -222,7 +235,8 @@ onLikePress = publication => console.log({ publication })
 onProfileImagePress = publication => console.log({ publication })
 ```
 
-### Styles 
+### Styles
+
 [PublicationStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L137)
 
 ## ProfileListItem
@@ -230,11 +244,9 @@ onProfileImagePress = publication => console.log({ publication })
 Renders a list item for a profile overview.
 
 ```tsx
-import { ProfileListItem } from '@lens-protocol/react-native-lens-ui-kit'
+import { ProfileListItem } from "@lens-protocol/react-native-lens-ui-kit";
 
-<ProfileListItem
-  profile={profile}
-/>
+<ProfileListItem profile={profile} />;
 ```
 
 ### Default props
@@ -246,7 +258,8 @@ onProfilePress
 onFollowPress
 ```
 
-### Styles    
+### Styles
+
 [ProfileListItemStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L173)
 
 ## LensProvider
@@ -266,15 +279,12 @@ theme? = 'light' (default) | 'dark
 import {
   LensProvider,
   Theme,
-  Environment
-} from '@lens-protocol/react-native-lens-ui-kit'
+  Environment,
+} from "@lens-protocol/react-native-lens-ui-kit";
 
-<LensProvider
-  environment={Environment.mainnet}
-  theme={Theme.dark}
->
+<LensProvider environment={Environment.mainnet} theme={Theme.dark}>
   <App />
-</LensProvider>
+</LensProvider>;
 ```
 
 # Roadmap
@@ -297,29 +307,3 @@ Currently this project is in Alpha.
 - Improved theme-ing
 - Better TypeScript support
 - Support audio
-
-### Contribute
-
-To run and develop with the project locally, do the following:
-
-1. Clone the repo:
-
-```sh
-git clone git@github.com:lens-protocol/react-native-lens-ui-kit.git
-```
-
-2. Install the dependencies
-
-```sh
-npm install 
-
-# or use yarn, pnpm, etc..
-```
-
-3. Open `watcher.js` and configure the directory of your React Native project (`destDir`).
-
-4. Run the develop scripts:
-
-```sh
-npm run dev
-```
