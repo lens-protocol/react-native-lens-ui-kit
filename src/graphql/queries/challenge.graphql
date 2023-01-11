@@ -1,0 +1,5 @@
+query challenge($request: ChallengeRequest!) {
+  challenge(request: $request) {
+    text
+  }
+}
