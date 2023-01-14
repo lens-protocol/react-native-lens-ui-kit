@@ -22,7 +22,7 @@ export type FeedQuery = {
 }
 
 export type ProfilesQuery = {
-  name: string;
+  name?: string;
   sortCriteria?: ProfileSortCriteria;
   limit?: number;
   ethereumAddress?: string;

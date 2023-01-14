@@ -6,7 +6,6 @@ import { createClient } from '../api'
 import {
   ProfilesQuery,
   ExtendedProfile,
-  Environment,
   LensContextType
 } from '../types'
 import {
@@ -21,6 +20,7 @@ import {
   ProfileListItem
 } from './'
 import { LensContext } from '../context'
+import { formatProfilePictures } from '../utils'
 
 export function Profiles({
   onFollowPress  = profile => console.log({ profile }),
@@ -147,31 +147,7 @@ export function Profiles({
           items: ExtendedProfile[], pageInfo: PaginatedResultInfo
         }
         setPaginationInfo(pageInfo)
-        items = await Promise.all(items.map(profile => {
-          let { picture, coverPicture } = profile
-          if (picture && picture.__typename === 'MediaSet') {
-            if (picture.original) {
-              if (picture.original.url.startsWith('ipfs://')) {
-                let result = picture.original.url.substring(7, picture.original.url.length)
-                picture.original.url = `https://lens.infura-ipfs.io/ipfs/${result}`
-              }
-            } else {
-              profile.missingAvatar = true
-            }
-          }
-          if (coverPicture && coverPicture.__typename === 'MediaSet') {
-            if (coverPicture.original.url) {
-              if (coverPicture.original.url.startsWith('ipfs://')) {
-                let hash = coverPicture.original.url.substring(7, coverPicture.original.url.length)
-                coverPicture.original.url = `https://lens.infura-ipfs.io/ipfs/${hash}`
-              }
-            } else {
-              profile.missingCover = true
-            }
-          }
-          return profile
-          })
-        )
+        items = formatProfilePictures(items)
         setLoading(false)
         setProfiles([...profiles, ...items])
       } else {

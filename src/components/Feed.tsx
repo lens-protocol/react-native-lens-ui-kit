@@ -97,7 +97,6 @@ export function Feed({
           }
         }).toPromise()
         if (data) {
-          console.log('data: ', data)
           const { explorePublications } = data
           let {
             pageInfo,
@@ -278,6 +277,7 @@ export function Feed({
         ListHeaderComponent={ListHeaderComponent}
         renderItem={renderItem}
         onEndReached={onEndReached}
+        keyExtractor={(_, index) => String(index)}
         onEndReachedThreshold={onEndReachedThreshold}
         ListFooterComponent={
           ListFooterComponent ?

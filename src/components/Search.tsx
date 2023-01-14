@@ -2,22 +2,29 @@ import {
   View,
   StyleSheet,
   TextInput,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native'
 import {
   useState,
   useCallback,
-  useContext
+  useContext,
+  useEffect
 } from 'react'
 import {
   SearchType,
-  AutoCapitalizeOptions
+  AutoCapitalizeOptions,
+  ProfilesQuery
 } from '../types'
 import { createClient } from '../api'
 import { ProfileListItem, SearchIcon } from './'
-import { debounce } from '../utils'
+import { debounce, formatProfilePictures } from '../utils'
 import {
-  SearchProfilesDocument, SearchRequestTypes, PaginatedResultInfo
+  SearchProfilesDocument,
+  SearchRequestTypes,
+  PaginatedResultInfo,
+  ExploreProfilesDocument,
+  ProfileSortCriteria
 } from '../graphql/generated'
 import { LensContext } from '../context'
 import { LensContextType, ExtendedProfile } from '../types'
@@ -28,67 +35,131 @@ export function Search({
   placeholder = 'Search',
   autoCapitalize = AutoCapitalizeOptions.none,
   selectionColor = '#b0b0b0',
+  infiniteScroll = true,
+  ListFooterComponent,
+  baseQuery = {
+    sortCriteria: ProfileSortCriteria.MostFollowers,
+    limit: 25
+  },
+  onEndReachedThreshold = .65,
   onFollowPress  = profile => console.log({ profile }),
-  onProfilePress = profile => console.log({ profile }),
+  onProfilePress = profile => console.log({ profile })
 } : {
   type?: SearchType,
   styles?: any,
   placeholder?: string,
   autoCapitalize?: AutoCapitalizeOptions,
   selectionColor?: string,
+  ListFooterComponent?: React.FC,
+  baseQuery?: ProfilesQuery,
+  infiniteScroll?: boolean,
+  onEndReachedThreshold?: number,
   onFollowPress?: (profile: ExtendedProfile, profiles: ExtendedProfile[]) => void,
-  onProfilePress?: (profile: ExtendedProfile) => void,
+  onProfilePress?: (profile: ExtendedProfile) => void
 }) {
   const [searchString, updateSearchString] = useState<string>('')
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
   const [profiles, setProfiles] = useState<any[]>([])
-
+  const [loading, setLoading] = useState<boolean>(false)
+  const [canPaginate, setCanPaginate] = useState<boolean>(true)
   let [searchType, setSearchType] = useState(type)
 
   const { environment } = useContext<LensContextType>(LensContext)
   const client = createClient(environment)
 
-  async function fetchProfiles() {}
+  useEffect(() => {
+    if (searchType = SearchType.profile) {
+      fetchProfiles()
+    } else {
+      fetchPublications()
+    }
+  }, [])
+
+  async function fetchProfiles(cursor?: string) {
+    setLoading(true)
+    try {
+      const { data } = await client.query(ExploreProfilesDocument, {
+        request: {
+          sortCriteria: baseQuery.sortCriteria || ProfileSortCriteria.MostFollowers,
+          limit: baseQuery.limit,
+          cursor
+        }
+      }).toPromise()
+      if (data && data.exploreProfiles.__typename === 'ExploreProfileResult') {
+        let {
+          items, pageInfo
+        } = data.exploreProfiles as any
+        setPaginationInfo(pageInfo)
+        items = formatProfilePictures(items)
+        if (cursor) {
+          let newData = [...profiles, ...items]
+          setProfiles(newData)
+        } else {
+          setProfiles(items)
+        }
+        setLoading(false)
+      }
+    } catch (err) {
+      console.log('error fetching profiles...:', err)
+    }
+  }
 
   async function fetchPublications() {}
 
-  async function searchProfiles(value: string) {
+  function onEndReached() {
+    if (loading) return
+    if (infiniteScroll) {
+      fetchNextItems()
+    }
+  }
+
+  async function fetchNextItems() {
     try {
+     if (canPaginate && paginationInfo) {
+       const { next } = paginationInfo
+       if (!next) {
+        setCanPaginate(false)
+       } else {
+         if (searchType === SearchType.profile) {
+           if (searchString) {
+            searchProfiles(searchString, next)
+           } else {
+            fetchProfiles(next)
+           }
+         } else {
+
+         }
+       }
+     }
+    } catch (err) {
+     console.log('Error fetching next items:', err)
+    }
+  }
+
+  async function searchProfiles(value: string, cursor?: string) {
+    try {
+      setLoading(true)
       const { data } = await client.query(SearchProfilesDocument, {
         request: {
           query: value,
-          type: SearchRequestTypes.Profile
+          type: SearchRequestTypes.Profile,
+          cursor
         }
       }).toPromise()
       if (data && data.search.__typename === 'ProfileSearchResult') {
+        setPaginationInfo(data.search.pageInfo)
         let items = data.search.items as ExtendedProfile[]
-        items = items.map(profile => {
-          let { picture, coverPicture } = profile
-          if (picture && picture.__typename === 'MediaSet') {
-            if (picture.original) {
-              if (picture.original.url.startsWith('ipfs://')) {
-                let result = picture.original.url.substring(7, picture.original.url.length)
-                picture.original.url = `https://lens.infura-ipfs.io/ipfs/${result}`
-              }
-            } else {
-              profile.missingAvatar = true
-            }
-          }
-          if (coverPicture && coverPicture.__typename === 'MediaSet') {
-            if (coverPicture.original.url) {
-              if (coverPicture.original.url.startsWith('ipfs://')) {
-                let hash = coverPicture.original.url.substring(7, coverPicture.original.url.length)
-                coverPicture.original.url = `https://lens.infura-ipfs.io/ipfs/${hash}`
-              }
-            } else {
-              profile.missingCover = true
-            }
-          }
-          return profile
-        })
-        setProfiles(items)
+        items = formatProfilePictures(items)
+        if (cursor) {
+          let newData = [...profiles, ...items]
+          setProfiles(newData)
+        } else {
+          setProfiles(items)
+        }
+        setLoading(false)
       }
     } catch (err) {
+      setLoading(false)
       console.log('error searching...', err)
     }
   }
@@ -123,7 +194,8 @@ export function Search({
     )
   }
 
-  async function searchPublications(item: string) {}
+  async function searchPublications(item: string) {
+  }
 
   const onChangeText = (value:string) => {
     updateSearchString(value)
@@ -134,7 +206,7 @@ export function Search({
     }
   }
 
-  const callback = useCallback(debounce(onChangeText, 300), []);
+  const callback = useCallback(debounce(onChangeText, 400), []);
 
   return (
     <View style={styles.containerStyle}>
@@ -153,9 +225,22 @@ export function Search({
         </View>
       </View>
       <FlatList
-          data={profiles}
-          renderItem={searchType === SearchType.profile ? renderProfile : renderPublication}
-        />
+        data={profiles}
+        renderItem={searchType === SearchType.profile ? renderProfile : renderPublication}
+        onEndReached={onEndReached}
+        initialNumToRender={25}
+        keyExtractor={(_, index) => String(index)}
+        onEndReachedThreshold={onEndReachedThreshold}
+        ListFooterComponent={
+          ListFooterComponent ?
+          ListFooterComponent :
+          loading ? (
+            <ActivityIndicator
+              style={styles.loadingIndicatorStyle}
+            />
+          ) : null
+        }
+      />
     </View>
   )
 }
@@ -165,6 +250,7 @@ const baseStyles = StyleSheet.create({
   inputContainerStyle: {
     alignItems: 'center',
     backgroundColor: 'white',
+    marginBottom: 8
   },
   inputWrapperStyle: {
     flexDirection: 'row',
@@ -179,7 +265,10 @@ const baseStyles = StyleSheet.create({
   inputStyle: {
     marginLeft: 8,
     flex: 1
-  }
+  },
+  loadingIndicatorStyle : {
+    marginVertical: 20
+  },
 })
 
 const darkThemeStyles = StyleSheet.create({
