@@ -10,9 +10,9 @@ import {
   PublicationMetadataFilters
 } from './graphql/generated'
 
-export type FeedQuery = {
-  name: string;
-  sortCriteria?: PublicationSortCriteria,
+export type PublicationQuery = {
+  name?: string;
+  publicationSortCriteria?: PublicationSortCriteria,
   publicationTypes?: PublicationTypes[],
   limit?: number;
   profileId?: number;
@@ -23,7 +23,7 @@ export type FeedQuery = {
 
 export type ProfilesQuery = {
   name?: string;
-  sortCriteria?: ProfileSortCriteria;
+  profileSortCriteria?: ProfileSortCriteria;
   limit?: number;
   ethereumAddress?: string;
   cursor?: string;

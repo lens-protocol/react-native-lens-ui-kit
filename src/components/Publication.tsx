@@ -14,7 +14,7 @@ import {
   LensContextType,
   ThemeColors
 } from '../types'
-import { returnIPFSPathorURL } from '../utils'
+import { returnIpfsPathOrUrl } from '../utils'
 import { LensContext } from '../context'
 import { CommentIcon, MirrorIcon, CollectIcon, UnfilledHeartIcon, FilledHeartIcon } from './'
 
@@ -111,7 +111,7 @@ export function Publication({
               <Image 
                 resizeMode="contain"
                 source={{
-                  uri: returnIPFSPathorURL(publication.metadata.media[0].original.url)
+                  uri: returnIpfsPathOrUrl(publication.metadata.media[0].original.url)
                 }}
                 style={styles.metadataImage}
               />

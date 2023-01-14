@@ -235,6 +235,8 @@ fragment CommentBaseFields on Comment {
   mirrors(by: null)
   hasCollectedByMe
   isGated
+  isDataAvailability
+  onChainContentURI
 }
 
 fragment CommentFields on Comment {

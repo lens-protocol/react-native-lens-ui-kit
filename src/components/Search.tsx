@@ -14,74 +14,123 @@ import {
 import {
   SearchType,
   AutoCapitalizeOptions,
-  ProfilesQuery
+  ProfilesQuery,
+  PublicationQuery,
+  PublicationFetchResults,
+  LensContextType,
+  ExtendedProfile,
+  PublicationStyles,
+  ExtendedPublication,
+  ProfileMetadata
 } from '../types'
 import { createClient } from '../api'
-import { ProfileListItem, SearchIcon } from './'
-import { debounce, formatProfilePictures } from '../utils'
+import {
+  ProfileListItem,
+  SearchIcon,
+  Publication as PublicationComponent
+} from './'
+import {
+  debounce,
+  formatProfilePictures,
+  filterMimeTypes,
+  configureMirrorAndIpfsUrl
+} from '../utils'
 import {
   SearchProfilesDocument,
-  SearchRequestTypes,
   PaginatedResultInfo,
   ExploreProfilesDocument,
-  ProfileSortCriteria
+  ProfileSortCriteria,
+  PublicationSortCriteria,
+  ExplorePublicationsDocument,
+  PublicationTypes,
+  SearchPublicationsDocument,
+  SearchRequestTypes
 } from '../graphql/generated'
 import { LensContext } from '../context'
-import { LensContextType, ExtendedProfile } from '../types'
 
 export function Search({
-  type = SearchType.profile,
+  searchType = SearchType.publication,
   styles = baseStyles,
   placeholder = 'Search',
   autoCapitalize = AutoCapitalizeOptions.none,
   selectionColor = '#b0b0b0',
   infiniteScroll = true,
   ListFooterComponent,
-  baseQuery = {
-    sortCriteria: ProfileSortCriteria.MostFollowers,
+  publicationStyles,
+  signedInUser,
+  hideLikes = false,
+  hideComments = false,
+  hideMirrors = false,
+  hideCollects = false,
+  iconColor,
+  profileQuery = {
+    profileSortCriteria: ProfileSortCriteria.MostFollowers,
     limit: 25
+  },
+  publicationQuery = {
+    publicationTypes: [PublicationTypes.Post, PublicationTypes.Comment, PublicationTypes.Mirror],
+    publicationSortCriteria: PublicationSortCriteria.Latest,
+    limit: 5
   },
   onEndReachedThreshold = .65,
   onFollowPress  = profile => console.log({ profile }),
-  onProfilePress = profile => console.log({ profile })
+  onProfilePress = profile => console.log({ profile }),
+  onCollectPress = publication => console.log({ publication }),
+  onCommentPress = publication => console.log({ publication }),
+  onMirrorPress = publication => console.log({ publication }),
+  onLikePress = publication => console.log({ publication }),
+  onProfileImagePress = publication => console.log({ publication }),
 } : {
-  type?: SearchType,
+  searchType?: SearchType,
   styles?: any,
   placeholder?: string,
   autoCapitalize?: AutoCapitalizeOptions,
   selectionColor?: string,
   ListFooterComponent?: React.FC,
-  baseQuery?: ProfilesQuery,
+  iconColor?: string,
+  profileQuery?: ProfilesQuery,
+  publicationQuery?: PublicationQuery,
   infiniteScroll?: boolean,
   onEndReachedThreshold?: number,
+  publicationStyles?: PublicationStyles,
+  signedInUser?: ProfileMetadata,
+  hideLikes?: any,
+  hideComments?: boolean,
+  hideMirrors?: boolean,
+  hideCollects?: boolean,
+  onCollectPress?: (publication: ExtendedPublication) => void,
+  onCommentPress?: (publication: ExtendedPublication) => void,
+  onMirrorPress?: (publication: ExtendedPublication) => void,
+  onLikePress?: (publication: ExtendedPublication) => void,
+  onProfileImagePress?: (publication: ExtendedPublication) => void,
   onFollowPress?: (profile: ExtendedProfile, profiles: ExtendedProfile[]) => void,
   onProfilePress?: (profile: ExtendedProfile) => void
 }) {
   const [searchString, updateSearchString] = useState<string>('')
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
-  const [profiles, setProfiles] = useState<any[]>([])
+  const [profiles, setProfiles] = useState<ExtendedProfile[]>([])
+  const [publications, setPublications] = useState<ExtendedPublication[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [canPaginate, setCanPaginate] = useState<boolean>(true)
-  let [searchType, setSearchType] = useState(type)
 
   const { environment } = useContext<LensContextType>(LensContext)
   const client = createClient(environment)
 
   useEffect(() => {
-    if (searchType = SearchType.profile) {
+    if (searchType === SearchType.profile) {
       fetchProfiles()
     } else {
       fetchPublications()
     }
-  }, [])
+  }, [searchType])
 
   async function fetchProfiles(cursor?: string) {
     setLoading(true)
     try {
       const { data } = await client.query(ExploreProfilesDocument, {
         request: {
-          sortCriteria: baseQuery.sortCriteria || ProfileSortCriteria.MostFollowers,
-          limit: baseQuery.limit,
+          sortCriteria: profileQuery.profileSortCriteria || ProfileSortCriteria.MostFollowers,
+          limit: profileQuery.limit,
           cursor
         }
       }).toPromise()
@@ -104,10 +153,61 @@ export function Search({
     }
   }
 
-  async function fetchPublications() {}
+  async function fetchPublications(cursor?: string) {
+    setLoading(true)
+    try {
+      const {
+        data
+      } = await client.query(ExplorePublicationsDocument, {
+        request: {
+          publicationTypes: publicationQuery.publicationTypes,
+          limit: publicationQuery.limit,
+          sortCriteria: publicationQuery.publicationSortCriteria || PublicationSortCriteria.Latest,
+          cursor,
+        }
+      }).toPromise()
+      if (data && data.explorePublications.__typename === 'ExplorePublicationResult') {
+        let {
+          items, pageInfo
+        } = data.explorePublications as PublicationFetchResults
+        setPaginationInfo(pageInfo)
+        items = filterMimeTypes(items)
+        items = configureMirrorAndIpfsUrl(items)
+        if (cursor) {
+          let newData = [...publications, ...items]
+          if (publicationQuery.publicationSortCriteria === "LATEST") {
+            newData = [...new Map(newData.map(m => [m.id, m])).values()]
+          }
+          setPublications(newData)
+        } else {
+          setPublications(items)
+        }
+        setLoading(false)
+      }
+    } catch (err) {
+      console.log('error fetching publications... ', err)
+      setLoading(false)
+    }
+  }
+
+  async function searchPublications(value: string, cursor?: string) {
+    try {
+      const {
+        data
+      } = await client.query(SearchPublicationsDocument, {
+        request: {
+          type: SearchRequestTypes.Publication,
+          query: value,
+          limit: publicationQuery.limit,
+          cursor,
+        }
+      }).toPromise()
+    } catch (err) {
+
+    }
+  }
 
   function onEndReached() {
-    if (loading) return
     if (infiniteScroll) {
       fetchNextItems()
     }
@@ -126,8 +226,13 @@ export function Search({
            } else {
             fetchProfiles(next)
            }
-         } else {
-
+         }
+         if (searchType === SearchType.publication) {
+           if (searchString) {
+             searchPublications(searchString, next)
+           } else {
+             fetchPublications(next)
+           }
          }
        }
      }
@@ -178,23 +283,31 @@ export function Search({
       />
     )
   }
-
-  function renderPublication({ item, index} : {
-    item: ExtendedProfile,
+  
+  function renderPublication({
+    item, index
+  } : {
+    item: ExtendedPublication,
     index: number
   }) {
     return (
-      <ProfileListItem
+      <PublicationComponent
+        styles={publicationStyles}
         key={index}
-        onProfilePress={onProfilePress}
-        profile={item}
-        onFollowPress={(profile: ExtendedProfile) => onFollowPress(profile, profiles)}
-        isFollowing={item.isFollowing}
+        publication={item}
+        signedInUser={signedInUser}
+        onCollectPress={onCollectPress}
+        onCommentPress={onCommentPress}
+        onMirrorPress={onMirrorPress}
+        onLikePress={onLikePress}
+        hideLikes={hideLikes}
+        hideComments={hideComments}
+        hideMirrors={hideMirrors}
+        hideCollects={hideCollects}
+        onProfileImagePress={onProfileImagePress}
+        iconColor={iconColor}
       />
     )
-  }
-
-  async function searchPublications(item: string) {
   }
 
   const onChangeText = (value:string) => {
@@ -224,23 +337,46 @@ export function Search({
           />
         </View>
       </View>
-      <FlatList
-        data={profiles}
-        renderItem={searchType === SearchType.profile ? renderProfile : renderPublication}
-        onEndReached={onEndReached}
-        initialNumToRender={25}
-        keyExtractor={(_, index) => String(index)}
-        onEndReachedThreshold={onEndReachedThreshold}
-        ListFooterComponent={
-          ListFooterComponent ?
-          ListFooterComponent :
-          loading ? (
-            <ActivityIndicator
-              style={styles.loadingIndicatorStyle}
-            />
-          ) : null
-        }
-      />
+      {
+        searchType === SearchType.profile ? (
+          <FlatList
+            data={profiles}
+            renderItem={renderProfile}
+            onEndReached={onEndReached}
+            initialNumToRender={25}
+            keyExtractor={(_, index) => String(index)}
+            onEndReachedThreshold={onEndReachedThreshold}
+            ListFooterComponent={
+              ListFooterComponent ?
+              ListFooterComponent :
+              loading ? (
+                <ActivityIndicator
+                  style={styles.loadingIndicatorStyle}
+                />
+              ) : null
+            }
+         />
+        ) : (
+          <FlatList
+            data={publications}
+            renderItem={renderPublication}
+            onEndReached={onEndReached}
+            initialNumToRender={25}
+            keyExtractor={(_, index) => String(index)}
+            onEndReachedThreshold={onEndReachedThreshold}
+            ListFooterComponent={
+              ListFooterComponent ?
+              ListFooterComponent :
+              loading ? (
+                <ActivityIndicator
+                  style={styles.loadingIndicatorStyle}
+                />
+              ) : null
+            }
+        />
+        )
+      }
+
     </View>
   )
 }
@@ -268,7 +404,7 @@ const baseStyles = StyleSheet.create({
   },
   loadingIndicatorStyle : {
     marginVertical: 20
-  },
+  }
 })
 
 const darkThemeStyles = StyleSheet.create({

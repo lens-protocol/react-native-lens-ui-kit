@@ -31,7 +31,7 @@ export function Profiles({
   signedInUserAddress,
   query = {
     name: 'exploreProfiles',
-    sortCriteria: ProfileSortCriteria.MostFollowers,
+    profileSortCriteria: ProfileSortCriteria.MostFollowers,
     limit: 25
   }
 } : {
@@ -59,7 +59,7 @@ export function Profiles({
       try {
         let { data } = await client.query(ExploreProfilesDocument, {
           request: {
-            sortCriteria: query.sortCriteria || ProfileSortCriteria.MostFollowers,
+            sortCriteria: query.profileSortCriteria || ProfileSortCriteria.MostFollowers,
             cursor,
             limit: query.limit
           }

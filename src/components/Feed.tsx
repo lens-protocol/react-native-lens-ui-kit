@@ -9,14 +9,17 @@ import {
 import { createClient } from '../api'
 import {
   ProfileMetadata,
-  FeedQuery,
+  PublicationQuery,
   ExtendedPublication,
   PublicationStyles,
   FeedStyles,
   PublicationFetchResults,
   LensContextType
 } from '../types'
-import { configureIPFSURL } from '../utils'
+import {
+  configureMirrorAndIpfsUrl,
+  filterMimeTypes
+} from '../utils'
 import { Publication as PublicationComponent } from './'
 import {
   ExplorePublicationsDocument,
@@ -31,7 +34,7 @@ export function Feed({
   query = {
     name: "explorePublications",
     publicationTypes: [PublicationTypes.Post, PublicationTypes.Comment, PublicationTypes.Mirror],
-    sortCriteria: PublicationSortCriteria.Latest,
+    publicationSortCriteria: PublicationSortCriteria.Latest,
     limit: 20
   },
   ListHeaderComponent,
@@ -53,7 +56,7 @@ export function Feed({
   publicationStyles,
   styles = baseStyles,
 }: {
-  query?: FeedQuery,
+  query?: PublicationQuery,
   ListHeaderComponent?: React.FC,
   ListFooterComponent?: React.FC,
   signedInUser?: ProfileMetadata
@@ -92,7 +95,7 @@ export function Feed({
           request: {
             cursor,
             publicationTypes: query.publicationTypes,
-            sortCriteria: query.sortCriteria || PublicationSortCriteria.Latest,
+            sortCriteria: query.publicationSortCriteria || PublicationSortCriteria.Latest,
             limit: query.limit
           }
         }).toPromise()
@@ -175,48 +178,11 @@ export function Feed({
           pageInfo
         } = await fetchResponse(cursor)
         setPaginationInfo(pageInfo)
-        items = items.filter(item => {
-          const { metadata: { media } } = item
-          if (media.length) {
-            if (media[0].original) {
-              if (media[0].original.mimeType === 'image/jpeg') return true
-              if (media[0].original.mimeType === 'image/gif') return true
-              if (media[0].original.mimeType === 'image/png') return true
-              return false
-            }
-          } else {
-            return true
-          }
-        })
-        items = items.map(item => {
-          if (item.profileSet) return item
-          let { profile } = item
-          if (item.__typename === 'Mirror') {
-            if (item.mirrorOf) {
-              item.originalProfile = profile
-              item.stats = item.mirrorOf.stats
-              profile = item.mirrorOf.profile
-            }
-          }
-          if (profile.picture && profile.picture.__typename === 'MediaSet' && profile.picture.original) {
-            const url = configureIPFSURL(profile.picture.original.url)
-            if (url) {
-              profile.picture.original.url = url
-            } else {
-              profile.missingAvatar = true
-            }
-          } else {
-            profile.missingAvatar = true
-          }
-
-          item.profile = profile
-          item.profileSet = true
-          return item
-        })
-
+        items = filterMimeTypes(items)
+        items = configureMirrorAndIpfsUrl(items)
         if (cursor) {
           let newData = [...publications, ...items]
-          if (query.sortCriteria === "LATEST") {
+          if (query.publicationSortCriteria === "LATEST") {
             newData = [...new Map(newData.map(m => [m.id, m])).values()]
           }
           setPublications(newData)

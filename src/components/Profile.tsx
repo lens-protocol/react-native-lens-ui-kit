@@ -4,7 +4,7 @@ import {
   ProfileHeaderStyles,
   FeedStyles,
   PublicationStyles,
-  FeedQuery,
+  PublicationQuery,
   ExtendedProfile,
   ExtendedPublication
 } from '../types'
@@ -53,7 +53,7 @@ export function Profile({
   headerStyles?: ProfileHeaderStyles,
   feedStyles?: FeedStyles,
   publicationStyles?: PublicationStyles,
-  query?: FeedQuery,
+  query?: PublicationQuery,
   onFollowingPress?: (profile: ExtendedProfile) => void,
   onFollowersPress?: (profile: ExtendedProfile) => void,
   onProfileImagePress?: (publication: ExtendedPublication) => void,
