@@ -52,6 +52,18 @@ export enum ThemeColors {
   clearWhite = 'rgba(255, 255, 255, .15)'
 }
 
+export enum SearchType {
+  profile = 'profile',
+  publication = 'publication'
+}
+
+export enum AutoCapitalizeOptions {
+  characters = 'characters',
+  words = 'words',
+  sentences = 'sentences',
+  none = 'none'
+}
+
 /* Lens specific */
 export enum MetadataDisplayType {
   number = 'number',

@@ -23,7 +23,7 @@ import {
   PublicationsDocument,
   PaginatedResultInfo,
   PublicationTypes,
-  PublicationSortCriteria
+  PublicationSortCriteria,
 } from '../graphql/generated'
 import { LensContext } from '../context'
 
@@ -55,7 +55,7 @@ export function Feed({
 }: {
   query?: FeedQuery,
   ListHeaderComponent?: React.FC,
-  ListFooterComponent?: React.FC <{}>,
+  ListFooterComponent?: React.FC,
   signedInUser?: ProfileMetadata
   feed?: ExtendedPublication[],
   onCollectPress?: (publication: ExtendedPublication) => void,
@@ -78,7 +78,7 @@ export function Feed({
   const [loading, setLoading] = useState(false)
   const [canPaginate, setCanPaginate] = useState<Boolean>(true)
 
-  const { environment } = useContext(LensContext) as LensContextType
+  const { environment } = useContext<LensContextType>(LensContext)
   const client = createClient(environment)
   
   useEffect(() => {
@@ -97,14 +97,15 @@ export function Feed({
           }
         }).toPromise()
         if (data) {
+          console.log('data: ', data)
           const { explorePublications } = data
           let {
             pageInfo,
             items
-          } = explorePublications as PublicationFetchResults
+          } = explorePublications
           return {
-            pageInfo, items,
-          }
+            pageInfo, items
+          } as PublicationFetchResults
         }
       } catch (err) {
         console.log('Error fetching explorePublications: ', err)
@@ -118,6 +119,8 @@ export function Feed({
           publicationTypes: query.publicationTypes
         }
       }).toPromise()
+      console.log('data: ', data)
+
       if (data) {
         const { publications: { pageInfo, items }} = data
         return {
@@ -143,6 +146,7 @@ export function Feed({
         console.log('error fetching comments...', err)
       }
     }
+    throw Error('No query defined...')
   }
 
   async function fetchNextItems() {
@@ -170,10 +174,7 @@ export function Feed({
         let {
           items,
           pageInfo
-        } = await fetchResponse(cursor) as {
-          pageInfo: PaginatedResultInfo,
-          items: ExtendedPublication[]
-        }  
+        } = await fetchResponse(cursor)
         setPaginationInfo(pageInfo)
         items = items.filter(item => {
           const { metadata: { media } } = item

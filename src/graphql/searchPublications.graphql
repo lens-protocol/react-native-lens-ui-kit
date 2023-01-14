@@ -1,0 +1,19 @@
+query SearchPublications($request: SearchQueryRequest!) {
+  search(request: $request) {
+    ... on PublicationSearchResult {
+      __typename
+      items {
+        __typename
+        ... on Comment {
+          ...CommentFields
+        }
+        ... on Post {
+          ...PostFields
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfoFields
+      }
+    }
+  }
+}

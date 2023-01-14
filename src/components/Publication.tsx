@@ -49,7 +49,7 @@ export function Publication({
   onProfileImagePress: (publication: ExtendedPublication) => void,
   styles?: PublicationStyles
 }) {
-  const { theme } = useContext(LensContext) as LensContextType
+  const { theme } = useContext(LensContext) 
   if (theme) {
     if (theme === 'dark') {
       styles = darkThemeStyles

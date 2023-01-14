@@ -7,8 +7,6 @@ import { ProfileDocument } from '../graphql/generated'
 import {
   ExtendedProfile,
   ProfileHeaderStyles,
-  Environment,
-  Theme,
   LensContextType,
   ThemeColors
 } from '../types'

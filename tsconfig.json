@@ -13,7 +13,8 @@
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    // "noErrorTruncation": true
   },
   "include": ["src/**/*"]
 }

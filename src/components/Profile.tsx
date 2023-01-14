@@ -11,7 +11,7 @@ import {
 
 export function Profile({
   profile,
-  ListHeaderComponent = null,
+  ListHeaderComponent,
   ListFooterComponent,
   feed,
   signedInUser,
@@ -39,8 +39,8 @@ export function Profile({
   onLikePress = publication => console.log({ publication }),
 } : {
   profile: ExtendedProfile,
-  ListHeaderComponent?: any,
-  ListFooterComponent?: React.FC <{}>,
+  ListHeaderComponent?: React.FC,
+  ListFooterComponent?: React.FC,
   feed?: Publication[],
   signedInUser?: any,
   hideLikes?: boolean,
@@ -64,7 +64,7 @@ export function Profile({
 }) {
   const HeaderComponent = ListHeaderComponent ?
   ListHeaderComponent : (
-    <ProfileHeader
+   () => <ProfileHeader
       profile={profile}
       onFollowingPress={onFollowingPress}
       onFollowersPress={onFollowersPress}

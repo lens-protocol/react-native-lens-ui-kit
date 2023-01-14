@@ -1,0 +1,15 @@
+query SearchProfiles($request: SearchQueryRequest!) {
+  search(request: $request) {
+    ... on ProfileSearchResult {
+      __typename
+      items {
+        ... on Profile {
+          ...ProfileFields
+        }
+      }
+      pageInfo {
+        ...CommonPaginatedResultInfoFields
+      }
+    }
+  }
+}
