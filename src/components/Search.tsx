@@ -75,7 +75,7 @@ export function Search({
   publicationsQuery = {
     publicationTypes: [PublicationTypes.Post, PublicationTypes.Comment, PublicationTypes.Mirror],
     publicationSortCriteria: PublicationSortCriteria.Latest,
-    limit: 5
+    limit: 25
   },
   onEndReachedThreshold = .65,
   onFollowPress  = profile => console.log({ profile }),
