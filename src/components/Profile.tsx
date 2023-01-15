@@ -4,9 +4,10 @@ import {
   ProfileHeaderStyles,
   FeedStyles,
   PublicationStyles,
-  PublicationQuery,
+  PublicationsQuery,
   ExtendedProfile,
-  ExtendedPublication
+  ExtendedPublication,
+  ProfileMetadata
 } from '../types'
 
 export function Profile({
@@ -25,7 +26,7 @@ export function Profile({
   headerStyles,
   feedStyles,
   publicationStyles,
-  query = {
+  publicationsQuery = {
     name: "getPublications",
     profileId: profile.id,
     publicationTypes: [PublicationTypes.Post, PublicationTypes.Mirror]
@@ -42,7 +43,7 @@ export function Profile({
   ListHeaderComponent?: React.FC,
   ListFooterComponent?: React.FC,
   feed?: Publication[],
-  signedInUser?: any,
+  signedInUser?: ProfileMetadata,
   hideLikes?: boolean,
   hideComments?: boolean,
   hideMirrors?: boolean,
@@ -53,7 +54,7 @@ export function Profile({
   headerStyles?: ProfileHeaderStyles,
   feedStyles?: FeedStyles,
   publicationStyles?: PublicationStyles,
-  query?: PublicationQuery,
+  publicationsQuery?: PublicationsQuery,
   onFollowingPress?: (profile: ExtendedProfile) => void,
   onFollowersPress?: (profile: ExtendedProfile) => void,
   onProfileImagePress?: (publication: ExtendedPublication) => void,
@@ -90,7 +91,7 @@ export function Profile({
       onEndReachedThreshold={onEndReachedThreshold}
       ListHeaderComponent={HeaderComponent}
       onProfileImagePress={onProfileImagePress}
-      query={query}
+      publicationsQuery={publicationsQuery}
       iconColor={iconColor}
     />
   )

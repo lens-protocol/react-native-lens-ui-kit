@@ -30,32 +30,28 @@ import { Feed } from '@lens-protocol/react-native-lens-ui-kit'
 <Feed />
 ```
 
-### Default props
+### Options
 
 ```
-query = {
-  name: "explorePublications",
-  publicationTypes: ["POST", "COMMENT", "MIRROR"],
-  sortCriteria: "LATEST",
-  limit: 20
-}
-ListHeaderComponent = null
-ListFooterComponent = null
-feed = null
-signedInUser = null
-hideLikes = false
-hideComments = false
-hideMirrors = false
-hideCollects = false
-infiniteScroll = true
-onEndReachedThreshold = .65
-
-# Functions
-onCollectPress = publication => console.log({ publication })
-onCommentPress = publication => console.log({ publication })
-onMirrorPress = publication => console.log({ publication })
-onLikePress = publication => console.log({ publication })
-onProfileImagePress = profile => console.log({ profile })
+publicationsQuery?: PublicationsQuery
+ListHeaderComponent?: React.FC
+ListFooterComponent?: React.FC
+signedInUser?: ProfileMetadata
+feed?: ExtendedPublication[]
+onCollectPress?: (publication: ExtendedPublication) => void
+onCommentPress?: (publication: ExtendedPublication) => void
+onMirrorPress?: (publication: ExtendedPublication) => void
+onLikePress?: (publication: ExtendedPublication) => void
+onProfileImagePress?: (publication: ExtendedPublication) => void
+hideLikes?: boolean
+hideComments?: boolean
+hideMirrors?: boolean
+hideCollects?: boolean
+iconColor?: string
+infiniteScroll?: boolean
+onEndReachedThreshold?: number
+styles?: FeedStyles
+publicationStyles?: PublicationStyles
 ```
 
 ### Styles
@@ -97,22 +93,16 @@ import { Profiles } from '@lens-protocol/react-native-lens-ui-kit'
 <Profiles />
 ```
 
-### Default Props
+### Options
 
 ```
-query = {
-  name: 'getFollowing',
-  sortCriteria: 'MOST_FOLLOWERS',
-  limit: 25
-}
-profileData = null
-onEndReachedThreshold = .7
-infiniteScroll = true
-signedInUserAddress=null
-
-# Functions
-onFollowPress = (profile, profiles) => console.log({ profile })
-onProfilePress = profile => console.log({ profile })
+onFollowPress?: (profile: ExtendedProfile, profiles: ExtendedProfile[]) => void
+onProfilePress?: (profile: ExtendedProfile) => void
+profileData?: ExtendedProfile[]
+onEndReachedThreshold?: number
+infiniteScroll?: boolean
+profilesQuery?: ProfilesQuery
+signedInUserAddress?: string
 ```
 
 ### Query options for `Profiles`
@@ -136,30 +126,32 @@ import { Profile } from '@lens-protocol/react-native-lens-ui-kit'
 />
 ```
 
-### Default props
+### Options
 
 ```
-profile (required)
-ListHeaderComponent = null
-ListFooterComponent = null
-feed = null
-signedInUser = null
-hideLikes = false
-hideComments = false
-hideMirrors = false
-hideCollects = false
-infiniteScroll = true
-onEndReachedThreshold = .65
-onProfileImagePress
-
-# Functions
-onFollowingPress = profile => console.log({ profile })
-onFollowersPress = profile => console.log({ profile })
-onProfileImagePress = publication => console.log({ publication })
-onCollectPress = publication => console.log({ publication })
-onCommentPress = publication => console.log({ publication })
-onMirrorPress = publication => console.log({ publication })
-onLikePress = publication => console.log({ publication })
+profile: ExtendedProfile
+ListHeaderComponent?: React.FC
+ListFooterComponent?: React.FC
+feed?: Publication[]
+signedInUser?: ProfileMetadata
+hideLikes?: boolean
+hideComments?: boolean
+hideMirrors?: boolean
+hideCollects?: boolean
+iconColor?: string
+infiniteScroll?: boolean
+onEndReachedThreshold?: number
+headerStyles?: ProfileHeaderStyles
+feedStyles?: FeedStyles
+publicationStyles?: PublicationStyles
+publicationsQuery?: publicationsQuery
+onFollowingPress?: (profile: ExtendedProfile) => void
+onFollowersPress?: (profile: ExtendedProfile) => void
+onProfileImagePress?: (publication: ExtendedPublication) => void
+onCollectPress?: (publication: ExtendedPublication) => void
+onCommentPress?: (publication: ExtendedPublication) => void
+onMirrorPress?: (publication: ExtendedPublication) => void
+onLikePress?: (publication: ExtendedPublication) => void
 ```
 
 ### Styles
@@ -180,13 +172,14 @@ import { ProfileHeader } from '@lens-protocol/react-native-lens-ui-kit'
 />
 ```
 
-### Default props
+### Options
 
 ```
-profileId = null
-profile = null
-onFollowingPress = profile => console.log({ profile })
-onFollowersPress = profile => console.log({ profile })
+profileId?: number
+profile?: ExtendedProfile
+onFollowingPress?: (profile: ExtendedProfile) => void
+onFollowersPress?: (profile: ExtendedProfile) => void
+styles?: ProfileHeaderStyles
 ```
 
 ### Styles 
@@ -204,22 +197,28 @@ import { Publication } from '@lens-protocol/react-native-lens-ui-kit'
 />
 ```
 
+### Options
+
+```
+publication: ExtendedPublication
+signedInUser?: ProfileMetadata
+hideLikes?: boolean
+hideComments?: boolean
+hideMirrors?: boolean
+hideCollects?: boolean
+iconColor?: string
+onCollectPress?: (publication: ExtendedPublication) => void
+onCommentPress?:(publication: ExtendedPublication) => void
+onMirrorPress?: (publication: ExtendedPublication) => void
+onLikePress?: (publication: ExtendedPublication) => void
+onProfileImagePress?: (publication: ExtendedPublication) => void
+styles?: PublicationStyles
+```
+
 ### Default props
 
 ```
-publication = undefined (required)
-signedInUser = null
-hideLikes = false
-hideComments = false
-hideMirrors = false
-hideCollects = false
 
-# Functions
-onCollectPress = publication => console.log({ publication })
-onCommentPress = publication => console.log({ publication })
-onMirrorPress= publication => console.log({ publication })
-onLikePress = publication => console.log({ publication })
-onProfileImagePress = publication => console.log({ publication })
 ```
 
 ### Styles 
@@ -237,17 +236,66 @@ import { ProfileListItem } from '@lens-protocol/react-native-lens-ui-kit'
 />
 ```
 
-### Default props
+### Options
 
 ```
-profile (required)
-isFollowing
-onProfilePress
-onFollowPress
+profile: ExtendedProfile
+onProfilePress?: (profile: ExtendedProfile) => void
+onFollowPress?: (profile: ExtendedProfile) => void
+isFollowing?: boolean
+styles?: ProfileListItemStyles
 ```
 
 ### Styles    
 [ProfileListItemStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L173)
+
+## Search
+
+A component for searching profiles and publications.
+
+### Options
+
+```
+searchType?: SearchType
+styles?: SearchStyles
+placeholder?: string
+autoCapitalize?: AutoCapitalizeOptions
+selectionColor?: string
+ListFooterComponent?: React.FC
+iconColor?: string
+profilesQuery?: ProfilesQuery
+publicationsQuery?: publicationsQuery
+infiniteScroll?: boolean
+onEndReachedThreshold?: number
+publicationStyles?: PublicationStyles
+signedInUser?: ProfileMetadata
+hideLikes?: any
+hideComments?: boolean
+hideMirrors?: boolean
+hideCollects?: boolean
+onCollectPress?: (publication: ExtendedPublication) => void
+onCommentPress?: (publication: ExtendedPublication) => void
+onMirrorPress?: (publication: ExtendedPublication) => void
+onLikePress?: (publication: ExtendedPublication) => void
+onProfileImagePress?: (publication: ExtendedPublication) => void
+onFollowPress?: (profile: ExtendedProfile, profiles: ExtendedProfile[]) => void
+onProfilePress?: (profile: ExtendedProfile) => void
+```
+
+### Usage
+
+```tsx
+import { Search } from  '@lens-protocol/react-native-lens-ui-kit'
+
+<Search />
+
+// default is profile search, for publication search:
+import { Search, SearchType } from  '@lens-protocol/react-native-lens-ui-kit'
+
+<Search
+  searchType={SearchType.publication}
+/>
+```
 
 ## LensProvider
 
@@ -283,13 +331,11 @@ Currently this project is in Alpha.
 
 ### Beta Roadmap
 
-- Search
 - Custom styling / layout (temporary implementation in place, want to make it more granular)
 - More query options (easy contribution, help wanted)
 - Authentication
 - Custom components
 - Support video
-- Support gifs
 - Gallery view for Feed
 
 ### V1 Roadmap

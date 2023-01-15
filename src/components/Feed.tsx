@@ -9,7 +9,7 @@ import {
 import { createClient } from '../api'
 import {
   ProfileMetadata,
-  PublicationQuery,
+  PublicationsQuery,
   ExtendedPublication,
   PublicationStyles,
   FeedStyles,
@@ -31,7 +31,7 @@ import {
 import { LensContext } from '../context'
 
 export function Feed({
-  query = {
+  publicationsQuery = {
     name: "explorePublications",
     publicationTypes: [PublicationTypes.Post, PublicationTypes.Comment, PublicationTypes.Mirror],
     publicationSortCriteria: PublicationSortCriteria.Latest,
@@ -56,7 +56,7 @@ export function Feed({
   publicationStyles,
   styles = baseStyles,
 }: {
-  query?: PublicationQuery,
+  publicationsQuery?: PublicationsQuery,
   ListHeaderComponent?: React.FC,
   ListFooterComponent?: React.FC,
   signedInUser?: ProfileMetadata
@@ -66,7 +66,7 @@ export function Feed({
   onMirrorPress?: (publication: ExtendedPublication) => void,
   onLikePress?: (publication: ExtendedPublication) => void,
   onProfileImagePress?: (publication: ExtendedPublication) => void,
-  hideLikes?: any,
+  hideLikes?: boolean,
   hideComments?: boolean,
   hideMirrors?: boolean,
   hideCollects?: boolean,
@@ -89,14 +89,14 @@ export function Feed({
   }, [])
 
   async function fetchResponse(cursor?: string) {
-    if (query.name === 'explorePublications') {
+    if (publicationsQuery.name === 'explorePublications') {
       try {
         let { data } = await client.query(ExplorePublicationsDocument, {
           request: {
             cursor,
-            publicationTypes: query.publicationTypes,
-            sortCriteria: query.publicationSortCriteria || PublicationSortCriteria.Latest,
-            limit: query.limit
+            publicationTypes: publicationsQuery.publicationTypes,
+            sortCriteria: publicationsQuery.publicationSortCriteria || PublicationSortCriteria.Latest,
+            limit: publicationsQuery.limit
           }
         }).toPromise()
         if (data) {
@@ -113,12 +113,12 @@ export function Feed({
         console.log('Error fetching explorePublications: ', err)
       }
     }
-    if (query.name === 'getPublications') {
+    if (publicationsQuery.name === 'getPublications') {
       let { data } = await client.query(PublicationsDocument, {
         request: {
-          profileId: query.profileId,
+          profileId: publicationsQuery.profileId,
           cursor,
-          publicationTypes: query.publicationTypes
+          publicationTypes: publicationsQuery.publicationTypes
         }
       }).toPromise()
       console.log('data: ', data)
@@ -130,11 +130,11 @@ export function Feed({
         } as PublicationFetchResults
       }
     }
-    if (query.name === 'getComments') {
+    if (publicationsQuery.name === 'getComments') {
       try {
         let { data } = await client.query(PublicationsDocument, {
           request: {
-            commentsOf: query.publicationId,
+            commentsOf: publicationsQuery.publicationId,
             cursor
           }
         }).toPromise()
@@ -182,7 +182,7 @@ export function Feed({
         items = configureMirrorAndIpfsUrl(items)
         if (cursor) {
           let newData = [...publications, ...items]
-          if (query.publicationSortCriteria === "LATEST") {
+          if (publicationsQuery.publicationSortCriteria === "LATEST") {
             newData = [...new Map(newData.map(m => [m.id, m])).values()]
           }
           setPublications(newData)
@@ -234,7 +234,7 @@ export function Feed({
       {
         !loading &&
         publications.length === Number(0) &&
-        query.name === 'getComments' && (
+        publicationsQuery.name === 'getComments' && (
           <Text style={styles.noCommentsMessage}>No comments...</Text>
         )
       }

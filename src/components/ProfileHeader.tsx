@@ -21,12 +21,12 @@ export function ProfileHeader({
 }: {
   profileId?: number,
   profile?: ExtendedProfile,
-  onFollowingPress: (profile: ExtendedProfile) => void,
-  onFollowersPress: (profile: ExtendedProfile) => void,
+  onFollowingPress?: (profile: ExtendedProfile) => void,
+  onFollowersPress?: (profile: ExtendedProfile) => void,
   styles?: ProfileHeaderStyles
 }) {
   const [fetchedProfile, setFetchedProfile] = useState<any | null>(null)
-  const { environment, theme } = useContext(LensContext) as LensContextType
+  const { environment, theme } = useContext<LensContextType>(LensContext)
   const client = createClient(environment)
   if (theme) {
     if (theme === 'dark') {

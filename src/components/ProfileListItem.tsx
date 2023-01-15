@@ -12,18 +12,18 @@ import { LensContext } from '../context'
 
 export function ProfileListItem({
   profile,
-  onProfilePress,
-  onFollowPress,
+  onProfilePress = profile => console.log({ profile }),
+  onFollowPress = profile => console.log({ profile }),
   isFollowing,
   styles = baseStyles
 } : {
   profile: ExtendedProfile,
-  onProfilePress: any,
-  onFollowPress: any,
+  onProfilePress?: (profile: ExtendedProfile) => void,
+  onFollowPress?: (profile: ExtendedProfile) => void,
   isFollowing?: boolean,
   styles?: ProfileListItemStyles
 }) {
-  const { theme } = useContext(LensContext) as LensContextType
+  const { theme } = useContext<LensContextType>(LensContext)
   if (theme) {
     if (theme === 'dark') {
       styles = darkThemeStyles

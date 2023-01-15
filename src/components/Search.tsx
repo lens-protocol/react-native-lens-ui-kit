@@ -15,12 +15,14 @@ import {
   SearchType,
   AutoCapitalizeOptions,
   ProfilesQuery,
-  PublicationQuery,
+  PublicationsQuery,
   LensContextType,
   ExtendedProfile,
   PublicationStyles,
   ExtendedPublication,
-  ProfileMetadata
+  ProfileMetadata,
+  ThemeColors,
+  SearchStyles
 } from '../types'
 import { createClient } from '../api'
 import {
@@ -52,7 +54,7 @@ import {
 import { LensContext } from '../context'
 
 export function Search({
-  searchType = SearchType.publication,
+  searchType = SearchType.profile,
   styles = baseStyles,
   placeholder = 'Search',
   autoCapitalize = AutoCapitalizeOptions.none,
@@ -66,11 +68,11 @@ export function Search({
   hideMirrors = false,
   hideCollects = false,
   iconColor,
-  profileQuery = {
+  profilesQuery = {
     profileSortCriteria: ProfileSortCriteria.MostFollowers,
     limit: 25
   },
-  publicationQuery = {
+  publicationsQuery = {
     publicationTypes: [PublicationTypes.Post, PublicationTypes.Comment, PublicationTypes.Mirror],
     publicationSortCriteria: PublicationSortCriteria.Latest,
     limit: 5
@@ -85,14 +87,14 @@ export function Search({
   onProfileImagePress = publication => console.log({ publication }),
 } : {
   searchType?: SearchType,
-  styles?: any,
+  styles?: SearchStyles,
   placeholder?: string,
   autoCapitalize?: AutoCapitalizeOptions,
   selectionColor?: string,
   ListFooterComponent?: React.FC,
   iconColor?: string,
-  profileQuery?: ProfilesQuery,
-  publicationQuery?: PublicationQuery,
+  profilesQuery?: ProfilesQuery,
+  publicationsQuery?: PublicationsQuery,
   infiniteScroll?: boolean,
   onEndReachedThreshold?: number,
   publicationStyles?: PublicationStyles,
@@ -116,8 +118,14 @@ export function Search({
   const [loading, setLoading] = useState<boolean>(false)
   const [canPaginate, setCanPaginate] = useState<boolean>(true)
 
-  const { environment } = useContext<LensContextType>(LensContext)
+  const { environment, theme } = useContext<LensContextType>(LensContext)
   const client = createClient(environment)
+
+  if (theme) {
+    if (theme === 'dark') {
+      styles = darkThemeStyles
+    }
+  }
 
   useEffect(() => {
     if (searchType === SearchType.profile) {
@@ -132,8 +140,8 @@ export function Search({
     try {
       const { data } = await client.query(ExploreProfilesDocument, {
         request: {
-          sortCriteria: profileQuery.profileSortCriteria || ProfileSortCriteria.MostFollowers,
-          limit: profileQuery.limit,
+          sortCriteria: profilesQuery.profileSortCriteria || ProfileSortCriteria.MostFollowers,
+          limit: profilesQuery.limit,
           cursor
         }
       }).toPromise()
@@ -152,7 +160,7 @@ export function Search({
         setLoading(false)
       }
     } catch (err) {
-      console.log('error fetching profiles...:', err)
+      console.log('error fetching profiles... ', err)
     }
   }
 
@@ -163,9 +171,9 @@ export function Search({
         data
       } = await client.query(ExplorePublicationsDocument, {
         request: {
-          publicationTypes: publicationQuery.publicationTypes,
-          limit: publicationQuery.limit,
-          sortCriteria: publicationQuery.publicationSortCriteria || PublicationSortCriteria.Latest,
+          publicationTypes: publicationsQuery.publicationTypes,
+          limit: publicationsQuery.limit,
+          sortCriteria: publicationsQuery.publicationSortCriteria || PublicationSortCriteria.Latest,
           cursor,
         }
       }).toPromise()
@@ -178,7 +186,7 @@ export function Search({
         items = configureMirrorAndIpfsUrl(items)
         if (cursor) {
           let newData = [...publications, ...items]
-          if (publicationQuery.publicationSortCriteria === "LATEST") {
+          if (publicationsQuery.publicationSortCriteria === "LATEST") {
             newData = [...new Map(newData.map(m => [m.id, m])).values()]
           }
           setPublications(newData)
@@ -202,7 +210,7 @@ export function Search({
         request: {
           type: SearchRequestTypes.Publication,
           query: value,
-          limit: publicationQuery.limit,
+          limit: publicationsQuery.limit,
           cursor,
         }
       }).toPromise()
@@ -215,7 +223,7 @@ export function Search({
         items = configureMirrorAndIpfsUrl(items)
         if (cursor) {
           let newData = [...publications, ...items]
-          if (publicationQuery.publicationSortCriteria === "LATEST") {
+          if (publicationsQuery.publicationSortCriteria === "LATEST") {
             newData = [...new Map(newData.map(m => [m.id, m])).values()]
           }
           setPublications(newData)
@@ -225,7 +233,7 @@ export function Search({
         setLoading(false)
       }
     } catch (err) {
-
+      console.log('error searching publications... ', err)
     }
   }
 
@@ -259,7 +267,7 @@ export function Search({
        }
      }
     } catch (err) {
-     console.log('Error fetching next items:', err)
+     console.log('Error fetching next items... ', err)
     }
   }
 
@@ -406,11 +414,13 @@ export function Search({
 }
 
 const baseStyles = StyleSheet.create({
-  containerStyle: {},
+  containerStyle: {
+  },
   inputContainerStyle: {
+    paddingTop: 10,
     alignItems: 'center',
     backgroundColor: 'white',
-    marginBottom: 8
+    paddingBottom: 10
   },
   inputWrapperStyle: {
     flexDirection: 'row',
@@ -424,7 +434,7 @@ const baseStyles = StyleSheet.create({
   },
   inputStyle: {
     marginLeft: 8,
-    flex: 1
+    flex: 1,
   },
   loadingIndicatorStyle : {
     marginVertical: 20
@@ -432,5 +442,30 @@ const baseStyles = StyleSheet.create({
 })
 
 const darkThemeStyles = StyleSheet.create({
-
+  containerStyle: {
+    backgroundColor: ThemeColors.black,
+  },
+  inputContainerStyle: {
+    alignItems: 'center',
+    backgroundColor: ThemeColors.black,
+    marginBottom: 8
+  },
+  inputWrapperStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '95%',
+    paddingLeft: 15,
+    backgroundColor: ThemeColors.darkGray,
+    borderRadius: 30,
+    height: 40,
+    paddingRight: 10
+  },
+  inputStyle: {
+    marginLeft: 8,
+    flex: 1,
+    color: ThemeColors.lightGray
+  },
+  loadingIndicatorStyle : {
+    marginVertical: 20
+  }
 })

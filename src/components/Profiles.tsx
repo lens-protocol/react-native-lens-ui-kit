@@ -29,7 +29,7 @@ export function Profiles({
   onEndReachedThreshold = .7,
   infiniteScroll = true,
   signedInUserAddress,
-  query = {
+  profilesQuery = {
     name: 'exploreProfiles',
     profileSortCriteria: ProfileSortCriteria.MostFollowers,
     limit: 25
@@ -40,14 +40,14 @@ export function Profiles({
   profileData?: ExtendedProfile[],
   onEndReachedThreshold?: number,
   infiniteScroll?: boolean,
-  query?: ProfilesQuery,
+  profilesQuery?: ProfilesQuery,
   signedInUserAddress?: string
 }) {
   const [profiles, setProfiles] = useState<ExtendedProfile[]>([])
   const [loading, setLoading] = useState<Boolean>(true)
   const [canPaginate, setCanPaginate] = useState<Boolean>(true)
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
-  const { environment } = useContext(LensContext) as LensContextType
+  const { environment } = useContext<LensContextType>(LensContext)
   const client = createClient(environment)
 
   useEffect(() => {
@@ -55,13 +55,13 @@ export function Profiles({
   }, [])
 
   async function fetchResponse(cursor = null) {
-    if (query.name === 'exploreProfiles') {
+    if (profilesQuery.name === 'exploreProfiles') {
       try {
         let { data } = await client.query(ExploreProfilesDocument, {
           request: {
-            sortCriteria: query.profileSortCriteria || ProfileSortCriteria.MostFollowers,
+            sortCriteria: profilesQuery.profileSortCriteria || ProfileSortCriteria.MostFollowers,
             cursor,
-            limit: query.limit
+            limit: profilesQuery.limit
           }
         }).toPromise()
         if (data && data.exploreProfiles) {
@@ -90,12 +90,12 @@ export function Profiles({
         setLoading(false)
       }
     }
-    if (query.name === 'getFollowing') {     
+    if (profilesQuery.name === 'getFollowing') {     
       let { data }  = await client.query(FollowingDocument, {
         request: {
-          address: query.ethereumAddress,
+          address: profilesQuery.ethereumAddress,
           cursor,
-          limit: query.limit || 25
+          limit: profilesQuery.limit || 25
         }
       }).toPromise()
       if (data) {

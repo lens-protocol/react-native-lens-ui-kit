@@ -12,7 +12,8 @@ import {
   PublicationStyles,
   ExtendedPublication,
   LensContextType,
-  ThemeColors
+  ThemeColors,
+  ProfileMetadata
 } from '../types'
 import { returnIpfsPathOrUrl } from '../utils'
 import { LensContext } from '../context'
@@ -22,7 +23,7 @@ const width = Dimensions.get('window').width
 
 export function Publication({
   publication,
-  signedInUser = null,
+  signedInUser,
   hideLikes = false,
   hideComments = false,
   hideMirrors = false,
@@ -36,20 +37,20 @@ export function Publication({
   styles = baseStyles
 }: {
   publication: ExtendedPublication,
-  signedInUser: any,
-  hideLikes: boolean,
-  hideComments: boolean,
-  hideMirrors: boolean,
-  hideCollects: boolean,
+  signedInUser?: ProfileMetadata,
+  hideLikes?: boolean,
+  hideComments?: boolean,
+  hideMirrors?: boolean,
+  hideCollects?: boolean,
   iconColor?: string,
-  onCollectPress: (publication: ExtendedPublication) => void,
-  onCommentPress:(publication: ExtendedPublication) => void,
-  onMirrorPress: (publication: ExtendedPublication) => void,
-  onLikePress: (publication: ExtendedPublication) => void,
-  onProfileImagePress: (publication: ExtendedPublication) => void,
+  onCollectPress?: (publication: ExtendedPublication) => void,
+  onCommentPress?:(publication: ExtendedPublication) => void,
+  onMirrorPress?: (publication: ExtendedPublication) => void,
+  onLikePress?: (publication: ExtendedPublication) => void,
+  onProfileImagePress?: (publication: ExtendedPublication) => void,
   styles?: PublicationStyles
 }) {
-  const { theme } = useContext(LensContext) 
+  const { theme } = useContext<LensContextType>(LensContext) 
   if (theme) {
     if (theme === 'dark') {
       styles = darkThemeStyles

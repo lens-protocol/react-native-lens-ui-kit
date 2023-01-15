@@ -10,7 +10,7 @@ import {
   PublicationMetadataFilters
 } from './graphql/generated'
 
-export type PublicationQuery = {
+export type PublicationsQuery = {
   name?: string;
   publicationSortCriteria?: PublicationSortCriteria,
   publicationTypes?: PublicationTypes[],
@@ -18,7 +18,7 @@ export type PublicationQuery = {
   profileId?: number;
   publicationId?: number;
   cursor?: string;
-  metadata?: PublicationMetadataFilters
+  metadata?: PublicationMetadataFilters;
 }
 
 export type ProfilesQuery = {
@@ -49,7 +49,8 @@ export enum ThemeColors {
   black = '#131313',
   white = '#ffffff',
   lightGray = 'rgba(255, 255, 255, .6)',
-  clearWhite = 'rgba(255, 255, 255, .15)'
+  clearWhite = 'rgba(255, 255, 255, .15)',
+  darkGray = '#202020'
 }
 
 export enum SearchType {
@@ -196,4 +197,12 @@ export type FeedStyles = {
   container: {},
   loadingIndicatorStyle: {},
   noCommentsMessage: {}
+}
+
+export type SearchStyles = {
+  containerStyle: {},
+  inputContainerStyle: {},
+  inputWrapperStyle: {},
+  inputStyle: {},
+  loadingIndicatorStyle : {}
 }
