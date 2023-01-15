@@ -16,7 +16,6 @@ import {
   AutoCapitalizeOptions,
   ProfilesQuery,
   PublicationQuery,
-  PublicationFetchResults,
   LensContextType,
   ExtendedProfile,
   PublicationStyles,
@@ -44,7 +43,11 @@ import {
   ExplorePublicationsDocument,
   PublicationTypes,
   SearchPublicationsDocument,
-  SearchRequestTypes
+  SearchRequestTypes,
+  ProfileSearchResult,
+  ExplorePublicationResult,
+  ExploreProfileResult,
+  PublicationSearchResult
 } from '../graphql/generated'
 import { LensContext } from '../context'
 
@@ -137,7 +140,7 @@ export function Search({
       if (data && data.exploreProfiles.__typename === 'ExploreProfileResult') {
         let {
           items, pageInfo
-        } = data.exploreProfiles as any
+        } = data.exploreProfiles as ExploreProfileResult
         setPaginationInfo(pageInfo)
         items = formatProfilePictures(items)
         if (cursor) {
@@ -169,7 +172,7 @@ export function Search({
       if (data && data.explorePublications.__typename === 'ExplorePublicationResult') {
         let {
           items, pageInfo
-        } = data.explorePublications as PublicationFetchResults
+        } = data.explorePublications as ExplorePublicationResult
         setPaginationInfo(pageInfo)
         items = filterMimeTypes(items)
         items = configureMirrorAndIpfsUrl(items)
@@ -191,6 +194,7 @@ export function Search({
   }
 
   async function searchPublications(value: string, cursor?: string) {
+    setLoading(true)
     try {
       const {
         data
@@ -202,6 +206,24 @@ export function Search({
           cursor,
         }
       }).toPromise()
+      if (data && data.search.__typename === 'PublicationSearchResult') {
+        let {
+          items, pageInfo
+        } = data.search as PublicationSearchResult
+        setPaginationInfo(pageInfo)
+        items = filterMimeTypes(items)
+        items = configureMirrorAndIpfsUrl(items)
+        if (cursor) {
+          let newData = [...publications, ...items]
+          if (publicationQuery.publicationSortCriteria === "LATEST") {
+            newData = [...new Map(newData.map(m => [m.id, m])).values()]
+          }
+          setPublications(newData)
+        } else {
+          setPublications(items)
+        }
+        setLoading(false)
+      }
     } catch (err) {
 
     }
@@ -252,8 +274,10 @@ export function Search({
         }
       }).toPromise()
       if (data && data.search.__typename === 'ProfileSearchResult') {
-        setPaginationInfo(data.search.pageInfo)
-        let items = data.search.items as ExtendedProfile[]
+        let {
+          items, pageInfo
+        } = data.search as ProfileSearchResult
+        setPaginationInfo(pageInfo)
         items = formatProfilePictures(items)
         if (cursor) {
           let newData = [...profiles, ...items]
