@@ -65,7 +65,7 @@ export function Publication({
       <View
         style={styles.publicationContainer}
       >
-        <View>
+        <View style={styles.userProfileContainer}>
           <TouchableHighlight
             underlayColor='transparent'
             onPress={() => onProfileImagePress(publication)}
@@ -118,69 +118,69 @@ export function Publication({
               />
             )
           }
+          {
+            publication.stats && (
+              <View style={styles.statsContainer}>
+                {
+                  !hideComments && (
+                    <View style={styles.statsDetailContainer}>
+                      <CommentIcon
+                        onPress={() => onCommentPress(publication)}
+                        color={iconColor}
+                      />
+                      <Text style={styles.statsDetailText}>{publication.stats.totalAmountOfComments}</Text>
+                    </View>
+                  )
+                }
+                {
+                  !hideMirrors && (
+                    <View style={styles.statsDetailContainer}>
+                      <MirrorIcon
+                        onPress={() => onMirrorPress(publication)}
+                        color={iconColor}
+                      />
+                      <Text style={styles.statsDetailText}>{publication.stats.totalAmountOfMirrors}</Text>
+                    </View>
+                  )
+                }
+                {
+                  !hideCollects && (
+                    <View style={styles.statsDetailContainer}>
+                      <CollectIcon
+                        onPress={() => onCollectPress(publication)}
+                        color={iconColor}
+                      />
+                      <Text style={styles.statsDetailText}>{publication.stats.totalAmountOfCollects}</Text>
+                    </View>
+                  )
+                }
+                {
+                  !signedInUser && !hideLikes && (
+                    <View style={styles.statsDetailContainer}>
+                      <UnfilledHeartIcon
+                        onPress={() => onLikePress(publication)}
+                        color={iconColor}
+                      />
+                      <Text style={styles.statsDetailText}>{publication.stats.totalUpvotes}</Text>
+                    </View>
+                  )
+                }
+                {
+                  signedInUser && !hideLikes && (
+                    <View style={styles.statsDetailContainer}>
+                      <FilledHeartIcon
+                        onPress={() => onLikePress(publication)}
+                        color={iconColor}
+                      />
+                      <Text style={styles.statsDetailText}>{publication.stats.totalUpvotes}</Text>
+                    </View>
+                  )
+                }
+              </View>
+            )
+          }
         </View>
       </View>
-      {
-        publication.stats && (
-          <View style={styles.statsContainer}>
-            {
-              !hideComments && (
-                <View style={styles.statsDetailContainer}>
-                  <CommentIcon
-                    onPress={() => onCommentPress(publication)}
-                    color={iconColor}
-                  />
-                  <Text style={styles.statsDetailText}>{publication.stats.totalAmountOfComments}</Text>
-                </View>
-              )
-            }
-            {
-              !hideMirrors && (
-                <View style={styles.statsDetailContainer}>
-                  <MirrorIcon
-                    onPress={() => onMirrorPress(publication)}
-                    color={iconColor}
-                  />
-                  <Text style={styles.statsDetailText}>{publication.stats.totalAmountOfMirrors}</Text>
-                </View>
-              )
-            }
-            {
-              !hideCollects && (
-                <View style={styles.statsDetailContainer}>
-                  <CollectIcon
-                    onPress={() => onCollectPress(publication)}
-                    color={iconColor}
-                  />
-                  <Text style={styles.statsDetailText}>{publication.stats.totalAmountOfCollects}</Text>
-                </View>
-              )
-            }
-            {
-              !signedInUser && !hideLikes && (
-                <View style={styles.statsDetailContainer}>
-                  <UnfilledHeartIcon
-                    onPress={() => onLikePress(publication)}
-                    color={iconColor}
-                  />
-                  <Text style={styles.statsDetailText}>{publication.stats.totalUpvotes}</Text>
-                </View>
-              )
-            }
-            {
-              signedInUser && !hideLikes && (
-                <View style={styles.statsDetailContainer}>
-                  <FilledHeartIcon
-                    onPress={() => onLikePress(publication)}
-                    color={iconColor}
-                  />
-                  <Text style={styles.statsDetailText}>{publication.stats.totalUpvotes}</Text>
-                </View>
-              )
-            }
-          </View>
-        )
-      }
     </View>
   )
 }
@@ -200,6 +200,8 @@ const baseStyles = StyleSheet.create({
   },
   publicationContainer: {
     flexDirection: 'row',
+  },
+  userProfileContainer: {
   },
   missingAvatarPlaceholder: {
     width: 40,
@@ -230,7 +232,6 @@ const baseStyles = StyleSheet.create({
   statsContainer: {
     marginTop: 20,
     flexDirection: 'row',
-    paddingLeft: 20,
   },
   statsDetailContainer: {
     flexDirection: 'row',
@@ -284,6 +285,8 @@ const darkThemeStyles = StyleSheet.create({
   },
   publicationContainer: {
     flexDirection: 'row',
+  },
+  userProfileContainer: {
   },
   missingAvatarPlaceholder: {
     width: 40,

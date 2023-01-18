@@ -24,13 +24,19 @@ import { Publication as PublicationComponent } from './'
 import {
   ExplorePublicationsDocument,
   PublicationsDocument,
+  ProfileFeedDocument,
   PaginatedResultInfo,
   PublicationTypes,
   PublicationSortCriteria,
+  FeedRequest,
+  PaginatedFeedResult,
+  FeedItemRoot
 } from '../graphql/generated'
 import { LensContext } from '../context'
 
 export function Feed({
+  profileId,
+  feedQuery,
   publicationsQuery = {
     name: "explorePublications",
     publicationTypes: [PublicationTypes.Post, PublicationTypes.Comment, PublicationTypes.Mirror],
@@ -47,7 +53,7 @@ export function Feed({
   hideCollects = false,
   iconColor,
   infiniteScroll = true,
-  onEndReachedThreshold = .65,
+  onEndReachedThreshold = .025,
   onCollectPress = publication => console.log({ publication }),
   onCommentPress = publication => console.log({ publication }),
   onMirrorPress = publication => console.log({ publication }),
@@ -56,7 +62,9 @@ export function Feed({
   publicationStyles,
   styles = baseStyles,
 }: {
+  profileId?: string,
   publicationsQuery?: PublicationsQuery,
+  feedQuery?: FeedRequest,
   ListHeaderComponent?: React.FC,
   ListFooterComponent?: React.FC,
   signedInUser?: ProfileMetadata
@@ -76,7 +84,7 @@ export function Feed({
   styles?: FeedStyles,
   publicationStyles?: PublicationStyles
 }) {
-  const [publications, setPublications] = useState<ExtendedPublication[]>([])
+  const [publications, setPublications] = useState<ExtendedPublication[] | FeedItemRoot[]>([])
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
   const [loading, setLoading] = useState(false)
   const [canPaginate, setCanPaginate] = useState<Boolean>(true)
@@ -89,6 +97,31 @@ export function Feed({
   }, [])
 
   async function fetchResponse(cursor?: string) {
+    if (profileId) {
+      try {
+        let { data } = await client.query(ProfileFeedDocument, {
+          request: {
+            cursor,
+            profileId,
+            limit: 50
+          }
+        }).toPromise()
+        console.log('data from Feed Component: ', data)
+        if (data) {
+          const { feed } = data
+          let {
+            pageInfo,
+            items
+          } = feed as PaginatedFeedResult
+          const rootItems = items.map(item => item.root)
+          return {
+            pageInfo, items: rootItems
+          }
+        }
+      } catch (err) {
+        console.log('error fetching feed... ', err)
+      }
+    }
     if (publicationsQuery.name === 'explorePublications') {
       try {
         let { data } = await client.query(ExplorePublicationsDocument, {
@@ -229,6 +262,12 @@ export function Feed({
       />
     )
   }
+
+  let initialNumToRender = 25
+  if (publicationsQuery) {
+    initialNumToRender = publicationsQuery.limit || 25
+  }
+
   return (
     <View style={styles.container}>
       {
@@ -245,6 +284,7 @@ export function Feed({
         onEndReached={onEndReached}
         keyExtractor={(_, index) => String(index)}
         onEndReachedThreshold={onEndReachedThreshold}
+        initialNumToRender={initialNumToRender}
         ListFooterComponent={
           ListFooterComponent ?
           ListFooterComponent :

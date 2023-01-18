@@ -145,6 +145,7 @@ export interface PublicationFetchResults {
 export type PublicationStyles = {
   publicationWrapper: {},
   publicationContainer: {},
+  userProfileContainer: {},
   missingAvatarPlaceholder: {},
   smallAvatar: {},
   postContentContainer: {},
