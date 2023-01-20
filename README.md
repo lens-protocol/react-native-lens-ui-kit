@@ -20,6 +20,15 @@ npm install @lens-protocol/react-native-lens-ui-kit
 
 # Components 🍃
 
+- [Feed](#feed)
+- [Profiles](#profiles)
+- [Profile](#profile)
+- [Profile Header](#profile-header)
+- [Publication](#publication)
+- [ProfileListItem](#profilelistitem)
+- [Search](#search)
+- [LensProvider](#lensprovider)
+
 ## Feed
 
 A feed of posts from Lens.
@@ -33,6 +42,7 @@ import { Feed } from '@lens-protocol/react-native-lens-ui-kit'
 ### Options
 
 ```
+profileId?: string
 publicationsQuery?: PublicationsQuery
 ListHeaderComponent?: React.FC
 ListFooterComponent?: React.FC
@@ -215,11 +225,6 @@ onProfileImagePress?: (publication: ExtendedPublication) => void
 styles?: PublicationStyles
 ```
 
-### Default props
-
-```
-
-```
 
 ### Styles 
 [PublicationStyles](https://github.com/lens-protocol/react-native-lens-ui-kit/blob/main/src/types.ts#L137)
