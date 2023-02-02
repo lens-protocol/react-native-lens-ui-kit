@@ -1,6 +1,6 @@
 # React Native Lens UI Kit 🌿 (alpha)
 
-![React Native Lens](https://arweave.net/eDVHKj0nvAhYzUUXCU9vqVDY1N_PES8uik53xjQeLWo)
+![React Native Lens](https://arweave.net/3COKWStwD_qjTpZNRGUxKoiyjtyZFqXMyYF-Tekk7zo)
 
 A React Native UI kit for [Lens Protocol](https://lens.xyz/). Get started building with as little as 2 lines of code. Mix and match components to supercharge your mobile development workflow.
 
