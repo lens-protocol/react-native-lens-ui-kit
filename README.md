@@ -6,6 +6,8 @@ A React Native UI kit for [Lens Protocol](https://lens.xyz/). Get started buildi
 
 Example app codebase located [here](https://github.com/dabit3/dabit3-react-native-lens-example)
 
+> You can also view a video tutorial of how to use the library [here](https://www.youtube.com/watch?v=qs6OE9kef6I)
+
 ## Getting started 🚀
 
 ### Prerequisites
