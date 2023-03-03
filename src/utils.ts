@@ -90,7 +90,11 @@ export function configureMirrorAndIpfsUrl(items: any[]) {
         profile = item.mirrorOf.profile
       }
     }
-    if (profile.picture && profile.picture.__typename === 'MediaSet' && profile.picture.original) {
+    if (profile.picture.uri) {
+      profile.picture.original = {
+        url: profile.picture.uri
+      }
+    } else if (profile.picture && profile.picture.__typename === 'MediaSet' && profile.picture.original) {
       const url = configureIpfsUrl(profile.picture.original.url)
       if (url) {
         profile.picture.original.url = url

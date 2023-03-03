@@ -71,7 +71,16 @@ export function Publication({
             onPress={() => onProfileImagePress(publication)}
           >
           {
-            publication?.profile?.picture?.__typename !== 'MediaSet' || publication.profile.missingAvatar ? (
+            publication?.profile?.picture?.__typename === 'NftImage' ? (
+              <Image
+                source={{
+                  uri: publication?.profile?.picture?.uri
+                }}
+                style={styles.smallAvatar}
+              />
+            ) :
+            publication?.profile?.picture?.__typename !== 'MediaSet' ||
+            publication.profile.missingAvatar ? (
               <View
                 style={styles.missingAvatarPlaceholder}
               />

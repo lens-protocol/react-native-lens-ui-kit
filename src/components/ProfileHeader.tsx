@@ -57,7 +57,11 @@ export function ProfileHeader({
     if (!user && !fetchedProfile) return null
     const profile = user || fetchedProfile
     let { picture, coverPicture } = profile
-    if (picture && picture.original) {
+    if (picture.uri) {
+      picture.original = {
+        url: picture.uri
+      }
+    } else if (picture && picture.original) {
       if (picture.original.url.startsWith('ipfs://')) {
         let result = picture.original.url.substring(7, picture.original.url.length)
         profile.picture.original.url = `https://lens.infura-ipfs.io/ipfs/${result}`
