@@ -62,6 +62,10 @@ export function ProfileHeader({
         let result = picture.original.url.substring(7, picture.original.url.length)
         profile.picture.original.url = `https://lens.infura-ipfs.io/ipfs/${result}`
       }
+      if (picture.original.url.startsWith('ar://')) {
+        let result = picture.original.url.substring(5, picture.original.url.length)
+        profile.picture.original.url = `https://arweave.net/${result}`
+      }
     } else {
       profile.missingAvatar = true
     }
@@ -69,6 +73,10 @@ export function ProfileHeader({
       if (coverPicture.original.url.startsWith('ipfs://')) {
         let hash = coverPicture.original.url.substring(7, coverPicture.original.url.length)
         profile.coverPicture.original.url = `https://lens.infura-ipfs.io/ipfs/${hash}`
+      }
+      if (coverPicture.original.url.startsWith('ar://')) {
+        let result = coverPicture.original.url.substring(5, coverPicture.original.url.length)
+        profile.coverPicture.original.url = `https://arweave.net/${result}`
       }
     } else {
       profile.missingCover = true

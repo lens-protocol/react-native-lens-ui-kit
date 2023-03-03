@@ -106,7 +106,6 @@ export function Feed({
             limit: 50
           }
         }).toPromise()
-        console.log('data from Feed Component: ', data)
         if (data) {
           const { feed } = data
           let {
@@ -154,8 +153,6 @@ export function Feed({
           publicationTypes: publicationsQuery.publicationTypes
         }
       }).toPromise()
-      console.log('data: ', data)
-
       if (data) {
         const { publications: { pageInfo, items }} = data
         return {

@@ -1,13 +1,13 @@
 import {
-  ExtendedProfile,
-  ExtendedPublication,
+  ExtendedProfile
 } from './types'
-import {
-  Publication,
-} from './graphql/generated'
 
 export function configureIpfsUrl(uri: string) {
-  if (uri.startsWith('ipfs://')) {
+  if (uri.startsWith('ar://')) {
+    let result = uri.substring(5, uri.length)
+    let modifiedUrl = `https://arweave.net/${result}`
+    return modifiedUrl
+  } else if (uri.startsWith('ipfs://')) {
     let result = uri.substring(7, uri.length)
     let modifiedUrl = `https://lens.infura-ipfs.io/ipfs/${result}`
     return modifiedUrl
@@ -19,7 +19,11 @@ export function configureIpfsUrl(uri: string) {
 }
 
 export function returnIpfsPathOrUrl(uri: string) {
-  if (uri.startsWith('ipfs://')) {
+  if (uri.startsWith('ar://')) {
+    let result = uri.substring(5, uri.length)
+    let modifiedUrl = `https://arweave.net/${result}`
+    return modifiedUrl
+  } else if (uri.startsWith('ipfs://')) {
     let result = uri.substring(7, uri.length)
     let modifiedUrl = `https://lens.infura-ipfs.io/ipfs/${result}`
     return modifiedUrl
