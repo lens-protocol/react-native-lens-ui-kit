@@ -134,7 +134,9 @@ Renders an individual profile
 import { Profile } from '@lens-protocol/react-native-lens-ui-kit'
 
 <Profile
-  profile={profile}
+  handle="nader.lens"
+  // or profileId={profileId}
+  // or handle={profile}
 />
 ```
 
@@ -179,8 +181,9 @@ Renders a profile header component.
 import { ProfileHeader } from '@lens-protocol/react-native-lens-ui-kit'
 
 <ProfileHeader
-  profile={profile}
+  handle="nader.lens"
   // or profileId={profileId}
+  // or profile={profile}
 />
 ```
 

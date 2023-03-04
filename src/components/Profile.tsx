@@ -12,6 +12,8 @@ import {
 
 export function Profile({
   profile,
+  profileId,
+  handle,
   ListHeaderComponent,
   ListFooterComponent,
   feed,
@@ -28,7 +30,8 @@ export function Profile({
   publicationStyles,
   publicationsQuery = {
     name: "getPublications",
-    profileId: profile.id,
+    handle,
+    profileId: profile?.id || profileId,
     publicationTypes: [PublicationTypes.Post, PublicationTypes.Mirror]
   },
   onFollowingPress = profile => console.log({ profile }),
@@ -39,7 +42,9 @@ export function Profile({
   onMirrorPress = publication => console.log({ publication }),
   onLikePress = publication => console.log({ publication }),
 } : {
-  profile: ExtendedProfile,
+  profile?: ExtendedProfile,
+  profileId?: string,
+  handle?: string,
   ListHeaderComponent?: React.FC,
   ListFooterComponent?: React.FC,
   feed?: Publication[],
@@ -66,7 +71,9 @@ export function Profile({
   const HeaderComponent = ListHeaderComponent ?
   ListHeaderComponent : (
    () => <ProfileHeader
+      profileId={profileId}
       profile={profile}
+      handle={handle}
       onFollowingPress={onFollowingPress}
       onFollowersPress={onFollowersPress}
       styles={headerStyles}

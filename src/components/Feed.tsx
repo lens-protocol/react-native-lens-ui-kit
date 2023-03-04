@@ -25,10 +25,10 @@ import {
   ExplorePublicationsDocument,
   PublicationsDocument,
   ProfileFeedDocument,
+  ProfileDocument,
   PaginatedResultInfo,
   PublicationTypes,
   PublicationSortCriteria,
-  FeedRequest,
   PaginatedFeedResult,
   FeedItemRoot
 } from '../graphql/generated'
@@ -36,7 +36,6 @@ import { LensContext } from '../context'
 
 export function Feed({
   profileId,
-  feedQuery,
   publicationsQuery = {
     name: "explorePublications",
     publicationTypes: [PublicationTypes.Post, PublicationTypes.Comment, PublicationTypes.Mirror],
@@ -64,7 +63,6 @@ export function Feed({
 }: {
   profileId?: string,
   publicationsQuery?: PublicationsQuery,
-  feedQuery?: FeedRequest,
   ListHeaderComponent?: React.FC,
   ListFooterComponent?: React.FC,
   signedInUser?: ProfileMetadata
@@ -146,13 +144,28 @@ export function Feed({
       }
     }
     if (publicationsQuery.name === 'getPublications') {
-      let { data } = await client.query(PublicationsDocument, {
+      let data
+      let id
+      if (publicationsQuery.handle) {
+        let handle = publicationsQuery.handle
+        if (!handle.includes('.lens')) {
+          handle = handle + '.lens'
+        }
+        const { data: profileData } = await client.query(ProfileDocument, {
+          request: { handle }
+        }).toPromise()
+        id = profileData?.profile?.id
+      } else {
+        id = publicationsQuery.profileId
+      }
+      let { data: publicationsData } = await client.query(PublicationsDocument, {
         request: {
-          profileId: publicationsQuery.profileId,
+          profileId: id,
           cursor,
           publicationTypes: publicationsQuery.publicationTypes
         }
       }).toPromise()
+      data = publicationsData
       if (data) {
         const { publications: { pageInfo, items }} = data
         return {

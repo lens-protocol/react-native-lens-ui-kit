@@ -4,7 +4,7 @@ import {
   TouchableHighlight,
   StyleSheet,
   Image,
-  Text,
+  Text
 } from "react-native";
 import { createClient } from "../api";
 import { ProfileDocument } from "../graphql/generated";
@@ -13,18 +13,25 @@ import {
   ProfileHeaderStyles,
   LensContextType,
   ThemeColors,
+  Theme,
 } from "../types";
 import { LensContext } from "../context";
 
 export function ProfileHeader({
   profileId,
   profile: user,
+  handle,
+  isFollowing,
+  onFollowPress = (profile) => console.log({ profile }),
   onFollowingPress = (profile) => console.log({ profile }),
   onFollowersPress = (profile) => console.log({ profile }),
   styles = baseStyles,
 }: {
-  profileId?: number;
+  profileId?: string;
   profile?: ExtendedProfile;
+  handle?: string,
+  isFollowing?: boolean,
+  onFollowPress?: (profile: ExtendedProfile) => void;
   onFollowingPress?: (profile: ExtendedProfile) => void;
   onFollowersPress?: (profile: ExtendedProfile) => void;
   styles?: ProfileHeaderStyles;
@@ -43,18 +50,35 @@ export function ProfileHeader({
     }
   });
   async function fetchProfile() {
-    console.log("FETCHING PROFILE");
     try {
-      const { data } = await client
-        .query(ProfileDocument, {
-          request: {
-            profileId,
-          },
-        })
-        .toPromise();
-      if (data) {
-        const { profile: userProfile } = data;
-        setFetchedProfile(userProfile);
+      if (profileId) {
+        const { data } = await client
+          .query(ProfileDocument, {
+            request: {
+              profileId,
+            },
+          })
+          .toPromise();
+        if (data) {
+          const { profile: userProfile } = data;
+          setFetchedProfile(userProfile);
+        }
+      }
+      if (handle) {
+        if (!handle.includes('.lens')) {
+          handle = handle + '.lens'
+        }
+        const { data } = await client
+          .query(ProfileDocument, {
+            request: {
+              handle,
+            }
+          })
+         .toPromise()
+        if (data) {
+          const { profile: userProfile } = data;
+          setFetchedProfile(userProfile);
+        }
       }
     } catch (err) {
       console.log("error fetching profile: ", err);
@@ -83,7 +107,7 @@ export function ProfileHeader({
       profile.picture.original.url = `https://arweave.net/${result}`;
     }
   } else {
-    profile?.missingAvatar = true;
+    profile.missingAvatar = true;
   }
   if (coverPicture?.original.url) {
     if (coverPicture.original.url.startsWith("ipfs://")) {
@@ -101,7 +125,7 @@ export function ProfileHeader({
       profile.coverPicture.original.url = `https://arweave.net/${result}`;
     }
   } else {
-    profile?.missingCover = true;
+    profile.missingCover = true;
   }
 
   return (
@@ -122,6 +146,9 @@ export function ProfileHeader({
           source={{ uri: profile.picture.original.url }}
         />
       )}
+      {
+        renderFollowButton(isFollowing, theme)
+      }
       <View style={styles.userDetails}>
         <Text style={styles.name}>{profile.name}</Text>
         <Text style={styles.handle}>@{profile.handle}</Text>
@@ -153,10 +180,46 @@ export function ProfileHeader({
       </View>
     </View>
   );
+
+  function renderFollowButton(isFollowing?: boolean, theme?: Theme) {
+    if (!isFollowing) {
+      return (
+        <TouchableHighlight
+          underlayColor={theme === Theme.dark ? 'rgba(255, 255, 255, .85)' : 'rgba(0, 0, 0, .85)'}
+          onPress={() => onFollowPress(profile)}
+          style={styles.followButton}
+        >
+          <Text
+            style={styles.followButtonText}
+          >
+            Follow
+          </Text>
+        </TouchableHighlight>
+      )
+    } else {
+      return (
+        <TouchableHighlight
+          underlayColor={theme === Theme.dark ? 'rgba(255, 255, 255, .85)' : 'rgba(0, 0, 0, .85)'}
+          onPress={() => onFollowPress(profile)}
+          style={styles.followingButton}
+        >
+          <Text
+            style={styles.followingButtonText}
+          >
+            Following
+          </Text>
+        </TouchableHighlight>
+      )
+    }
+  }
 }
 
 const baseStyles = StyleSheet.create({
-  container: {},
+  container: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0, 0, 0, .045)',
+    paddingBottom: 3
+  },
   blankHeader: {
     height: 120,
     backgroundColor: "black",
@@ -171,6 +234,36 @@ const baseStyles = StyleSheet.create({
     borderRadius: 50,
     marginTop: -50,
     marginLeft: 25,
+  },
+  followButton: {
+    backgroundColor: ThemeColors.black,
+    width: 110,
+    position: 'absolute',
+    top: 128,
+    right: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    borderRadius: 30
+  },
+  followButtonText: {
+    color: ThemeColors.white,
+    fontWeight: '600'
+  },
+  followingButton: {
+    borderWidth: 1,
+    borderColor: ThemeColors.black,
+    width: 110,
+    position: 'absolute',
+    top: 128,
+    right: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    borderRadius: 30
+  },
+  followingButtonText: {
+    color: ThemeColors.black
   },
   userDetails: {
     paddingHorizontal: 25,
@@ -214,6 +307,8 @@ const darkThemeStyles = StyleSheet.create({
   container: {
     backgroundColor: ThemeColors.black,
     paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, .05)',
   },
   blankHeader: {
     height: 120,
@@ -227,8 +322,38 @@ const darkThemeStyles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginTop: -50,
+    marginTop: -55,
     marginLeft: 25,
+  },
+  followButton: {
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    width: 110,
+    position: 'absolute',
+    top: 128,
+    right: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    borderRadius: 30
+  },
+  followButtonText: {
+    color: ThemeColors.black,
+    fontWeight: '600'
+  },
+  followingButton: {
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, .2)',
+    width: 110,
+    position: 'absolute',
+    top: 128,
+    right: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    borderRadius: 30
+  },
+  followingButtonText: {
+    color: ThemeColors.white
   },
   userDetails: {
     paddingHorizontal: 25,

@@ -16,6 +16,7 @@ export type PublicationsQuery = {
   publicationTypes?: PublicationTypes[],
   limit?: number;
   profileId?: number;
+  handle?: string;
   publicationId?: number;
   cursor?: string;
   metadata?: PublicationMetadataFilters;
@@ -168,6 +169,10 @@ export type ProfileHeaderStyles = {
   blankHeader: {},
   headerImage: {},
   avatar: {},
+  followButton: {},
+  followingButton: {},
+  followingButtonText: {},
+  followButtonText: {},
   userDetails: {},
   name: {},
   handle: {},

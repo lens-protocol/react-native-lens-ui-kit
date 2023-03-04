@@ -44,7 +44,7 @@ export function formatProfilePictures(profiles: ExtendedProfile[]) {
   return profiles.map(profile => {
     let { picture, coverPicture } = profile
     if (picture && picture.__typename === 'MediaSet') {
-      if (picture.original) {
+      if (picture.original && picture.original.url) {
         picture.original.url = returnIpfsPathOrUrl(picture.original.url)
       } else {
         profile.missingAvatar = true
@@ -94,7 +94,7 @@ export function configureMirrorAndIpfsUrl(items: any[]) {
       profile.picture.original = {
         url: profile.picture.uri
       }
-    } else if (profile.picture && profile.picture.__typename === 'MediaSet' && profile.picture.original) {
+    } else if (profile.picture && profile.picture.__typename === 'MediaSet' && profile.picture.original && profile.picture.original.url) {
       const url = configureIpfsUrl(profile.picture.original.url)
       if (url) {
         profile.picture.original.url = url
