@@ -1,21 +1,21 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react"
 import {
   View,
   TouchableHighlight,
   StyleSheet,
   Image,
   Text
-} from "react-native";
-import { createClient } from "../api";
-import { ProfileDocument } from "../graphql/generated";
+} from "react-native"
+import { createClient } from "../api"
+import { ProfileDocument } from "../graphql/generated"
 import {
   ExtendedProfile,
   ProfileHeaderStyles,
   LensContextType,
   ThemeColors,
   Theme,
-} from "../types";
-import { LensContext } from "../context";
+} from "../types"
+import { LensContext } from "../context"
 
 export function ProfileHeader({
   profileId,
@@ -57,10 +57,10 @@ export function ProfileHeader({
               profileId,
             },
           })
-          .toPromise();
+          .toPromise()
         if (data) {
-          const { profile: userProfile } = data;
-          setFetchedProfile(userProfile);
+          const { profile: userProfile } = data
+          setFetchedProfile(userProfile)
         }
       }
       if (handle) {
@@ -75,56 +75,56 @@ export function ProfileHeader({
           })
          .toPromise()
         if (data) {
-          const { profile: userProfile } = data;
-          setFetchedProfile(userProfile);
+          const { profile: userProfile } = data
+          setFetchedProfile(userProfile)
         }
       }
     } catch (err) {
-      console.log("error fetching profile: ", err);
+      console.log("error fetching profile: ", err)
     }
   }
-  if (!user && !fetchedProfile) return null;
-  const profile = user || fetchedProfile;
-  let { picture, coverPicture } = profile;
+  if (!user && !fetchedProfile) return null
+  const profile = user || fetchedProfile
+  let { picture, coverPicture } = profile
   if (picture?.uri) {
     picture.original = {
       url: picture.uri,
-    };
+    }
   } else if (picture?.original) {
     if (picture.original.url.startsWith("ipfs://")) {
       let result = picture.original.url.substring(
         7,
         picture.original.url.length
-      );
-      profile.picture.original.url = `${IPFSGateway}/${result}`;
+      )
+      profile.picture.original.url = `${IPFSGateway}/${result}`
     }
     if (picture.original.url.startsWith("ar://")) {
       let result = picture.original.url.substring(
         5,
         picture.original.url.length
-      );
-      profile.picture.original.url = `${IPFSGateway}/${result}`;
+      )
+      profile.picture.original.url = `${IPFSGateway}/${result}`
     }
   } else {
-    profile.missingAvatar = true;
+    profile.missingAvatar = true
   }
   if (coverPicture?.original.url) {
     if (coverPicture.original.url.startsWith("ipfs://")) {
       let hash = coverPicture.original.url.substring(
         7,
         coverPicture.original.url.length
-      );
-      profile.coverPicture.original.url = `${IPFSGateway}/${hash}`;
+      )
+      profile.coverPicture.original.url = `${IPFSGateway}/${hash}`
     }
     if (coverPicture.original.url.startsWith("ar://")) {
       let result = coverPicture.original.url.substring(
         5,
         coverPicture.original.url.length
-      );
-      profile.coverPicture.original.url = `https://arweave.net/${result}`;
+      )
+      profile.coverPicture.original.url = `https://arweave.net/${result}`
     }
   } else {
-    profile.missingCover = true;
+    profile.missingCover = true
   }
 
   return (
@@ -178,7 +178,7 @@ export function ProfileHeader({
         </View>
       </View>
     </View>
-  );
+  )
 
   function renderFollowButton(isFollowing?: boolean, theme?: Theme) {
     if (!isFollowing) {
@@ -300,7 +300,7 @@ const baseStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-});
+})
 
 const darkThemeStyles = StyleSheet.create({
   container: {
@@ -393,4 +393,4 @@ const darkThemeStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-});
+})

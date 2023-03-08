@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/react-native-lens-ui-kit",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "React Native UI Kit for Lens Protocol",
   "main": "dist/index.js",
   "scripts": {
@@ -16,7 +16,6 @@
     "React Native"
   ],
   "author": "Nader Dabit",
-  "type": "module",
   "dependencies": {
     "@graphql-codegen/fragment-matcher": "^3.3.1",
     "date-fns": "^2.29.3",
