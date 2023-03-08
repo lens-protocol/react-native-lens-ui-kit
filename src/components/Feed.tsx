@@ -87,7 +87,7 @@ export function Feed({
   const [loading, setLoading] = useState(false)
   const [canPaginate, setCanPaginate] = useState<Boolean>(true)
 
-  const { environment } = useContext<LensContextType>(LensContext)
+  const { environment, IPFSGateway } = useContext<LensContextType>(LensContext)
   const client = createClient(environment)
   
   useEffect(() => {
@@ -222,7 +222,7 @@ export function Feed({
         } = await fetchResponse(cursor)
         setPaginationInfo(pageInfo)
         items = filterMimeTypes(items)
-        items = configureMirrorAndIpfsUrl(items)
+        items = configureMirrorAndIpfsUrl(items, IPFSGateway)
         if (cursor) {
           let newData = [...publications, ...items]
           if (publicationsQuery.publicationSortCriteria === "LATEST") {

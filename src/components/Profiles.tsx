@@ -47,7 +47,7 @@ export function Profiles({
   const [loading, setLoading] = useState<Boolean>(true)
   const [canPaginate, setCanPaginate] = useState<Boolean>(true)
   const [paginationInfo, setPaginationInfo] = useState<PaginatedResultInfo | undefined>()
-  const { environment } = useContext<LensContextType>(LensContext)
+  const { environment, IPFSGateway } = useContext<LensContextType>(LensContext)
   const client = createClient(environment)
 
   useEffect(() => {
@@ -147,7 +147,7 @@ export function Profiles({
           items: ExtendedProfile[], pageInfo: PaginatedResultInfo
         }
         setPaginationInfo(pageInfo)
-        items = formatProfilePictures(items)
+        items = formatProfilePictures(items, IPFSGateway)
         setLoading(false)
         setProfiles([...profiles, ...items])
       } else {
