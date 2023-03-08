@@ -50,7 +50,7 @@ export function Publication({
   onProfileImagePress?: (publication: ExtendedPublication) => void,
   styles?: PublicationStyles
 }) {
-  const { theme } = useContext<LensContextType>(LensContext) 
+  const { theme, IPFSGateway } = useContext<LensContextType>(LensContext)
   if (theme) {
     if (theme === 'dark') {
       styles = darkThemeStyles
@@ -118,10 +118,10 @@ export function Publication({
           }
           {
             Number(publication.metadata.media.length) > 0 && (
-              <Image 
+              <Image
                 resizeMode="contain"
                 source={{
-                  uri: returnIpfsPathOrUrl(publication.metadata.media[0].original.url)
+                  uri: returnIpfsPathOrUrl(publication.metadata.media[0].original.url, IPFSGateway)
                 }}
                 style={styles.metadataImage}
               />

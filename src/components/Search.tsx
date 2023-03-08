@@ -118,13 +118,11 @@ export function Search({
   const [loading, setLoading] = useState<boolean>(false)
   const [canPaginate, setCanPaginate] = useState<boolean>(true)
 
-  const { environment, theme } = useContext<LensContextType>(LensContext)
+  const { environment, theme, IPFSGateway } = useContext<LensContextType>(LensContext)
   const client = createClient(environment)
 
-  if (theme) {
-    if (theme === 'dark') {
-      styles = darkThemeStyles
-    }
+  if (theme === 'dark') {
+    styles = darkThemeStyles
   }
 
   useEffect(() => {
@@ -150,7 +148,7 @@ export function Search({
           items, pageInfo
         } = data.exploreProfiles as ExploreProfileResult
         setPaginationInfo(pageInfo)
-        items = formatProfilePictures(items)
+        items = formatProfilePictures(items, IPFSGateway)
         if (cursor) {
           let newData = [...profiles, ...items]
           setProfiles(newData)
@@ -183,7 +181,7 @@ export function Search({
         } = data.explorePublications as ExplorePublicationResult
         setPaginationInfo(pageInfo)
         items = filterMimeTypes(items)
-        items = configureMirrorAndIpfsUrl(items)
+        items = configureMirrorAndIpfsUrl(items, IPFSGateway)
         if (cursor) {
           let newData = [...publications, ...items]
           if (publicationsQuery.publicationSortCriteria === "LATEST") {
@@ -220,7 +218,7 @@ export function Search({
         } = data.search as PublicationSearchResult
         setPaginationInfo(pageInfo)
         items = filterMimeTypes(items)
-        items = configureMirrorAndIpfsUrl(items)
+        items = configureMirrorAndIpfsUrl(items, IPFSGateway)
         if (cursor) {
           let newData = [...publications, ...items]
           if (publicationsQuery.publicationSortCriteria === "LATEST") {
@@ -286,7 +284,7 @@ export function Search({
           items, pageInfo
         } = data.search as ProfileSearchResult
         setPaginationInfo(pageInfo)
-        items = formatProfilePictures(items)
+        items = formatProfilePictures(items, IPFSGateway)
         if (cursor) {
           let newData = [...profiles, ...items]
           setProfiles(newData)

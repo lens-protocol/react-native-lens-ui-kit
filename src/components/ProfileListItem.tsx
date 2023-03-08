@@ -28,10 +28,8 @@ export function ProfileListItem({
   styles?: ProfileListItemStyles;
 }) {
   const { theme } = useContext<LensContextType>(LensContext);
-  if (theme) {
-    if (theme === "dark") {
-      styles = darkThemeStyles;
-    }
+  if (theme === "dark") {
+    styles = darkThemeStyles;
   }
   function renderFollowButton(isFollowing: boolean = false) {
     if (isFollowing) {

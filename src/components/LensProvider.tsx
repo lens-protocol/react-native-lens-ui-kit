@@ -2,16 +2,22 @@ import { LensContext } from '../context'
 import { Theme, Environment } from '../types'
 
 export function LensProvider({
-  children, environment, theme
+  children,
+  theme = Theme.light,
+  environment = Environment.mainnet,
+  IPFSGateway = 'https://gateway.ipfscdn.io/ipfs',
 }: {
   children: React.ReactNode,
   theme?: Theme,
-  environment?: Environment
+  environment?: Environment,
+  IPFSGateway?: string
 }) {
   return (
     <LensContext.Provider
       value={{
-        environment, theme
+        environment,
+        theme,
+        IPFSGateway
       }}>
       {children}
     </LensContext.Provider>

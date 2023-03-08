@@ -8,7 +8,7 @@ const environments = {
 }
 
 /* creates the API client */
-export function createClient(env:Environment = Environment.mainnet) {
+export function createClient(env:Environment) {
   const APIURL = environments[env] || environments.mainnet
   return createUrqlClient({
     url: APIURL

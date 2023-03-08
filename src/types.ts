@@ -42,8 +42,9 @@ export enum Environment {
 }
 
 export interface LensContextType {
-  environment?: Environment;
-  theme?: Theme;
+  environment: Environment;
+  theme: Theme;
+  IPFSGateway: string;
 }
 
 export enum ThemeColors {

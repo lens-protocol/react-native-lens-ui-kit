@@ -36,19 +36,18 @@ export function ProfileHeader({
   onFollowersPress?: (profile: ExtendedProfile) => void;
   styles?: ProfileHeaderStyles;
 }) {
-  const [fetchedProfile, setFetchedProfile] = useState<any | null>(null);
-  const { environment, theme } = useContext<LensContextType>(LensContext);
-  const client = createClient(environment);
-  if (theme) {
-    if (theme === "dark") {
-      styles = darkThemeStyles;
-    }
+  const [fetchedProfile, setFetchedProfile] = useState<any | null>(null)
+  const { environment, theme, IPFSGateway } = useContext<LensContextType>(LensContext)
+  const client = createClient(environment)
+  if (theme === "dark") {
+    styles = darkThemeStyles
   }
   useEffect(() => {
     if (!profile) {
-      fetchProfile();
+      fetchProfile()
     }
-  });
+  })
+
   async function fetchProfile() {
     try {
       if (profileId) {
@@ -97,14 +96,14 @@ export function ProfileHeader({
         7,
         picture.original.url.length
       );
-      profile.picture.original.url = `https://lens.infura-ipfs.io/ipfs/${result}`;
+      profile.picture.original.url = `${IPFSGateway}/${result}`;
     }
     if (picture.original.url.startsWith("ar://")) {
       let result = picture.original.url.substring(
         5,
         picture.original.url.length
       );
-      profile.picture.original.url = `https://arweave.net/${result}`;
+      profile.picture.original.url = `${IPFSGateway}/${result}`;
     }
   } else {
     profile.missingAvatar = true;
@@ -115,7 +114,7 @@ export function ProfileHeader({
         7,
         coverPicture.original.url.length
       );
-      profile.coverPicture.original.url = `https://lens.infura-ipfs.io/ipfs/${hash}`;
+      profile.coverPicture.original.url = `${IPFSGateway}/${hash}`;
     }
     if (coverPicture.original.url.startsWith("ar://")) {
       let result = coverPicture.original.url.substring(

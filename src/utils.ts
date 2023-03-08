@@ -2,14 +2,14 @@ import {
   ExtendedProfile
 } from './types'
 
-export function configureIpfsUrl(uri: string) {
+export function configureIpfsUrl(uri: string, IPFSGateway: string) {
   if (uri.startsWith('ar://')) {
     let result = uri.substring(5, uri.length)
     let modifiedUrl = `https://arweave.net/${result}`
     return modifiedUrl
   } else if (uri.startsWith('ipfs://')) {
     let result = uri.substring(7, uri.length)
-    let modifiedUrl = `https://lens.infura-ipfs.io/ipfs/${result}`
+    let modifiedUrl = `${IPFSGateway}/${result}`
     return modifiedUrl
   } else if (uri.startsWith('https://')) {
       return uri
@@ -18,14 +18,14 @@ export function configureIpfsUrl(uri: string) {
   }
 }
 
-export function returnIpfsPathOrUrl(uri: string) {
+export function returnIpfsPathOrUrl(uri: string, IPFSGateway: string) {
   if (uri.startsWith('ar://')) {
     let result = uri.substring(5, uri.length)
     let modifiedUrl = `https://arweave.net/${result}`
     return modifiedUrl
   } else if (uri.startsWith('ipfs://')) {
     let result = uri.substring(7, uri.length)
-    let modifiedUrl = `https://lens.infura-ipfs.io/ipfs/${result}`
+    let modifiedUrl = `${IPFSGateway}/${result}`
     return modifiedUrl
   } else {
     return uri
@@ -40,19 +40,19 @@ export const debounce = (fn: Function, ms = 300) => {
   }
 }
 
-export function formatProfilePictures(profiles: ExtendedProfile[]) {
+export function formatProfilePictures(profiles: ExtendedProfile[], IPFSGateway:string) {
   return profiles.map(profile => {
     let { picture, coverPicture } = profile
     if (picture && picture.__typename === 'MediaSet') {
       if (picture.original && picture.original.url) {
-        picture.original.url = returnIpfsPathOrUrl(picture.original.url)
+        picture.original.url = returnIpfsPathOrUrl(picture.original.url, IPFSGateway)
       } else {
         profile.missingAvatar = true
       }
     }
     if (coverPicture && coverPicture.__typename === 'MediaSet') {
       if (coverPicture.original.url) {
-        coverPicture.original.url = returnIpfsPathOrUrl(coverPicture.original.url)
+        coverPicture.original.url = returnIpfsPathOrUrl(coverPicture.original.url, IPFSGateway)
       } else {
         profile.missingCover = true
       }
@@ -79,7 +79,7 @@ export function filterMimeTypes(items: any[]) {
   return items
 }
 
-export function configureMirrorAndIpfsUrl(items: any[]) {
+export function configureMirrorAndIpfsUrl(items: any[], IPFSGateway: string) {
   return items.map(item => {
     if (item.profileSet) return item
     let { profile } = item
@@ -95,7 +95,7 @@ export function configureMirrorAndIpfsUrl(items: any[]) {
         url: profile.picture.uri
       }
     } else if (profile?.picture?.__typename === 'MediaSet' && profile.picture.original && profile.picture.original.url) {
-      const url = configureIpfsUrl(profile.picture.original.url)
+      const url = configureIpfsUrl(profile.picture.original.url, IPFSGateway)
       if (url) {
         profile.picture.original.url = url
       } else {
