@@ -7,6 +7,6 @@ import {
 
 export const LensContext = createContext<LensContextType>({
   environment: Environment.mainnet,
-  IPFSGateway: 'https://gateway.ipfscdn.io/ipfs',
+  IPFSGateway: 'https://cloudflare-ipfs.com/ipfs',
   theme: Theme.light
 })

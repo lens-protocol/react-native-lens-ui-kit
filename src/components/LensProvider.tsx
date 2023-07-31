@@ -5,7 +5,7 @@ export function LensProvider({
   children,
   theme = Theme.light,
   environment = Environment.mainnet,
-  IPFSGateway = 'https://gateway.ipfscdn.io/ipfs',
+  IPFSGateway = 'https://cloudflare-ipfs.com/ipfs'
 }: {
   children: React.ReactNode,
   theme?: Theme,
