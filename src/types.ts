@@ -162,7 +162,9 @@ export type PublicationStyles = {
   timestamp: {},
   activityIndicatorContainer: {},
   mirrorContainer: {},
-  mirrorText: {}
+  mirrorText: {},
+  video: {},
+  videoContainer: {}
 }
 
 export type ProfileHeaderStyles = {

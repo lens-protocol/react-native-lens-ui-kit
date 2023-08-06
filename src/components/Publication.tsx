@@ -4,9 +4,11 @@ import {
   Text,
   Dimensions,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  Modal
 } from 'react-native'
-import { useContext } from 'react'
+import Video from 'react-native-media-console'
+import { useContext, useState } from 'react'
 import { formatDistanceStrict } from 'date-fns'
 import {
   PublicationStyles,
@@ -50,6 +52,8 @@ export function Publication({
   onProfileImagePress?: (publication: ExtendedPublication) => void,
   styles?: PublicationStyles
 }) {
+  const [isFullScreen, setIsFullScreen] = useState(false)
+  const [isPaused, setIsPaused] = useState(true)
   const { theme, IPFSGateway } = useContext<LensContextType>(LensContext)
   if (theme) {
     if (theme === 'dark') {
@@ -57,6 +61,9 @@ export function Publication({
       iconColor = ThemeColors.lightGray
     }
   }
+
+  const ComponentType = isFullScreen ? Modal : View
+
   return (
     <View
       key={publication.id}
@@ -118,13 +125,53 @@ export function Publication({
           }
           {
             Number(publication.metadata.media.length) > 0 && (
+              publication.metadata.media[0].original.mimeType.includes('image') ?
               <Image
                 resizeMode="contain"
                 source={{
                   uri: returnIpfsPathOrUrl(publication.metadata.media[0].original.url, IPFSGateway)
                 }}
                 style={styles.metadataImage}
-              />
+              /> : (
+                <View style={styles.videoContainer}>
+                  <ComponentType
+                    style={{
+                      width: '100%',
+                      height: 220
+                    }}
+                  >
+                    <Video
+                      videoStyle={styles.video}
+                      paused={true}
+                      showOnStart
+                      isFullscreen={isFullScreen}
+                      ignoreSilentSwitch={'ignore'}
+                      toggleResizeModeOnFullscreen={false}
+                      onExitFullscreen={
+                        () => {
+                          setIsFullScreen(false)
+                          setIsPaused(false)
+                        }
+                      }
+                      onEnterFullscreen={
+                        () => {
+                          setIsFullScreen(true)
+                          setIsPaused(false)
+                          setTimeout(() => {
+                            setIsFullScreen(true)
+                          }, 100)
+                        }
+                      }
+                      onBack={
+                        () => setIsFullScreen(false)
+                      }
+                      source={{
+                        uri: publication.metadata.media[0].original.url
+                      }}
+                    />
+                  </ComponentType>
+                </View>
+              )
             )
           }
           {
@@ -202,6 +249,18 @@ function reduceDate(date: any) {
 }
 
 const baseStyles = StyleSheet.create({
+  videoContainer: {
+    width: '100%',
+    height: 220,
+    marginTop: 10
+  },
+  video: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
   publicationWrapper: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0, 0, 0, .05)',
@@ -286,6 +345,18 @@ const baseStyles = StyleSheet.create({
 })
 
 const darkThemeStyles = StyleSheet.create({
+  videoContainer: {
+    width: '100%',
+    height: 220,
+    marginTop: 10
+  },
+  video: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
   publicationWrapper: {
     borderBottomWidth: 1,
     padding: 20,

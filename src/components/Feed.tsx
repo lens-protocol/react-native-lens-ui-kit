@@ -248,7 +248,7 @@ export function Feed({
   }
 
   function renderItem({
-    item, index
+    item
   } : {
     item: ExtendedPublication,
     index: number
@@ -256,7 +256,7 @@ export function Feed({
     return (
       <PublicationComponent
         styles={publicationStyles}
-        key={index}
+        key={item.id}
         publication={item}
         signedInUser={signedInUser}
         onCollectPress={onCollectPress}

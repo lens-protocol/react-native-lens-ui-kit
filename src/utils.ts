@@ -63,13 +63,14 @@ export function formatProfilePictures(profiles: ExtendedProfile[], IPFSGateway:s
 
 export function filterMimeTypes(items: any[]) {
   items = items.filter(item => {
-    if (item.__typename === 'Mirror') return true
+    // if (item.__typename === 'Mirror') return true
     const { metadata: { media } } = item
     if (media.length) {
       if (media[0].original) {
         if (media[0].original.mimeType === 'image/jpeg') return true
         if (media[0].original.mimeType === 'image/gif') return true
         if (media[0].original.mimeType === 'image/png') return true
+        if (media[0].original.mimeType.includes('video')) return true
         return false
       }
     } else {

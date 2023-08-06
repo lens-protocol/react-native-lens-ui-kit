@@ -12,7 +12,7 @@ Example app codebase located [here](https://github.com/dabit3/dabit3-react-nativ
 
 ### Prerequisites
 
-First, install and configure [React Native SVG](https://github.com/software-mansion/react-native-svg).
+First, install and configure [React Native SVG](https://github.com/software-mansion/react-native-svg) and [React Native Video](https://github.com/react-native-video/react-native-video) into your Expo or bare React Native project.
 
 ### Installation
 

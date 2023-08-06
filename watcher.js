@@ -1,4 +1,4 @@
-import fs from 'fs'
+const fs = require('fs')
 
 const srcDir = `./dist`;
 const destDir = `../RNLensExpoTesting/node_modules/@lens-protocol/react-native-lens-ui-kit/dist`;
@@ -8,4 +8,4 @@ fs.watch("./dist/", {recursive: true}, () => {
   fs.cp(srcDir, destDir, { overwrite: true, recursive: true }, function() {
     console.log('copied')
   })
-});
+})
